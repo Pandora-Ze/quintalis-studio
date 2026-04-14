@@ -3,6 +3,7 @@ branding:
   label: Officiel
   logo: static/logo.png
   logoWidth: 40
+  url: https://quintalis-studio.netlify.app
 
 favicon: static/favicon.png
 
