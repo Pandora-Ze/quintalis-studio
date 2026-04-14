@@ -1,0 +1,60 @@
+branding:
+  title: Quintalis STUDIO
+  label: Officiel
+  logo: static/logo.png
+  logoWidth: 40
+
+favicon: static/favicon.png
+
+color:
+  brand: "#ff6b6b"
+
+nav:
+  - text: Menu
+    link: index.md
+    icon: home
+  
+  - text: À propos de Quintalis STUDIO
+    link: equipe.md
+    icon: info
+
+  - text: Jeux Vidéo
+    icon: play
+    items:
+      - text: Présentation
+        link: jeux-video/index.md
+        icon: device-desktop
+      - text: Téléchargements
+        link: jeux-video/telechargements.md
+        icon: download
+      - text: Installation
+        link: jeux-video/installation.md
+        icon: package
+      - text: Problèmes détectés
+        link: jeux-video/bug.md
+        icon: alert
+
+  - text: Fansub
+    icon: video
+    items:
+      - text: Présentation
+        link: fansub/index.md
+        icon: Tasklist
+      - text: Visionnage
+        link: fansub/visionnage.md
+        icon: eye
+
+  - text: Scantrad
+    icon: book
+    items:
+      - text: Présentation
+        link: scantrad/index.md
+        icon: eye
+      - text: Lecture
+        link: scantrad/lecture.md
+        icon: bookshelf
+
+links:
+  - text: Discord
+    link: https://discord.gg/w4qK3RvCeg
+    target: blank

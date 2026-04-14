@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecteur Quintalis</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: white;
+            font-family: sans-serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #reader {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        /* Zone d'image */
+        .img-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 92vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            transition: opacity 0.2s;
+        }
+
+        /* Bouton Plein Écran */
+        #fullscreen-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            border: 1px solid #444;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 1.2em;
+            transition: 0.3s;
+        }
+
+        /* Barre de navigation */
+        .chapter-nav {
+            height: 55px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            background: #111;
+            width: 100%;
+            justify-content: center;
+            border-top: 1px solid #333;
+        }
+
+        select {
+            background: #252525;
+            color: white;
+            border: 1px solid #444;
+            padding: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        #page-info {
+            color: #888;
+            font-size: 0.85em;
+            min-width: 80px;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        /* Loader */
+        .loader {
+            border: 4px solid #333;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            z-index: 5;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="reader">
+        <div id="loading-icon" class="loader"></div>
+        <button id="fullscreen-btn" title="Plein écran (F)">⛶</button>
+
+        <div class="img-container" id="click-zone">
+            <img id="manga-page" src="" alt="Chargement..." style="opacity: 0;">
+        </div>
+
+        <div class="chapter-nav">
+            <label id="label-ch" for="chapter-select" style="font-size: 0.8em; color: #666;">Chapitre :</label>
+            <select id="chapter-select"></select>
+            <span id="page-info">-- / --</span>
+        </div>
+    </div>
+
+    <script>
+        let mangaData = null;
+        let currentPages = [];
+        let currentPage = 0;
+
+        const img = document.getElementById('manga-page');
+        const info = document.getElementById('page-info');
+        const select = document.getElementById('chapter-select');
+        const loader = document.getElementById('loading-icon');
+
+        // 1. RÉCUPÉRATION PARAMÈTRES (ID & COULEUR)
+        const urlParams = new URLSearchParams(window.location.search);
+        const mangaId = urlParams.get('id');
+        const themeColor = "#" + (urlParams.get('color') || "3498db");
+
+        // 2. APPLICATION DU THÈME DYNAMIQUE
+        function applyTheme() {
+        loader.style.borderTopColor = themeColor;
+        const style = document.createElement('style');
+        style.innerHTML = `
+        select:focus { border-color: ${themeColor} !important; }
+        #fullscreen-btn:hover { background: ${themeColor}CC !important; border-color: ${themeColor} !important; }
+        `;
+        document.head.appendChild(style);
+        }
+
+        // 3. CHARGEMENT DES DONNÉES JSON
+        fetch('/static/manga-data.json')
+        .then(res => res.json())
+        .then(data => {
+        if (data[mangaId]) {
+        mangaData = data[mangaId];
+        setupSelector();
+        applyTheme();
+        loadChapter(Object.keys(mangaData)[0]);
+        } else {
+        alert("Erreur : Projet '" + mangaId + "' introuvable.");
+        }
+        });
+
+        function setupSelector() {
+        select.innerHTML = "";
+        Object.keys(mangaData).forEach(chNum => {
+        let opt = document.createElement('option');
+        opt.value = chNum;
+        // Affiche "Ch. X : Titre" ou juste "Chapitre X" selon ton JSON
+        let title = mangaData[chNum].title ? " : " + mangaData[chNum].title : "";
+        opt.innerText = "Ch. " + chNum + title;
+        select.appendChild(opt);
+        });
+        select.onchange = (e) => loadChapter(e.target.value);
+        }
+
+        function loadChapter(chId) {
+        // Gère les deux formats de JSON (simple tableau ou objet avec titre)
+        currentPages = Array.isArray(mangaData[chId]) ? mangaData[chId] : mangaData[chId].pages;
+        currentPage = 0;
+        updateView();
+        }
+
+        function updateView() {
+        loader.style.display = "block";
+        img.style.opacity = "0";
+        img.src = currentPages[currentPage];
+
+        img.onload = () => {
+        img.style.opacity = "1";
+        loader.style.display = "none";
+        };
+
+        info.innerText = (currentPage + 1) + " / " + currentPages.length;
+        if (currentPage < currentPages.length - 1) {
+        const next = new Image();
+        next.src = currentPages[currentPage + 1];
+        }
+        }
+
+        // NAVIGATION CLIC (DROITE = SUIVANT)
+        document.getElementById('click-zone').onclick = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        if ((e.clientX - rect.left) > rect.width / 2) {
+        if (currentPage < currentPages.length - 1) { currentPage++; updateView(); }
+        } else {
+        if (currentPage > 0) { currentPage--; updateView(); }
+        }
+        };
+
+        // CLAVIER
+        document.addEventListener('keydown', (e) => {
+        if (e.key === "ArrowRight") { if (currentPage < currentPages.length - 1) { currentPage++; updateView(); } }
+        if (e.key === "ArrowLeft") { if (currentPage > 0) { currentPage--; updateView(); } }
+        if (e.key === "f" || e.key === "F") { toggleFS(); }
+        });
+
+        function toggleFS() {
+        if (!document.fullscreenElement) { document.getElementById('reader').requestFullscreen(); }
+        else { document.exitFullscreen(); }
+        }
+        document.getElementById('fullscreen-btn').onclick = toggleFS;
+    </script>
+</body>
+</html>
