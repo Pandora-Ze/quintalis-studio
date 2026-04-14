@@ -7,7 +7,7 @@ order: 70
 
 Bienvenue dans la section dédiée à nos projets de traduction de mangas. Chez Quintalis STUDIO, l'objectif est de vous proposer des chapitres en français avec le plus grand soin, en mettant l'accent sur la qualité du texte et de l'image.
 
-Tout comme pour l'animation, je suis animé par une réelle passion. Je cherche à m'améliorer à chaque nouvelle sortie, en peaufinant mes techniques de nettoyage et de lettrage au fil des projets pour vous offrir la meilleure expérience de lecture possible.
+Tout comme pour l'animation, je suis animé par une réelle passion. Je cherche à m'améliorer à chaque nouvelle sortie, en peaufinant mes techniques de nettoyage et de lettrage au fil des projets pour vous offrir la meilleure expérience de lecture possible. 
 
 ---
 
