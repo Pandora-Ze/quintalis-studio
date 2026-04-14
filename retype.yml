@@ -6,6 +6,8 @@ branding:
 
 url: https://quintalisstudio.github.io/quintalis-studio/
 
+base: quintalis-studio
+
 favicon: static/favicon.png
 
 color:
