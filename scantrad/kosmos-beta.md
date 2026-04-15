@@ -6,7 +6,7 @@
 
 <div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; margin-bottom: 40px; margin-top: 10px;">
   
-  <img src="https://quintalisstudio.github.io/quintalis-studio/static/cover-kosmos-beta.png" alt="Nino Nakano - Kosmos Beta" style="width: 240px; border-radius: 10px; box-shadow: 0 6px 12px rgba(155, 89, 182, 0.4); flex-shrink: 0;">
+  <img src="https://pandora-ze.github.io/quintalis-studio/static/cover-kosmos-beta.png" alt="Nino Nakano - Kosmos Beta" style="width: 240px; border-radius: 10px; box-shadow: 0 6px 12px rgba(155, 89, 182, 0.4); flex-shrink: 0;">
   
   <div style="flex: 1; min-width: 300px;">
     
@@ -46,5 +46,5 @@
 > * **Plein écran :** Icône en haut à droite ou touche 'F'.
 
 <div style="width: 100%; height: 85vh; overflow: hidden; border: 2px solid #9b59b6; border-radius: 8px; background: #000; margin-top: 1rem;">
-  <iframe src="https://quintalisstudio.github.io/quintalis-studio/static/lecteur.html?id=kosmos-beta&color=9b59b6" style="width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
+  <iframe src="https://pandora-ze.github.io/quintalis-studio/static/lecteur.html?id=kosmos-beta&color=9b59b6" style="width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
 </div>

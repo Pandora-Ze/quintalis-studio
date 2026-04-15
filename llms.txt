@@ -2,22 +2,22 @@
 
 > Le portail officiel du groupe indépendant dédié à la traduction et au fansub.
 
-- [Quintalis STUDIO](https://quintalis-studio.surge.sh/quintalis-studio/index.md): Quintalis STUDIO
-- [Les jeux vidéo The Quintessential Quintuplets](https://quintalis-studio.surge.sh/quintalis-studio/jeux-video/index.md): Retrouvez ici le détail des jeux de la licence.
-- [Présentation du Fansub](https://quintalis-studio.surge.sh/quintalis-studio/fansub/index.md): Bienvenue dans la section dédiée à nos projets d'animation. Chez Quintalis STUDIO, l'objectif est de vous proposer des épisodes sous-titrés en français avec le plus grand soin.
-- [Présentation du Scantrad](https://quintalis-studio.surge.sh/quintalis-studio/scantrad/index.md): Bienvenue dans la section dédiée à nos projets de traduction de mangas. Chez Quintalis STUDIO, l'objectif est de vous proposer des chapitres en français avec le plus grand soin, en mettant l'accent sur la qualité du texte et de l'image.
-- [À propos de Quintalis STUDIO](https://quintalis-studio.surge.sh/quintalis-studio/equipe.md): La passion de la traduction, de l'écran à la page.
+- [Quintalis STUDIO](https://pandora-ze.github.io/quintalis-studio/index.md): Quintalis STUDIO
+- [Les jeux vidéo The Quintessential Quintuplets](https://pandora-ze.github.io/quintalis-studio/jeux-video/index.md): Retrouvez ici le détail des jeux de la licence.
+- [Présentation du Fansub](https://pandora-ze.github.io/quintalis-studio/fansub/index.md): Bienvenue dans la section dédiée à nos projets d'animation. Chez Quintalis STUDIO, l'objectif est de vous proposer des épisodes sous-titrés en français avec le plus grand soin.
+- [Présentation du Scantrad](https://pandora-ze.github.io/quintalis-studio/scantrad/index.md): Bienvenue dans la section dédiée à nos projets de traduction de mangas. Chez Quintalis STUDIO, l'objectif est de vous proposer des chapitres en français avec le plus grand soin, en mettant l'accent sur la qualité du texte et de l'image.
+- [À propos de Quintalis STUDIO](https://pandora-ze.github.io/quintalis-studio/equipe.md): La passion de la traduction, de l'écran à la page.
 
 ## Jeux Vidéo
 
-- [Téléchargements des Patchs](https://quintalis-studio.surge.sh/quintalis-studio/jeux-video/t%C3%A9l%C3%A9chargements.md): Retrouvez ici les liens officiels pour nos traductions. Tous nos patchs sont testés avant publication et garantis sans virus.
-- [Guide d'installation](https://quintalis-studio.surge.sh/quintalis-studio/jeux-video/installation.md): Retrouvez ici toutes les étapes pour appliquer correctement notre patch de traduction sur votre jeu.
-- [Problèmes détectés et Solutions](https://quintalis-studio.surge.sh/quintalis-studio/jeux-video/bug.md): Malgré tous nos tests, il est possible que des coquilles ou des bugs se glissent dans nos patchs. Retrouvez ici la liste des problèmes connus et les solutions fréquentes.
+- [Téléchargements des Patchs](https://pandora-ze.github.io/quintalis-studio/jeux-video/t%C3%A9l%C3%A9chargements.md): Retrouvez ici les liens officiels pour nos traductions. Tous nos patchs sont testés avant publication et garantis sans virus.
+- [Guide d'installation](https://pandora-ze.github.io/quintalis-studio/jeux-video/installation.md): Retrouvez ici toutes les étapes pour appliquer correctement notre patch de traduction sur votre jeu.
+- [Problèmes détectés et Solutions](https://pandora-ze.github.io/quintalis-studio/jeux-video/bug.md): Malgré tous nos tests, il est possible que des coquilles ou des bugs se glissent dans nos patchs. Retrouvez ici la liste des problèmes connus et les solutions fréquentes.
 
 ## Fansub
 
-- [Visionnage](https://quintalis-studio.surge.sh/quintalis-studio/fansub/visionnage.md): Choisissez une série ci-dessous pour accéder à tous ses épisodes.
+- [Visionnage](https://pandora-ze.github.io/quintalis-studio/fansub/visionnage.md): Choisissez une série ci-dessous pour accéder à tous ses épisodes.
 
 ## Scantrad
 
-- [Lecture](https://quintalis-studio.surge.sh/quintalis-studio/scantrad/lecture.md): Choisissez une série ci-dessous pour accéder à tous ses chapitres.
+- [Lecture](https://pandora-ze.github.io/quintalis-studio/scantrad/lecture.md): Choisissez une série ci-dessous pour accéder à tous ses chapitres.
