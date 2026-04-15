@@ -53,5 +53,5 @@ C'est le moment de retrouver les quintuplées en version française.
 :::center
 Rejoignez notre serveur pour suivre l'avancée des projets et discuter avec l'équipe !
 
-[!button text="Rejoindre le Discord Officiel" variant="question" icon="custom-discord" color="#5865F2" size="l"](https://discord.gg/w4qK3RvCeg)
+[!button target="blank" text="Rejoindre le Discord Officiel" variant="question" icon="custom-discord" color="#5865F2" size="l"](https://discord.gg/w4qK3RvCeg)
 :::
