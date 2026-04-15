@@ -24,7 +24,7 @@
             position: relative;
         }
 
-        /* Conteneur de l'image avec marge protégée en bas */
+        /* L'image reprend 100% de la place, plus de marge en bas */
         .img-container {
             flex: 1;
             display: flex;
@@ -34,9 +34,37 @@
             overflow: hidden;
             cursor: pointer;
             position: relative;
-            padding-bottom: 90px; /* Protège le bas de l'image pour les boutons */
-            box-sizing: border-box;
-            transition: padding-bottom 0.3s ease;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            transition: opacity 0.2s;
+        }
+
+        /* ... Laisse tes styles de boutons (#fullscreen-btn, .controls-container, etc.) tels quels ici ... */
+
+        /* --- NOUVEAU : On cache l'UI quand inactif, MÊME EN MODE NORMAL --- */
+        #reader.idle .controls-container {
+            transform: translate(-50%, 150%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #reader.idle #fullscreen-btn {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* (On garde la disparition de la souris UNIQUEMENT en plein écran) */
+        #reader:fullscreen.idle,
+        #reader:fullscreen.idle *,
+        #reader:-webkit-full-screen.idle,
+        #reader:-webkit-full-screen.idle * {
+            cursor: none !important;
         }
 
         img {
@@ -290,9 +318,15 @@
         return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
         }
 
-        function resetIdleTimer() {
-        readerEl.classList.remove('idle');
-        clearTimeout(idleTimer);
+       function resetIdleTimer() {
+            readerEl.classList.remove('idle');
+            clearTimeout(idleTimer);
+            
+            // Le chronomètre se lance maintenant tout le temps (Plein écran OU Normal)
+            idleTimer = setTimeout(() => {
+                readerEl.classList.add('idle');
+            }, 2500);
+        }
 
         if (isFullscreen()) {
         idleTimer = setTimeout(() => {
