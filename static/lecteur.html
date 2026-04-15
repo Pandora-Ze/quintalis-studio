@@ -24,7 +24,6 @@
             position: relative;
         }
 
-        /* L'image reprend 100% de la place, plus de marge en bas */
         .img-container {
             flex: 1;
             display: flex;
@@ -45,132 +44,49 @@
             transition: opacity 0.2s;
         }
 
-        /* ... Laisse tes styles de boutons (#fullscreen-btn, .controls-container, etc.) tels quels ici ... */
-
-        /* --- NOUVEAU : On cache l'UI quand inactif, MÊME EN MODE NORMAL --- */
-        #reader.idle .controls-container {
-            transform: translate(-50%, 150%);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        #reader.idle #fullscreen-btn {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        /* (On garde la disparition de la souris UNIQUEMENT en plein écran) */
-        #reader:fullscreen.idle,
-        #reader:fullscreen.idle *,
-        #reader:-webkit-full-screen.idle,
-        #reader:-webkit-full-screen.idle * {
-            cursor: none !important;
-        }
-
-        img {
-            max-width: 100%;
-            max-height: 100%;
-            width: auto;
-            height: auto;
-            object-fit: contain;
-            transition: opacity 0.2s;
-        }
-
-        /* --- DESIGN : Bouton Plein Écran Moderne --- */
+        /* Bouton Plein Écran */
         #fullscreen-btn {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(15, 15, 15, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.4);
             color: white;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            border: 1px solid #444;
+            padding: 5px 10px;
+            border-radius: 4px;
             cursor: pointer;
             z-index: 15;
-            font-size: 1.3em;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.6);
-            transition: all 0.3s ease;
+            font-size: 1.2em;
+            transition: opacity 0.3s ease;
         }
 
-            #fullscreen-btn:hover {
-                transform: scale(1.1);
-            }
-
-        /* --- DESIGN : Boutons Flottants (Pilules) --- */
-        .controls-container {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
+        /* Barre Nav Base */
+        .chapter-nav {
+            height: 55px;
             display: flex;
             gap: 15px;
-            z-index: 20;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
-        }
-
-        .control-pill {
-            background: rgba(15, 15, 15, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 30px;
-            padding: 10px 25px;
-            display: flex;
             align-items: center;
+            background: #111;
+            width: 100%;
             justify-content: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            border-top: 1px solid #333;
+            z-index: 20;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-            .control-pill:hover {
-                transform: translateY(-3px);
-            }
-
-        select {
-            background: transparent;
-            color: white;
-            border: none;
-            cursor: pointer;
-            outline: none;
-            font-size: 1em;
-            font-weight: bold;
-            text-align: center;
-            appearance: none;
+        /* MAGIE CSS : GESTION DU PLEIN ÉCRAN NATIVE */
+        #reader:fullscreen .chapter-nav,
+        #reader:-webkit-full-screen .chapter-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: rgba(17, 17, 17, 0.95);
+            border-top: none;
         }
 
-            select option {
-                background: #1a1a1a;
-                color: white;
-            }
-
-        #page-info {
-            color: #ddd;
-            font-size: 1em;
-            font-weight: bold;
-            font-family: monospace;
-            min-width: 60px;
-            text-align: center;
-        }
-
-        /* --- MAGIE CSS : GESTION DU PLEIN ÉCRAN NATIVE --- */
-
-        /* 1. En plein écran, la marge disparaît et l'image prend 100% */
-        #reader:fullscreen .img-container,
-        #reader:-webkit-full-screen .img-container {
-            padding-bottom: 0;
-        }
-
-        /* 2. En plein écran ET inactif (classe .idle) : On cache l'UI ! */
-        #reader:fullscreen.idle .controls-container,
-        #reader:-webkit-full-screen.idle .controls-container {
-            transform: translate(-50%, 150%);
+        #reader:fullscreen.idle .chapter-nav,
+        #reader:-webkit-full-screen.idle .chapter-nav {
+            transform: translateY(100%);
             opacity: 0;
             pointer-events: none;
         }
@@ -189,7 +105,25 @@
             cursor: none !important;
         }
 
-        /* Loaders & Ecrans */
+        /* Reste de l'interface */
+        select {
+            background: #252525;
+            color: white;
+            border: 1px solid #444;
+            padding: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        #page-info {
+            color: #888;
+            font-size: 0.85em;
+            min-width: 80px;
+            text-align: center;
+            font-family: monospace;
+        }
+
         .loader {
             border: 4px solid #333;
             border-radius: 50%;
@@ -284,13 +218,10 @@
             </div>
         </div>
 
-        <div class="controls-container">
-            <div class="control-pill" title="Choisir un chapitre">
-                <select id="chapter-select"></select>
-            </div>
-            <div class="control-pill" title="Page actuelle">
-                <span id="page-info">-- / --</span>
-            </div>
+        <div class="chapter-nav">
+            <label for="chapter-select" style="font-size: 0.8em; color: #aaa;">Chapitre :</label>
+            <select id="chapter-select"></select>
+            <span id="page-info">-- / --</span>
         </div>
     </div>
 
@@ -311,22 +242,16 @@
 
         // --- 1. GESTION DE L'INACTIVITÉ ---
         const readerEl = document.getElementById('reader');
-        const navBar = document.querySelector('.controls-container');
+        const navBar = document.querySelector('.chapter-nav');
         let idleTimer;
 
         function isFullscreen() {
         return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
         }
 
-       function resetIdleTimer() {
-            readerEl.classList.remove('idle');
-            clearTimeout(idleTimer);
-            
-            // Le chronomètre se lance maintenant tout le temps (Plein écran OU Normal)
-            idleTimer = setTimeout(() => {
-                readerEl.classList.add('idle');
-            }, 2500);
-        }
+        function resetIdleTimer() {
+        readerEl.classList.remove('idle');
+        clearTimeout(idleTimer);
 
         if (isFullscreen()) {
         idleTimer = setTimeout(() => {
@@ -335,13 +260,13 @@
         }
         }
 
+        // On ignore 'keydown' pour que le clavier ne réveille pas l'interface
         ['mousemove', 'mousedown', 'touchstart', 'fullscreenchange', 'webkitfullscreenchange'].forEach(evt => {
         document.addEventListener(evt, resetIdleTimer);
         });
 
         navBar.addEventListener('mouseenter', () => clearTimeout(idleTimer));
         navBar.addEventListener('mouseleave', resetIdleTimer);
-
 
         // --- 2. BOUTON PLEIN ÉCRAN ---
         function toggleFS() {
@@ -357,7 +282,6 @@
         }
         document.getElementById('fullscreen-btn').onclick = toggleFS;
 
-
         // --- 3. CHARGEMENT MANGA ---
         const urlParams = new URLSearchParams(window.location.search);
         const mangaId = urlParams.get('id');
@@ -366,12 +290,10 @@
         function applyTheme() {
         loader.style.borderTopColor = themeColor;
         transitionLoader.style.borderTopColor = themeColor;
-
         const style = document.createElement('style');
         style.innerHTML = `
-        .control-pill:hover { border-color: ${themeColor} !important; box-shadow: 0 10px 25px ${themeColor}55 !important; }
-        #fullscreen-btn:hover { border-color: ${themeColor} !important; color: ${themeColor} !important; box-shadow: 0 8px 20px ${themeColor}55 !important; }
-        select:focus { color: ${themeColor}; }
+        select:focus { border-color: ${themeColor} !important; }
+        #fullscreen-btn:hover { background: ${themeColor}CC !important; border-color: ${themeColor} !important; }
         `;
         document.head.appendChild(style);
         }
