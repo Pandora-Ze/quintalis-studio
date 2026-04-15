@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lecteur Quintalis</title>
     <style>
+        /* Reset & Base */
         body {
             margin: 0;
             padding: 0;
@@ -36,13 +37,14 @@
 
         img {
             max-width: 100%;
-            max-height: 92vh;
+            max-height: 100%;
             width: auto;
             height: auto;
             object-fit: contain;
             transition: opacity 0.2s;
         }
 
+        /* Bouton Plein Écran */
         #fullscreen-btn {
             position: absolute;
             top: 15px;
@@ -53,11 +55,12 @@
             padding: 5px 10px;
             border-radius: 4px;
             cursor: pointer;
-            z-index: 10;
+            z-index: 15;
             font-size: 1.2em;
-            transition: 0.3s;
+            transition: opacity 0.3s ease;
         }
 
+        /* Barre Nav Base (Mode Normal : Toujours visible en bas) */
         .chapter-nav {
             height: 55px;
             display: flex;
@@ -67,8 +70,42 @@
             width: 100%;
             justify-content: center;
             border-top: 1px solid #333;
+            z-index: 20;
+            transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
+        /* ==== MAGIE CSS : GESTION DU PLEIN ÉCRAN NATIVE ==== */
+
+        /* 1. Quand le lecteur passe en plein écran, la barre devient flottante */
+        #reader:fullscreen .chapter-nav,
+        #reader:-webkit-full-screen .chapter-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: rgba(17, 17, 17, 0.95);
+            border-top: none;
+        }
+
+        /* 2. Quand le lecteur est en plein écran ET inactif (classe .idle) : On cache tout ! */
+        #reader:fullscreen.idle .chapter-nav,
+        #reader:-webkit-full-screen.idle .chapter-nav {
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #reader:fullscreen.idle #fullscreen-btn,
+        #reader:-webkit-full-screen.idle #fullscreen-btn {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        #reader:fullscreen.idle,
+        #reader:-webkit-full-screen.idle {
+            cursor: none; /* Cache la souris */
+        }
+
+        /* Reste de l'interface */
         select {
             background: #252525;
             color: white;
@@ -130,7 +167,6 @@
             white-space: pre-line;
         }
 
-        /* --- NOUVEAU : Écran de transition entre chapitres --- */
         #transition-overlay {
             position: absolute;
             top: 0;
@@ -138,7 +174,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.85);
-            z-index: 20;
+            z-index: 30;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -183,7 +219,7 @@
         </div>
 
         <div class="chapter-nav">
-            <label for="chapter-select" style="font-size: 0.8em; color: #666;">Chapitre :</label>
+            <label for="chapter-select" style="font-size: 0.8em; color: #aaa;">Chapitre :</label>
             <select id="chapter-select"></select>
             <span id="page-info">-- / --</span>
         </div>
@@ -200,21 +236,65 @@
         const loader = document.getElementById('loading-icon');
         const errorScreen = document.getElementById('error-screen');
         const errorDetail = document.getElementById('error-detail');
-
-        // NOUVEAU : Éléments de transition
         const transitionOverlay = document.getElementById('transition-overlay');
         const transitionText = document.getElementById('transition-text');
         const transitionLoader = document.getElementById('transition-loader');
 
-        // 1. PARAMÈTRES URL
+        // --- 1. GESTION DE L'INACTIVITÉ SIMPLIFIÉE ---
+        const readerEl = document.getElementById('reader');
+        const navBar = document.querySelector('.chapter-nav');
+        let idleTimer;
+
+        // Fonction pour vérifier si on est en plein écran
+        function isFullscreen() {
+        return document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement;
+        }
+
+        function resetIdleTimer() {
+        readerEl.classList.remove('idle');
+        clearTimeout(idleTimer);
+
+        // On ne déclenche le chronomètre de disparition QUE si on est en plein écran
+        if (isFullscreen()) {
+        idleTimer = setTimeout(() => {
+        readerEl.classList.add('idle');
+        }, 2500);
+        }
+        }
+
+        // Relance le chrono sur toutes ces actions
+        ['mousemove', 'mousedown', 'touchstart', 'keydown', 'fullscreenchange', 'webkitfullscreenchange'].forEach(evt => {
+        document.addEventListener(evt, resetIdleTimer);
+        });
+
+        // Bloque la disparition si la souris est sur la barre
+        navBar.addEventListener('mouseenter', () => clearTimeout(idleTimer));
+        navBar.addEventListener('mouseleave', resetIdleTimer);
+
+
+        // --- 2. BOUTON PLEIN ÉCRAN ---
+        function toggleFS() {
+        if (!isFullscreen()) {
+        if (readerEl.requestFullscreen) readerEl.requestFullscreen();
+        else if (readerEl.webkitRequestFullscreen) readerEl.webkitRequestFullscreen();
+        else if (readerEl.msRequestFullscreen) readerEl.msRequestFullscreen();
+        } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+        else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+        else if (document.msExitFullscreen) document.msExitFullscreen();
+        }
+        }
+        document.getElementById('fullscreen-btn').onclick = toggleFS;
+
+
+        // --- 3. CHARGEMENT MANGA (Code Claude) ---
         const urlParams = new URLSearchParams(window.location.search);
         const mangaId = urlParams.get('id');
         const themeColor = "#" + (urlParams.get('color') || "3498db");
 
-        // 2. THÈME
         function applyTheme() {
         loader.style.borderTopColor = themeColor;
-        transitionLoader.style.borderTopColor = themeColor; // Applique la couleur au loader de transition
+        transitionLoader.style.borderTopColor = themeColor;
         const style = document.createElement('style');
         style.innerHTML = `
         select:focus { border-color: ${themeColor} !important; }
@@ -230,7 +310,7 @@
         errorDetail.innerText = msg;
         }
 
-        // 3. CHARGEMENT JSON (Code de Claude intact)
+        // Ligne de Claude pour éviter le bug d'URL relative !
         const jsonUrl = new URL('manga-data.json', window.location.href).href;
 
         fetch(jsonUrl)
@@ -285,61 +365,50 @@
         }
         }
 
-        // NOUVEAU : Fonction pour passer au chapitre suivant avec animation
         function goToNextChapter() {
         const chapters = Object.keys(mangaData);
         const currentIndex = chapters.indexOf(select.value);
 
-        // S'il y a un chapitre après celui-ci
         if (currentIndex >= 0 && currentIndex < chapters.length - 1) {
         const nextChapterKey = chapters[currentIndex + 1];
         let nextTitle = mangaData[nextChapterKey].title ? "\n" + mangaData[nextChapterKey].title : "";
 
-        // 1. Met à jour le texte et affiche l'écran de transition
         transitionText.innerText = "Chapitre suivant\nCh. " + nextChapterKey + nextTitle;
         transitionOverlay.classList.add('show');
 
-        // 2. Attend 1.5 seconde, puis charge le chapitre et cache l'écran
         setTimeout(() => {
-        select.value = nextChapterKey; // Met à jour le menu déroulant visuellement
+        select.value = nextChapterKey;
         loadChapter(nextChapterKey);
         transitionOverlay.classList.remove('show');
         }, 1500);
         }
         }
 
-        // NAVIGATION CLIC
+        // --- 4. NAVIGATION AU CLIC / CLAVIER ---
         document.getElementById('click-zone').onclick = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
         if ((e.clientX - rect.left) > rect.width / 2) {
         if (currentPage < currentPages.length - 1) {
         currentPage++; updateView();
         } else {
-        goToNextChapter(); // Modifié ici
+        goToNextChapter();
         }
         } else {
         if (currentPage > 0) { currentPage--; updateView(); }
         }
         };
 
-        // CLAVIER
         document.addEventListener('keydown', (e) => {
         if (e.key === "ArrowRight") {
         if (currentPage < currentPages.length - 1) {
         currentPage++; updateView();
         } else {
-        goToNextChapter(); // Modifié ici
+        goToNextChapter();
         }
         }
         if (e.key === "ArrowLeft") { if (currentPage > 0) { currentPage--; updateView(); } }
         if (e.key === "f" || e.key === "F") { toggleFS(); }
         });
-
-        function toggleFS() {
-        if (!document.fullscreenElement) { document.getElementById('reader').requestFullscreen(); }
-        else { document.exitFullscreen(); }
-        }
-        document.getElementById('fullscreen-btn').onclick = toggleFS;
     </script>
 </body>
 </html>

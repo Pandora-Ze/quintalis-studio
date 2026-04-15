@@ -7,7 +7,7 @@ visibility: hidden
 ---
 # Kosmos Beta (Nino Route)
 
-[!button text="Retour au catalogue" icon="arrow-left" variant="outline"](lecture.md)
+[!button text="Retour au catalogue" icon="arrow-left" variant="base"](lecture.md)
 
 ---
 
