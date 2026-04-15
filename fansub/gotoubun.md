@@ -1,6 +1,6 @@
 ---
 title: "The Quintessential Quintuplets : Honeymoon"
-image: /static/affiche-gotoubun.png
+image: https://quintalisstudio.github.io/quintalis-studio/static/affiche-gotoubun.png
 description: Retrouvez tous les épisodes du dernier OAV en date.
 visibility: hidden
 ---
@@ -12,7 +12,7 @@ visibility: hidden
 
 <div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; margin-bottom: 40px; margin-top: 10px;">
   
-  <img src="/static/affiche-gotoubun.png" alt="Affiche The Quintessential Quintuplets" style="width: 240px; border-radius: 10px; box-shadow: 0 6px 12px rgba(0,0,0,0.3); flex-shrink: 0;">
+  <img src="https://quintalisstudio.github.io/quintalis-studio/static/affiche-gotoubun.png" alt="Affiche The Quintessential Quintuplets" style="width: 240px; border-radius: 10px; box-shadow: 0 6px 12px rgba(0,0,0,0.3); flex-shrink: 0;">
   
   <div style="flex: 1; min-width: 300px;">
     
@@ -27,7 +27,7 @@ visibility: hidden
     
     <h2 style="margin-top: 0; margin-bottom: 15px; font-size: 1.5rem; font-weight: 700;">Synopsis</h2>
     
-    <p style="line-height: 1.7; margin-bottom: 15px;">En tant que tuteur à temps partiel, Fûtarô Uesugi est parvenu à guider avec succès les quintuplées jusqu’à l’obtention de leur diplôme, bien que quelque chose semble troubler ces dernières. En parallèle, tous préparent ensemble un grand voyage de noces à Hawaï !</p>
+    <p style="line-height: 1.7; margin-bottom: 15px;">En tant que tuteur à temps partiel, Fûtarô Uesugi est parvenu à guider avec succès les quintuplées jusqu'à l'obtention de leur diplôme, bien que quelque chose semble troubler ces dernières. En parallèle, tous préparent ensemble un grand voyage de noces à Hawaï !</p>
     
     <p style="line-height: 1.7; margin-bottom: 0;">Mais tandis que les préparatifs vont bon train, un incident survient. Fûtarô et les cinq sœurs se retrouvent soudainement dans le pétrin !</p>
     
