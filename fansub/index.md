@@ -4,7 +4,7 @@ icon: custom-closed-caption
 order: 80
 ---
 
-# Présentation du Fansub
+# Présentation du Fansub 
 
 Bienvenue dans la section dédiée à nos projets d'animation. Chez Quintalis STUDIO, l'objectif est de vous proposer des épisodes sous-titrés en français avec le plus grand soin. 
 
