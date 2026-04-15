@@ -7,7 +7,8 @@ visibility: hidden
 
 # The Quintessential Quintuplets : Honeymoon
 
-[!button text="Retour au catalogue" icon="arrow-left" variant="outline"](visionnage.md)
+[!button text="Retour au catalogue" icon="arrow-left" variant="base"](visionnage.md)
+
 ---
 
 <div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; margin-bottom: 40px; margin-top: 10px;">
