@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://quintalis-studio.surge.sh/quintalis-studio/sitemap.xml
