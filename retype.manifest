@@ -1,0 +1,174 @@
+{
+  "version": "4.5.2",
+  "created": "2026-04-15T19:53:11Z",
+  "files": [
+    {
+      "path": ".nojekyll"
+    },
+    {
+      "path": "404.html"
+    },
+    {
+      "path": "CNAME"
+    },
+    {
+      "path": "equipe.md"
+    },
+    {
+      "path": "equipe\\index.html"
+    },
+    {
+      "path": "fansub\\gotoubun.md"
+    },
+    {
+      "path": "fansub\\gotoubun\\index.html"
+    },
+    {
+      "path": "fansub\\index.html"
+    },
+    {
+      "path": "fansub\\index.md"
+    },
+    {
+      "path": "fansub\\visionnage.md"
+    },
+    {
+      "path": "fansub\\visionnage\\index.html"
+    },
+    {
+      "path": "index.html"
+    },
+    {
+      "path": "index.md"
+    },
+    {
+      "path": "jeux-video\\bug.md"
+    },
+    {
+      "path": "jeux-video\\bug\\index.html"
+    },
+    {
+      "path": "jeux-video\\index.html"
+    },
+    {
+      "path": "jeux-video\\index.md"
+    },
+    {
+      "path": "jeux-video\\installation.md"
+    },
+    {
+      "path": "jeux-video\\installation\\index.html"
+    },
+    {
+      "path": "jeux-video\\téléchargements.md"
+    },
+    {
+      "path": "jeux-video\\téléchargements\\index.html"
+    },
+    {
+      "path": "llms.txt"
+    },
+    {
+      "path": "package.json"
+    },
+    {
+      "path": "resources\\css\\retype.css"
+    },
+    {
+      "path": "resources\\fonts\\Inter-italic-latin-var.woff2"
+    },
+    {
+      "path": "resources\\fonts\\Inter-roman-latin-var.woff2"
+    },
+    {
+      "path": "resources\\js\\config.js"
+    },
+    {
+      "path": "resources\\js\\instagram.js"
+    },
+    {
+      "path": "resources\\js\\lunr.js"
+    },
+    {
+      "path": "resources\\js\\retype.js"
+    },
+    {
+      "path": "resources\\js\\search.json"
+    },
+    {
+      "path": "resources\\lunr.js.LICENSE.txt"
+    },
+    {
+      "path": "resources\\mermaid.js.LICENSE.txt"
+    },
+    {
+      "path": "resources\\prism.js.LICENSE.txt"
+    },
+    {
+      "path": "resources\\retype.js.LICENSE.txt"
+    },
+    {
+      "path": "resources\\retype.LICENSE.txt"
+    },
+    {
+      "path": "robots.txt"
+    },
+    {
+      "path": "scantrad\\index.html"
+    },
+    {
+      "path": "scantrad\\index.md"
+    },
+    {
+      "path": "scantrad\\kosmos-beta.md"
+    },
+    {
+      "path": "scantrad\\kosmos-beta\\index.html"
+    },
+    {
+      "path": "scantrad\\lecture.md"
+    },
+    {
+      "path": "scantrad\\lecture\\index.html"
+    },
+    {
+      "path": "sitemap.xml"
+    },
+    {
+      "path": "static\\affiche-gotoubun.png"
+    },
+    {
+      "path": "static\\cover-kosmos-beta.png"
+    },
+    {
+      "path": "static\\favicon.png"
+    },
+    {
+      "path": "static\\lecteur.html"
+    },
+    {
+      "path": "static\\logo.png"
+    },
+    {
+      "path": "static\\manga-data.json"
+    },
+    {
+      "path": "static\\memories-banner.png"
+    },
+    {
+      "path": "static\\patchs\\patch_vf_v0.1.zip"
+    },
+    {
+      "path": "static\\princess-banner.png"
+    },
+    {
+      "path": "static\\promises-banner.png"
+    },
+    {
+      "path": "static\\soon.png"
+    },
+    {
+      "path": "static\\summer-banner.png"
+    }
+  ]
+}

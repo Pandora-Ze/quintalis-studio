@@ -4,7 +4,7 @@ branding:
   logo: static/logo.png
   logoWidth: 40
 
-url: https://quintalisstudio.github.io/quintalis-studio/
+url: https://quintalis-studio.surge.sh/
 
 base: quintalis-studio
 
