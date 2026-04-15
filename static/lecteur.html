@@ -6,67 +6,161 @@
     <title>Lecteur Quintalis</title>
     <style>
         body {
-            margin: 0; padding: 0;
-            background: #000; color: white;
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: white;
             font-family: sans-serif;
-            overflow: hidden; height: 100vh;
+            overflow: hidden;
+            height: 100vh;
         }
+
         #reader {
-            display: flex; flex-direction: column;
-            height: 100vh; width: 100vw; position: relative;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
         }
+
         .img-container {
-            flex: 1; display: flex;
-            justify-content: center; align-items: center;
-            background: #000; overflow: hidden;
-            cursor: pointer; position: relative;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
         }
+
         img {
-            max-width: 100%; max-height: 92vh;
-            width: auto; height: auto;
-            object-fit: contain; transition: opacity 0.2s;
+            max-width: 100%;
+            max-height: 92vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            transition: opacity 0.2s;
         }
+
         #fullscreen-btn {
-            position: absolute; top: 15px; right: 15px;
-            background: rgba(0,0,0,0.4); color: white;
-            border: 1px solid #444; padding: 5px 10px;
-            border-radius: 4px; cursor: pointer;
-            z-index: 10; font-size: 1.2em; transition: 0.3s;
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0,0,0,0.4);
+            color: white;
+            border: 1px solid #444;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 1.2em;
+            transition: 0.3s;
         }
+
         .chapter-nav {
-            height: 55px; display: flex; gap: 15px;
-            align-items: center; background: #111;
-            width: 100%; justify-content: center;
+            height: 55px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            background: #111;
+            width: 100%;
+            justify-content: center;
             border-top: 1px solid #333;
         }
+
         select {
-            background: #252525; color: white;
-            border: 1px solid #444; padding: 5px;
-            border-radius: 4px; cursor: pointer; outline: none;
+            background: #252525;
+            color: white;
+            border: 1px solid #444;
+            padding: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            outline: none;
         }
+
         #page-info {
-            color: #888; font-size: 0.85em;
-            min-width: 80px; text-align: center; font-family: monospace;
+            color: #888;
+            font-size: 0.85em;
+            min-width: 80px;
+            text-align: center;
+            font-family: monospace;
         }
+
         .loader {
-            border: 4px solid #333; border-radius: 50%;
-            width: 30px; height: 30px;
+            border: 4px solid #333;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
             animation: spin 1s linear infinite;
-            position: absolute; z-index: 5;
+            position: absolute;
+            z-index: 5;
         }
+
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
+
         #error-screen {
-            display: none; flex-direction: column;
-            justify-content: center; align-items: center;
-            height: 100%; gap: 12px;
-            color: #e74c3c; font-size: 0.95em;
-            text-align: center; padding: 20px;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            gap: 12px;
+            color: #e74c3c;
+            font-size: 0.95em;
+            text-align: center;
+            padding: 20px;
         }
-        #error-screen .error-icon { font-size: 2.5em; }
-        #error-detail { color: #888; font-size: 0.85em; white-space: pre-line; }
+
+            #error-screen .error-icon {
+                font-size: 2.5em;
+            }
+
+        #error-detail {
+            color: #888;
+            font-size: 0.85em;
+            white-space: pre-line;
+        }
+
+        /* --- NOUVEAU : Écran de transition entre chapitres --- */
+        #transition-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 20;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 1.5em;
+            text-align: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+            #transition-overlay.show {
+                visibility: visible;
+                opacity: 1;
+            }
+
+        #transition-text {
+            margin-top: 20px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
@@ -80,6 +174,11 @@
                 <div class="error-icon">⚠️</div>
                 <strong>Impossible de charger les données du manga.</strong>
                 <p id="error-detail"></p>
+            </div>
+
+            <div id="transition-overlay">
+                <div class="loader" id="transition-loader" style="position: relative;"></div>
+                <div id="transition-text">Chapitre suivant...</div>
             </div>
         </div>
 
@@ -102,6 +201,11 @@
         const errorScreen = document.getElementById('error-screen');
         const errorDetail = document.getElementById('error-detail');
 
+        // NOUVEAU : Éléments de transition
+        const transitionOverlay = document.getElementById('transition-overlay');
+        const transitionText = document.getElementById('transition-text');
+        const transitionLoader = document.getElementById('transition-loader');
+
         // 1. PARAMÈTRES URL
         const urlParams = new URLSearchParams(window.location.search);
         const mangaId = urlParams.get('id');
@@ -109,99 +213,131 @@
 
         // 2. THÈME
         function applyTheme() {
-            loader.style.borderTopColor = themeColor;
-            const style = document.createElement('style');
-            style.innerHTML = `
-                select:focus { border-color: ${themeColor} !important; }
-                #fullscreen-btn:hover { background: ${themeColor}CC !important; border-color: ${themeColor} !important; }
-            `;
-            document.head.appendChild(style);
+        loader.style.borderTopColor = themeColor;
+        transitionLoader.style.borderTopColor = themeColor; // Applique la couleur au loader de transition
+        const style = document.createElement('style');
+        style.innerHTML = `
+        select:focus { border-color: ${themeColor} !important; }
+        #fullscreen-btn:hover { background: ${themeColor}CC !important; border-color: ${themeColor} !important; }
+        `;
+        document.head.appendChild(style);
         }
 
         function showError(msg) {
-            loader.style.display = "none";
-            img.style.display = "none";
-            errorScreen.style.display = "flex";
-            errorDetail.innerText = msg;
+        loader.style.display = "none";
+        img.style.display = "none";
+        errorScreen.style.display = "flex";
+        errorDetail.innerText = msg;
         }
 
-        // 3. CHARGEMENT JSON
-        // On construit l'URL de manga-data.json relativement à lecteur.html lui-même,
-        // ce qui fonctionne quelle que soit la base de déploiement du site.
+        // 3. CHARGEMENT JSON (Code de Claude intact)
         const jsonUrl = new URL('manga-data.json', window.location.href).href;
 
         fetch(jsonUrl)
-            .then(res => {
-                if (!res.ok) throw new Error(`HTTP ${res.status}\n${jsonUrl}`);
-                return res.json();
-            })
-            .then(data => {
-                if (data[mangaId]) {
-                    mangaData = data[mangaId];
-                    setupSelector();
-                    applyTheme();
-                    loadChapter(Object.keys(mangaData)[0]);
-                } else {
-                    showError(`Projet "${mangaId}" introuvable dans manga-data.json.`);
-                }
-            })
-            .catch(err => {
-                showError(`Fichier manga-data.json inaccessible.\n${err.message}`);
-            });
+        .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}\n${jsonUrl}`);
+        return res.json();
+        })
+        .then(data => {
+        if (data[mangaId]) {
+        mangaData = data[mangaId];
+        setupSelector();
+        applyTheme();
+        loadChapter(Object.keys(mangaData)[0]);
+        } else {
+        showError(`Projet "${mangaId}" introuvable dans manga-data.json.`);
+        }
+        })
+        .catch(err => {
+        showError(`Fichier manga-data.json inaccessible.\n${err.message}`);
+        });
 
         function setupSelector() {
-            select.innerHTML = "";
-            Object.keys(mangaData).forEach(chNum => {
-                let opt = document.createElement('option');
-                opt.value = chNum;
-                let title = mangaData[chNum].title ? " : " + mangaData[chNum].title : "";
-                opt.innerText = "Ch. " + chNum + title;
-                select.appendChild(opt);
-            });
-            select.onchange = (e) => loadChapter(e.target.value);
+        select.innerHTML = "";
+        Object.keys(mangaData).forEach(chNum => {
+        let opt = document.createElement('option');
+        opt.value = chNum;
+        let title = mangaData[chNum].title ? " : " + mangaData[chNum].title : "";
+        opt.innerText = "Ch. " + chNum + title;
+        select.appendChild(opt);
+        });
+        select.onchange = (e) => loadChapter(e.target.value);
         }
 
         function loadChapter(chId) {
-            currentPages = Array.isArray(mangaData[chId]) ? mangaData[chId] : mangaData[chId].pages;
-            currentPage = 0;
-            updateView();
+        currentPages = Array.isArray(mangaData[chId]) ? mangaData[chId] : mangaData[chId].pages;
+        currentPage = 0;
+        updateView();
         }
 
         function updateView() {
-            loader.style.display = "block";
-            img.style.opacity = "0";
-            img.src = currentPages[currentPage];
-            img.onload = () => {
-                img.style.opacity = "1";
-                loader.style.display = "none";
-            };
-            info.innerText = (currentPage + 1) + " / " + currentPages.length;
-            if (currentPage < currentPages.length - 1) {
-                const next = new Image();
-                next.src = currentPages[currentPage + 1];
-            }
+        loader.style.display = "block";
+        img.style.opacity = "0";
+        img.src = currentPages[currentPage];
+        img.onload = () => {
+        img.style.opacity = "1";
+        loader.style.display = "none";
+        };
+        info.innerText = (currentPage + 1) + " / " + currentPages.length;
+        if (currentPage < currentPages.length - 1) {
+        const next = new Image();
+        next.src = currentPages[currentPage + 1];
+        }
+        }
+
+        // NOUVEAU : Fonction pour passer au chapitre suivant avec animation
+        function goToNextChapter() {
+        const chapters = Object.keys(mangaData);
+        const currentIndex = chapters.indexOf(select.value);
+
+        // S'il y a un chapitre après celui-ci
+        if (currentIndex >= 0 && currentIndex < chapters.length - 1) {
+        const nextChapterKey = chapters[currentIndex + 1];
+        let nextTitle = mangaData[nextChapterKey].title ? "\n" + mangaData[nextChapterKey].title : "";
+
+        // 1. Met à jour le texte et affiche l'écran de transition
+        transitionText.innerText = "Chapitre suivant\nCh. " + nextChapterKey + nextTitle;
+        transitionOverlay.classList.add('show');
+
+        // 2. Attend 1.5 seconde, puis charge le chapitre et cache l'écran
+        setTimeout(() => {
+        select.value = nextChapterKey; // Met à jour le menu déroulant visuellement
+        loadChapter(nextChapterKey);
+        transitionOverlay.classList.remove('show');
+        }, 1500);
+        }
         }
 
         // NAVIGATION CLIC
         document.getElementById('click-zone').onclick = (e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            if ((e.clientX - rect.left) > rect.width / 2) {
-                if (currentPage < currentPages.length - 1) { currentPage++; updateView(); }
-            } else {
-                if (currentPage > 0) { currentPage--; updateView(); }
-            }
+        const rect = e.currentTarget.getBoundingClientRect();
+        if ((e.clientX - rect.left) > rect.width / 2) {
+        if (currentPage < currentPages.length - 1) {
+        currentPage++; updateView();
+        } else {
+        goToNextChapter(); // Modifié ici
+        }
+        } else {
+        if (currentPage > 0) { currentPage--; updateView(); }
+        }
         };
 
         // CLAVIER
         document.addEventListener('keydown', (e) => {
-            if (e.key === "ArrowRight") { if (currentPage < currentPages.length - 1) { currentPage++; updateView(); } }
-            if (e.key === "ArrowLeft") { if (currentPage > 0) { currentPage--; updateView(); } }
-            if (e.key === "f" || e.key === "F") { toggleFS(); }
+        if (e.key === "ArrowRight") {
+        if (currentPage < currentPages.length - 1) {
+        currentPage++; updateView();
+        } else {
+        goToNextChapter(); // Modifié ici
+        }
+        }
+        if (e.key === "ArrowLeft") { if (currentPage > 0) { currentPage--; updateView(); } }
+        if (e.key === "f" || e.key === "F") { toggleFS(); }
         });
 
         function toggleFS() {
-            if (!document.fullscreenElement) { document.getElementById('reader').requestFullscreen(); }
-            else { document.exitFullscreen(); }
+        if (!document.fullscreenElement) { document.getElementById('reader').requestFullscreen(); }
+        else { document.exitFullscreen(); }
         }
         document.getElementById('fullscreen-btn').onclick = toggleFS;
     </script>
