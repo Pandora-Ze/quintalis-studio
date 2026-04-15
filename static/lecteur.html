@@ -97,9 +97,12 @@
             pointer-events: none;
         }
 
+        /* --- Cache la souris PARTOUT en plein écran inactif --- */
         #reader:fullscreen.idle,
-        #reader:-webkit-full-screen.idle {
-            cursor: none;
+        #reader:fullscreen.idle *,
+        #reader:-webkit-full-screen.idle,
+        #reader:-webkit-full-screen.idle * {
+            cursor: none !important;
         }
 
         /* Reste de l'interface */
