@@ -1,4 +1,4 @@
-name: Deploy to Emcloud
+name: Publish Retype powered website to FTP
 
 on:
   push:
@@ -6,29 +6,18 @@ on:
       - main
 
 jobs:
-  deploy:
-    name: Build & Deploy
+  publish:
+    name: Publish to FTP host
     runs-on: ubuntu-latest
-
     steps:
-      - name: 📥 Récupération du code source
-        uses: actions/checkout@v4
-
-      - name: ⚙️ Configuration de Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      
+      - uses: retypeapp/action-build@latest
+      
+      - uses: retypeapp/action-git-ftp@latest
         with:
-          node-version: '20'
-
-      - name: 🔨 Installation et Construction (Retype)
-        run: |
-          npm install -g retypeapp
-          retype build
-
-      - name: 🚀 Envoi des fichiers via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./.retype/
-          server-dir: ./
+          ftp-host: ${{ secrets.FTP_SERVER }}
+          ftp-root: ./ # Remplace par public_html si l'admin te le demande plus tard
+          ftp-user: ${{ secrets.FTP_USERNAME }}
+          ftp-pass: ${{ secrets.FTP_PASSWORD }}
+          update-branch: true
