@@ -1,0 +1,32 @@
+name: Deploy to Emcloud
+
+on:
+  push:
+    branches:
+      - main # Le robot s'active à chaque fois que tu envoies sur main
+
+jobs:
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Récupération du code source
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configuration de l'environnement
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 🔨 Construction du site (Retype)
+        run: npx retypeapp build
+
+      - name: 🚀 Envoi des fichiers via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: .retype/
+          server-dir: ./
