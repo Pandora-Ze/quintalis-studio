@@ -3,7 +3,7 @@ name: Deploy to Emcloud
 on:
   push:
     branches:
-      - main # Le robot s'active à chaque fois que tu envoies sur main
+      - main
 
 jobs:
   deploy:
@@ -14,13 +14,8 @@ jobs:
       - name: 📥 Récupération du code source
         uses: actions/checkout@v4
 
-      - name: ⚙️ Configuration de l'environnement
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: 🔨 Construction du site (Retype)
-        run: npx retypeapp build
+      - name: 🔨 Construction du site (Retype Officiel)
+        uses: retypeapp/action-build@latest
 
       - name: 🚀 Envoi des fichiers via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
