@@ -14,8 +14,15 @@ jobs:
       - name: 📥 Récupération du code source
         uses: actions/checkout@v4
 
-      - name: 🔨 Construction du site (Retype Officiel)
-        uses: retypeapp/action-build@latest
+      - name: ⚙️ Configuration de Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: 🔨 Construction du site (Méthode manuelle)
+        run: |
+          npm install retypeapp --global
+          retype build
 
       - name: 🚀 Envoi des fichiers via SFTP
         uses: appleboy/scp-action@master
@@ -24,6 +31,6 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 22
-          source: ".retype/*"
+          source: ".retype"
           target: "./" 
           strip_components: 1
