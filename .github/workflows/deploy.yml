@@ -16,8 +16,8 @@ jobs:
       
       - uses: retypeapp/action-git-ftp@latest
         with:
-          ftp-host: ${{ secrets.FTP_SERVER }}
-          ftp-root: ./ # Remplace par public_html si l'admin te le demande plus tard
+          ftp-host: sftp://${{ secrets.FTP_SERVER }}:22
+          ftp-root: ./
           ftp-user: ${{ secrets.FTP_USERNAME }}
           ftp-pass: ${{ secrets.FTP_PASSWORD }}
           update-branch: true
