@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: '20'
 
-      - name: 🔨 Construction du site (Méthode manuelle)
+      - name: 🔨 Construction du site (Retype)
         run: |
           npm install retypeapp --global
           retype build
@@ -31,6 +31,6 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 33964
-          source: ".retype"
+          source: ".retype/*"
           target: "./" 
           strip_components: 1
