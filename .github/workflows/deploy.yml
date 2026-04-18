@@ -24,7 +24,7 @@ jobs:
           npm install retypeapp --global
           retype build
 
-      - name: 🚀 Envoi des fichiers via SFTP
+- name: 🚀 Envoi des fichiers via SFTP
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.FTP_SERVER }}
@@ -32,5 +32,6 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 33964
           source: ".retype/*"
-          target: "./" 
+          target: "public_html/" # <--- On cible le bon dossier ici
           strip_components: 1
+          overwrite: true
