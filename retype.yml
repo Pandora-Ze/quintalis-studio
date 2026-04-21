@@ -1,17 +1,18 @@
+url: https://quintalis-studio.emcloudhost.fr/
+
 branding:
   title: Quintalis STUDIO
   label: Officiel
   logo: static/logo.png
   logoWidth: 40
-
-url: https://quintalis-studio.emcloudhost.fr/
-
-base: quintalis-studio
+  link: https://quintalis-studio.emcloudhost.fr/
 
 favicon: static/favicon.png
 
 color:
   brand: "#ff6b6b"
+
+edit: false
 
 nav:
   - text: Menu

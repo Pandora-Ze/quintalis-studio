@@ -9,17 +9,24 @@ echo.
 echo [+] Ajout des modifications...
 git add .
 
-:: Étape 2 : Commit avec un message automatique (date et heure)
-set current_date=%date% %time%
-echo [+] Validation des fichiers (Commit)...
-git commit -m "Mise a jour automatique du %current_date%"
+:: Étape 2 : Saisie du message de commit
+echo.
+set /p msg="Entrez le nom de la modif (ex: Maj Chapitre 1) : "
+
+:: Si tu appuies sur Entree sans rien ecrire, il met un message par defaut
+if "%msg%"=="" set msg="Mise a jour sans nom"
+
+echo.
+echo [+] Validation des fichiers...
+git commit -m "%msg%"
 
 :: Étape 3 : Envoi vers GitHub
-echo [+] Envoi vers GitHub (Push)...
+echo.
+echo [+] Envoi vers GitHub...
 git push origin main
 
 echo.
 echo ===========================================
-echo   TERMINE ! GitHub va deployer le site.
+echo   ENVOI REUSSI ! Le site se met a jour...
 echo ===========================================
 pause
