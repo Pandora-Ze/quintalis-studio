@@ -11,7 +11,7 @@ Voici les projets, les équipes et les outils que nous soutenons à 100 % et que
 
 ## ☁️ Emcloud - Notre Hébergeur Web
 
-!!! info Hébergement 100% Français
+!!! Hébergement 100% Français
 **Emcloud** est la plateforme cloud qui propulse et héberge le site officiel de Quintalis Studio.
 !!!
 
@@ -25,7 +25,7 @@ Si vous cherchez un hébergeur réactif, avec des serveurs en France et un suppo
 
 ## 🌸 Otakube - L'Application Ultime pour les Passionnés
 
-!!! success L'encyclopédie de vos œuvres préférées
+!!! L'encyclopédie de vos œuvres préférées
 **Otakube** est une application révolutionnaire qui répertorie l'intégralité des informations de vos animes préférés (et bientôt mangas !).
 !!!
 
@@ -35,14 +35,16 @@ L'application est actuellement dans une phase **Bêta très aboutie** sur iOS et
 
 Inscrivez-vous vite pour ne pas rater le lancement public !
 
-[Rejoindre la liste d'attente Otakube](https://otakube.com/waitlist){.button .button-primary}
+[Rejoindre la liste d'attente Otakube](https://www.otakube.com/waitlist){.button .button-primary}
 
 ---
 
 ## 🎮 Nakanoista - L'équipe de l'ombre
 
-!!! quote Travail d'équipe
+!!! Travail d'équipe
 Un grand merci à la team **Nakanoista** pour leur implication colossale sur nos projets de patchs.
 !!!
 
 Il est impossible de parler de nos avancées sur les Visual Novels (et notamment sur *The Quintessential Quintuplets*) sans remercier Nakanoista. Leur aide sur le patch a été inestimable. C'est grâce à des passionnés comme eux que de tels projets peuvent franchir la ligne d'arrivée et arriver sur vos écrans.
+
+[Visiter le site de Nakanoista (anglophone)](https://nakanoista.cc/){.button .button-primary}
