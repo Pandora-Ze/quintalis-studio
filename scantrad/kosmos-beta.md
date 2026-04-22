@@ -53,5 +53,5 @@ visibility: hidden
 > * **Plein écran :** Icône en haut à droite ou touche 'F'.
 
 <div style="width: 100%; height: 85vh; overflow: hidden; border: 2px solid #9b59b6; border-radius: 8px; background: #000; margin-top: 1rem;">
-  <iframe src="https://pandora-ze.github.io/quintalis-studio/static/lecteur.html?id=kosmos-beta&color=9b59b6" style="width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
+  <iframe src="https://quintalis-studio.emcloudhost.fr/static/lecteur.html?id=kosmos-beta&color=9b59b6" style="width: 100%; height: 100%; border: none;" allowfullscreen></iframe>
 </div>
