@@ -9,7 +9,7 @@ Voici les projets, les équipes et les outils que nous soutenons à 100 % et que
 
 ---
 
-## ☁️ Emcloud - Notre Hébergeur Web
+## Emcloud - Notre Hébergeur Web
 
 !!! Hébergement 100% Français
 **Emcloud** est la plateforme cloud qui propulse et héberge le site officiel de Quintalis Studio.
@@ -19,11 +19,11 @@ Mettre en place un site de A à Z demande une infrastructure solide. L'équipe d
 
 Si vous cherchez un hébergeur réactif, avec des serveurs en France et un support ultra à l'écoute pour vos propres projets (serveurs VPS, bots Discord, ou sites web), c'est la porte à laquelle il faut frapper.
 
-[Visiter le site d'Emcloud](https://emcloudhost.fr/){.button .button-primary}
+[Visiter le site d'Emcloud](https://emcloudhost.fr/){.button .button-primary target="blank"}
 
 ---
 
-## 🌸 Otakube - L'Application Ultime pour les Passionnés
+## Otakube - L'Application Ultime pour les Passionnés
 
 !!! L'encyclopédie de vos œuvres préférées
 **Otakube** est une application révolutionnaire qui répertorie l'intégralité des informations de vos animes préférés (et bientôt mangas !).
@@ -35,11 +35,11 @@ L'application est actuellement dans une phase **Bêta très aboutie** sur iOS et
 
 Inscrivez-vous vite pour ne pas rater le lancement public !
 
-[Rejoindre la liste d'attente Otakube](https://www.otakube.com/waitlist){.button .button-primary}
+[Rejoindre la liste d'attente Otakube](https://www.otakube.com/waitlist){.button .button-primary target="blank"}
 
 ---
 
-## 🎮 Nakanoista - L'équipe de l'ombre
+## Nakanoista - L'équipe de l'ombre
 
 !!! Travail d'équipe
 Un grand merci à la team **Nakanoista** pour leur implication colossale sur nos projets de patchs.
@@ -47,4 +47,4 @@ Un grand merci à la team **Nakanoista** pour leur implication colossale sur nos
 
 Il est impossible de parler de nos avancées sur les Visual Novels (et notamment sur *The Quintessential Quintuplets*) sans remercier Nakanoista. Leur aide sur le patch a été inestimable. C'est grâce à des passionnés comme eux que de tels projets peuvent franchir la ligne d'arrivée et arriver sur vos écrans.
 
-[Visiter le site de Nakanoista (anglophone)](https://nakanoista.cc/){.button .button-primary}
+[Visiter le site de Nakanoista (anglophone)](https://nakanoista.cc/){.button .button-primary target="blank"}
