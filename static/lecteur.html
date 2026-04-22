@@ -306,7 +306,7 @@
         errorDetail.innerText = msg;
         }
 
-        const jsonUrl = '/static/manga-data.json';
+        const jsonUrl = new URL('manga-data.json', window.location.href).href;
 
         fetch(jsonUrl)
         .then(res => {
