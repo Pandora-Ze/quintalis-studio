@@ -53,4 +53,4 @@ visibility: hidden
 > * **Plein écran :** Icône en haut à droite ou touche 'F'.
 
 <div style="width: 100%; height: 85vh; overflow: hidden; border: 2px solid #9b59b6; border-radius: 8px; background: #000; margin-top: 1rem;">
-<iframe src="/static/lecteur.html?id=kosmos-beta" width="100%" height="850px" style="border:none;" allowfullscreen></iframe>
+<iframe src="/static/lecteur.html?id=kosmos-beta" width="100%" height="80vh" style="border:none;" allowfullscreen></iframe>
