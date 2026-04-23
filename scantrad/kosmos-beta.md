@@ -50,7 +50,7 @@ visibility: hidden
 > [!TIP] **Commandes**
 > * **Avancer :** Clic droit (ou flèche droite).
 > * **Reculer :** Clic gauche (ou flèche gauche).
-> * **Plein écran :** Icône en haut à droite ou touche 'F'.
+> * **Plein écran :** Icône en haut à droite ou touche 'F'. L'UI disparaît au bout de quelques secondes sans bouger la souris.
 
 <div style="width: 100%; height: 85vh; overflow: hidden; border: 2px solid #9b59b6; border-radius: 8px; background: #000; margin-top: 1rem;">
-<iframe src="/static/lecteur.html?id=kosmos-beta" width="100%" height="80vh" style="border:none;" allowfullscreen></iframe>
+<iframe src="/static/lecteur.html?id=kosmos-beta&color=9b59b6" width="100%" height="590px" style="border:none;" allowfullscreen></iframe>
