@@ -1,6 +1,6 @@
 ---
 title: "Petals of Reincarnation"
-image: /static/affiche-petals.png
+image: https://pandora-ze.github.io/quintalis-studio/static/affiche-petals.png
 description: Retrouvez tous les épisodes du dernier OAV en date.
 visibility: hidden
 ---
@@ -13,7 +13,7 @@ visibility: hidden
 
 <div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; margin-bottom: 40px; margin-top: 10px;">
   
-  <img src="/static/affiche-petals.png" alt="Affiche Petals of Reincarnation" style="width: 240px; border-radius: 10px; box-shadow: 0 6px 12px rgba(0,0,0,0.3); flex-shrink: 0;">
+  <img src="https://pandora-ze.github.io/quintalis-studio/static/affiche-petals.png" alt="Affiche Petals of Reincarnation" style="width: 240px; border-radius: 10px; box-shadow: 0 6px 12px rgba(0,0,0,0.3); flex-shrink: 0;">
 
   <div style="flex: 1; min-width: 300px;">
     
