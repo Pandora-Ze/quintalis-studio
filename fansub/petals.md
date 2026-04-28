@@ -1,11 +1,11 @@
 ---
-title: "The Quintessential Quintuplets : Honeymoon"
-image: https://pandora-ze.github.io/quintalis-studio/static/affiche-gotoubun.png
+title: "Petals of Reincarnation"
+image: https://pandora-ze.github.io/quintalis-studio/static/affiche-petals.png
 description: Retrouvez tous les épisodes du dernier OAV en date.
 visibility: hidden
 ---
 
-# The Quintessential Quintuplets : Honeymoon
+# Petals of Reincarnation
 
 [!button text="Retour au catalogue" icon="arrow-left" variant="base"](visionnage.md)
 
@@ -13,8 +13,8 @@ visibility: hidden
 
 <div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; margin-bottom: 40px; margin-top: 10px;">
   
-  <img src="https://pandora-ze.github.io/quintalis-studio/static/affiche-gotoubun.png" alt="Affiche The Quintessential Quintuplets" style="width: 240px; border-radius: 10px; box-shadow: 0 6px 12px rgba(0,0,0,0.3); flex-shrink: 0;">
-  
+  <img src="https://pandora-ze.github.io/quintalis-studio/static/affiche-petals.png" alt="Affiche Petals of Reincarnation" style="width: 240px; border-radius: 10px; box-shadow: 0 6px 12px rgba(0,0,0,0.3); flex-shrink: 0;">
+
   <div style="flex: 1; min-width: 300px;">
     
     <h2 style="margin-top: 0; margin-bottom: 15px; font-size: 1.5rem; font-weight: 700;">Informations</h2>
