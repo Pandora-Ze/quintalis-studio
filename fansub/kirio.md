@@ -1,7 +1,7 @@
 ---
 title: "Kirio Fanclub"
 image: https://quintalis-studio.emcloudhost.fr/static/affiche-kirio.png
-description: Retrouvez tous les épisodes de cet animé mêlant fiction et histoire.
+description: Retrouvez tous les épisodes de la quête d'Aimi et Nami pour conquérrir Kirio.
 visibility: hidden
 ---
 
