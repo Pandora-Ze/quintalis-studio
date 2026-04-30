@@ -1,7 +1,7 @@
 ---
 title: "Petals of Reincarnation"
 image: https://quintalis-studio.emcloudhost.fr/static/affiche-petals.png
-description: Retrouvez tous les épisodes du dernier OAV en date.
+description: Retrouvez tous les épisodes de cet animé mêlant fiction et histoire.
 visibility: hidden
 ---
 
