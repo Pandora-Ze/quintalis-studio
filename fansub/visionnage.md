@@ -14,5 +14,3 @@ Choisissez une série ci-dessous pour accéder à tous ses épisodes.
 [!card vert](petals.md)
 [!card vert](kirio.md)
 :::
-
-![Test affiche](/static/affiche-kirio.png)
