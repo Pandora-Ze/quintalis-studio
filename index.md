@@ -44,7 +44,7 @@ C'est le moment de retrouver les quintuplées en version française.
 | **Kirio Fanclub** | Fansub | [!badge variant="info" text="En cours"] | 16% |
 | **Petals of Reincarnation** | Fansub | [!badge variant="info" text="En cours"] | 15% |
 | **Marika's Love Meter** | Fansub | [!badge variant="info" text="En cours"] | 12% |
-| **Projet Secret** | Scantrad | [!badge variant="warning" text="Teaser"] | 6% |
+| **Kosmos Beta** | Scantrad | [!badge variant="warning" text="Teaser"] | 6% |
 
 ---
 
