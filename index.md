@@ -39,10 +39,10 @@ C'est le moment de retrouver les quintuplées en version française.
 
 | Projet | Type | État | Progression |
 | :--- | :--- | :--- | :--- |
-| **Five Memories Spent With You** | Jeu Vidéo | [!badge variant="info" text="En cours"] | 80% |
+| **Five Memories Spent With You** | Jeu Vidéo | [!badge variant="info" text="En cours"] | 86% |
 | **TQQ : Honeymoon** | Fansub | [!badge variant="success" text="Terminé"] | 100% |
-| **Kirio Fanclub** | Fansub | [!badge variant="info" text="En cours"] | 16% |
-| **Petals of Reincarnation** | Fansub | [!badge variant="info" text="En cours"] | 15% |
+| **Kirio Fanclub** | Fansub | [!badge variant="info" text="En cours"] | 33% |
+| **Petals of Reincarnation** | Fansub | [!badge variant="info" text="En cours"] | 41% |
 | **Marika's Love Meter** | Fansub | [!badge variant="info" text="En cours"] | 12% |
 | **Kosmos Beta** | Scantrad | [!badge variant="warning" text="Teaser"] | 6% |
 
