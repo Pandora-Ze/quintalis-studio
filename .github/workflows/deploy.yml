@@ -24,7 +24,7 @@ jobs:
           npm install retypeapp --global
           retype build
 
-- name: 🚀 Copie des fichiers via SCP
+      - name: 🚀 Copie des fichiers via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.FTP_SERVER }}
