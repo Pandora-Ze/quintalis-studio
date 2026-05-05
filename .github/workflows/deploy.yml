@@ -32,6 +32,6 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 33964
           source: "./.retype/*"
-          target: "/public_html"
+          target: "public_html"
           strip_components: 1
           debug: true
