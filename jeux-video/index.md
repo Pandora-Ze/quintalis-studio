@@ -52,7 +52,7 @@ Retrouvez ici le détail des jeux de la licence.
 | Titre du Jeu | État | Progression |
 | :--- | :--- | :--- |
 | **Memories of a Quintessential Summer** | [!badge variant="warning" text="Phase d'analyse"] | -- |
-| **Five Memories Spent With You** | [!badge variant="info" text="En cours"] | 75% |
+| **Five Memories Spent With You** | [!badge variant="info" text="En cours"] | 93% |
 | **Five Promises Exchanged with Her** | [!badge variant="danger" text="En attente"] | -- |
 | **The Quintessential Princess** | [!badge variant="danger" text="En attente"] | -- |
 
