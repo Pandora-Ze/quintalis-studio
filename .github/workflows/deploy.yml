@@ -24,13 +24,13 @@ jobs:
           npm install retypeapp --global
           retype build
 
-      - name: 🚀 Envoi des fichiers via SFTP pur
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+      - name: 🚀 Copie des fichiers via SCP (non destructif)
+        uses: appleboy/scp-action@v0.1.7
         with:
-          server: ${{ secrets.FTP_SERVER }}
+          host: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 33964
-          local_path: './.retype/*'
-          remote_path: '/public_html'
-          sftp_only: true
+          source: "./.retype/*"
+          target: "/public_html"
+          strip_components: 1

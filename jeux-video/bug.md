@@ -16,7 +16,38 @@ Malgré tous nos tests, il est possible que des coquilles ou des bugs se glissen
 
 Voici la liste des problèmes actuellement étudiés par l'équipe sur la version actuelle du patch :
 
-[!badge variant="success" text="Aucun problème de connu pour le moment"]
+<div style="text-align: center;">
+
+[!badge variant="success" text="Résolu et en attente d'implémentation"]
+
+</div>
+
+- Aucun problème de résolu pour le moment
+
+<div style="text-align: center;">
+
+[!badge variant="warning" text="En cours"]
+
+</div>
+
+- Route des Quintuplées en cours de traduction. Sortie prévue pour la v1.1
+
+<div style="text-align: center;">
+
+[!badge variant="question" text="Repérés"]
+
+</div>
+
+- Sous-titres des vidéos touristiques illisibles
+- Allignements des textes en jeu
+
+<div style="text-align: center;">
+
+[!badge variant="danger" text="Signalés"]
+
+</div>
+
+- Aucun problème de signalé pour le moment
 ===
 
 ---

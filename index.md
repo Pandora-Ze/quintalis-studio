@@ -15,7 +15,7 @@ layout: central
 ### À la une
 
 :::success [Nouveauté] Patch Gotokisu (v1.0.0)
-La traduction française intégrale du jeu The Quintessential Quintuplets : Five Memories Spent With You est enfin disponible ! 
+La traduction française (quasi) intégrale du jeu The Quintessential Quintuplets : Five Memories Spent With You est enfin disponible ! 
 C'est le moment de retrouver les quintuplées en version française.
 
 [!button variant="danger" text="Accéder aux téléchargements" icon="download"](jeux-video/téléchargements)
@@ -39,7 +39,7 @@ C'est le moment de retrouver les quintuplées en version française.
 
 | Projet | Type | État | Progression |
 | :--- | :--- | :--- | :--- |
-| **Five Memories Spent With You** | Jeu Vidéo | [!badge variant="info" text="En cours"] | 86% |
+| **Five Memories Spent With You** | Jeu Vidéo | [!badge variant="info" text="En cours"] | 93% |
 | **TQQ : Honeymoon** | Fansub | [!badge variant="success" text="Terminé"] | 100% |
 | **Kirio Fanclub** | Fansub | [!badge variant="info" text="En cours"] | 33% |
 | **Petals of Reincarnation** | Fansub | [!badge variant="info" text="En cours"] | 41% |
