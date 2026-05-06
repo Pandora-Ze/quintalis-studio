@@ -48,6 +48,7 @@ Voici la liste des problèmes actuellement étudiés par l'équipe sur la versio
 </div>
 
 - Aucun problème de signalé pour le moment
+
 ===
 
 ---

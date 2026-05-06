@@ -1,0 +1,46 @@
+===================================================================
+                       PATCH NOTE VN FMSWY
+===================================================================
+
+Version 0.1 :
+
+- Traduction complète de tous les menus du jeu
+- Traduction quasi complète du tutoriel
+
+
+Version 1.0 :
+
+
+- Nouveautés :
+
+	- Traduction scenario : 
+
+		- Traduction complète de la route d'Ichika
+
+	       	- Traduction complète de la route de Nino
+
+	       	- Traduction complète de la route de Miku
+
+	     	- Traduction complète de la route de Yotsuba
+
+	    	- Traduction complète de la route d'Itsuki
+
+	- Traduction images : 
+
+		- Traduction complète du tutoriel
+
+		- Traduction compète des "Du côté de..."
+
+
+- Améliorations : 
+
+	- Amélioration du tutoriel (ajout background personnalisé)
+
+	- Refonte texte "Options"
+
+	- Refonte texte "Sélection personnages"
+
+
+
+
+

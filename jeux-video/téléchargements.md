@@ -19,8 +19,12 @@ Attention : les patch sont disponible uniquement pour une version PC du jeu. Une
 [!button text="Télécharger le patch (local)" icon="custom-jeu" variant="info" color="#8b5cf6" size="l"](https://quintalis-studio.emcloudhost.fr/patchs_manuels/Patch_VF_v1.0.zip) [!badge variant="question" text="v1.0"]
 
 [!button target="blank" text="Téléchargement alternatif via MEGA" icon="custom-mega" variant="info" color="#8b5cf6" size="l"](https://mega.nz/file/BX9zxDAb#cg-_jd--ZDQVrAzjARXJa_jBEoJ7tNsMgpGUys0GUIs) [!badge variant="question" text="v1.0"]
+
 :::
 Assurez vous d'avoir toujours la dernière version en date afin de profiter d'une expérience de jeu optimale.
+
+<a href="/patchs/patch-note.txt" download="patch-note.txt">Consulter le patch note pour ce jeu</a>
+
 +++ Five Promises Exchanged with Her
 ![](static/soon.png)
 +++ The Quintessential Princess
