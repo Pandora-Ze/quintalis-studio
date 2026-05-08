@@ -63,7 +63,7 @@ Si le jeu se ferme tout seul lors d'une ligne de dialogue spécifique, c'est pro
 
 ==- Le jeu indique des fichiers .dll manquants
 Cette erreur est souvent présente quand vous installez une version crackée du jeu. En effet, Steam télécharge automatiquement les librairies pour que le jeu fonctionne correctement. 
-Si cette erreur vous arrive, rendez-vous sur la <a href="https://www.microsoft.com/en-us/download/details.aspx?id=35" target="_blank" rel="noopener noreferrer" style="color: #5297f0; text-decoration: underline;">page officielle de Microsoft</a> pour télécharger les librairies requises au bon fonctionnement du jeu.
+Si cette erreur vous arrive, rendez-vous sur la <a href="https://www.microsoft.com/fr-fr/download/details.aspx?id=35" target="_blank" rel="noopener noreferrer" style="color: #5297f0; text-decoration: underline;">page officielle de Microsoft</a> pour télécharger les librairies requises au bon fonctionnement du jeu.
 ===
 
 ---
