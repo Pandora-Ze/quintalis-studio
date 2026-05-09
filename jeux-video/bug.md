@@ -31,6 +31,7 @@ Voici la liste des problèmes actuellement étudiés par l'équipe sur la versio
 </div>
 
 - Route des Quintuplées en cours de traduction. Sortie prévue pour la v1.2
+- Au niveau des choix, le texte est resté en anglais (même si la phrase d'origine est bien en français)
 
 <div style="text-align: center;">
 

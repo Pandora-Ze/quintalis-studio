@@ -17,13 +17,13 @@ Version 1.0 :
 
 		- Traduction complète de la route d'Ichika
 
-	       	- Traduction complète de la route de Nino
+	  	- Traduction complète de la route de Nino
 
-	       	- Traduction complète de la route de Miku
+	   	- Traduction complète de la route de Miku
 
-	     	- Traduction complète de la route de Yotsuba
+	  	- Traduction complète de la route de Yotsuba
 
-	    	- Traduction complète de la route d'Itsuki
+	   	- Traduction complète de la route d'Itsuki
 
 	- Traduction images : 
 
@@ -43,7 +43,7 @@ Version 1.0 :
 
 
 
-Version 1.0 :
+Version 1.1 :
 
 - Améliorations : 
 	
@@ -55,4 +55,16 @@ Version 1.0 :
 
 - Corrections :
 
-	- Correction sous-titres vidéo touristique d'Okinawa (via un éditeur de sous-titres) Kokusai dori 
+	- Correction sous-titres vidéo touristique d'Okinawa (via un éditeur de sous-titres) Kokusai dori
+	
+	- Crash sur la voie d'Itsuki, à la sortie de l'aéroport (je pense que les joueurs n'ont pas été affectés par ce crash)
+
+
+
+Version 2.2 : 
+
+- Nouveautés : 
+	
+	- Traduction scenario : 
+		
+		- Traduction complète de la Voie des Quintuplées
