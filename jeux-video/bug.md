@@ -30,7 +30,7 @@ Voici la liste des problèmes actuellement étudiés par l'équipe sur la versio
 
 </div>
 
-- Route des Quintuplées en cours de traduction. Sortie prévue pour la v1.1
+- Route des Quintuplées en cours de traduction. Sortie prévue pour la v1.2
 
 <div style="text-align: center;">
 

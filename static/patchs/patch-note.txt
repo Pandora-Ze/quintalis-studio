@@ -43,4 +43,16 @@ Version 1.0 :
 
 
 
+Version 1.0 :
 
+- Améliorations : 
+	
+	- Menu des commandes en jeu : allignement de "Quick Load"
+
+	- Correction tableau valeurs (ajout des accents circonflexes de "Points Fûtarô")
+
+	- MAJ allignements dialogues (passage de 750 à 755 pour les deux lignes).
+
+- Corrections :
+
+	- Correction sous-titres vidéo touristique d'Okinawa (via un éditeur de sous-titres) Kokusai dori 
