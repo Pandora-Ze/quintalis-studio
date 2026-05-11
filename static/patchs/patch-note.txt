@@ -68,3 +68,11 @@ Version 2.2 :
 	- Traduction scenario : 
 		
 		- Traduction complète de la Voie des Quintuplées
+
+- Corrections : 
+
+	- Correction sous-titres vidéos touristiques d'Okinawa (via un éditeur de sous-titres)
+
+	- Correction des choix qui s'affichaient en anglais (problème au niveau de remplacement dans le .json)
+
+	- Correction des guillemets apparaissant dans la voie d'Ichika

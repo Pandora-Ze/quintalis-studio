@@ -22,7 +22,7 @@ Voici la liste des problèmes actuellement étudiés par l'équipe sur la versio
 
 </div>
 
-- Aucun problème de résolu pour le moment
+- Correction des guillemets apparaissants dans la voie d'Ichika
 
 <div style="text-align: center;">
 
@@ -33,7 +33,6 @@ Voici la liste des problèmes actuellement étudiés par l'équipe sur la versio
 - Route des Quintuplées en cours de traduction. Sortie prévue pour la v1.2
 - Au niveau des choix, le texte est resté en anglais (même si la phrase d'origine est bien en français)
 - Sous-titres des vidéos touristiques illisibles
-- Allignements des textes en jeu
 
 <div style="text-align: center;">
 
@@ -42,7 +41,7 @@ Voici la liste des problèmes actuellement étudiés par l'équipe sur la versio
 
 </div>
 
-Aucun problème signalé et non-traité
+- Allignements des textes en jeu
 
 ===
 
