@@ -69,10 +69,20 @@ Version 2.2 :
 		
 		- Traduction complète de la Voie des Quintuplées
 
+- Améliorations
+
+	- Modifications du script du jeu pour enlever certains textes du système de sauvegarde (No et Jour)
+
 - Corrections : 
 
 	- Correction sous-titres vidéos touristiques d'Okinawa (via un éditeur de sous-titres)
 
 	- Correction des choix qui s'affichaient en anglais (problème au niveau de remplacement dans le .json)
 
-	- Correction des guillemets apparaissant dans la voie d'Ichika
+	- Correction du dialogue d'introduction ou les retours à la ligne d'Itsuki étaient trop tôt (gr_01_02)
+
+	- Corrections de la voie d'Ichika
+	
+		- Guillemets apparaissant dans la voie d'Ichika supprimés
+
+		- Déclaration corrigée, où un "I" est resté au lieu d'un "Je"

@@ -23,6 +23,7 @@ Voici la liste des problèmes actuellement étudiés par l'équipe sur la versio
 </div>
 
 - Correction des guillemets apparaissants dans la voie d'Ichika
+- Lettre manquante lors d'une phrase de Nino au niveau de la remise des diplômes
 
 <div style="text-align: center;">
 
