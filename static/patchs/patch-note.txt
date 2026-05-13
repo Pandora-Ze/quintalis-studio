@@ -81,6 +81,8 @@ Version 2.2 :
 
 	- Correction du dialogue d'introduction ou les retours à la ligne d'Itsuki étaient trop tôt (gr_01_02)
 
+	- Correction de la phrase de Nino, où il manquait la première lettre de la phrase (gr_04_01)
+
 	- Corrections de la voie d'Ichika
 	
 		- Guillemets apparaissant dans la voie d'Ichika supprimés
