@@ -1,6 +1,18 @@
 ---
 icon: heart
 ---
+
+<style>
+  @media (max-width: 768px) {
+    /* Verrouillage strict de la largeur de la page pour stopper le glissement */
+    html, body {
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+      width: 100vw !important;
+    }
+  }
+</style>
+
 # Remerciements & Partenaires
 
 Si **Quintalis STUDIO** peut aujourd'hui vous proposer du contenu de qualité dans des conditions optimales, c'est aussi grâce au soutien technique et communautaire de nos partenaires. 

@@ -3,6 +3,18 @@ label: Scantrad
 icon: book
 order: 70
 ---
+
+<style>
+  @media (max-width: 768px) {
+    /* Verrouillage strict de la largeur de la page pour stopper le glissement */
+    html, body {
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+      width: 100vw !important;
+    }
+  }
+</style>
+
 # Présentation du Scantrad
 
 Bienvenue dans la section dédiée à nos projets de traduction de mangas. Chez Quintalis STUDIO, l'objectif est de vous proposer des chapitres en français avec le plus grand soin, en mettant l'accent sur la qualité du texte et de l'image.

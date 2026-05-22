@@ -5,6 +5,18 @@ image: https://pandora-ze.github.io/quintalis-studio/static/cover-kosmos-beta.pn
 description: "Découvrez la version française de Kosmos Beta, l'histoire alternative culte centrée sur Nino Nakano. Une traduction signée Quintalis STUDIO."
 visibility: hidden
 ---
+
+<style>
+  @media (max-width: 768px) {
+    /* Verrouillage strict de la largeur de la page pour stopper le glissement */
+    html, body {
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+      width: 100vw !important;
+    }
+  }
+</style>
+
 # Kosmos Beta (Nino Route)
 
 [!button text="Retour au catalogue" icon="arrow-left" variant="base"](lecture.md)

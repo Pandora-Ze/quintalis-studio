@@ -5,6 +5,17 @@ description: Retrouvez tous les épisodes de cet animé mêlant fiction et histo
 visibility: hidden
 ---
 
+<style>
+  @media (max-width: 768px) {
+    /* Verrouillage strict de la largeur de la page pour stopper le glissement */
+    html, body {
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+      width: 100vw !important;
+    }
+  }
+</style>
+
 # Petals of Reincarnation
 
 [!button text="Retour au catalogue" icon="arrow-left" variant="base"](visionnage.md)

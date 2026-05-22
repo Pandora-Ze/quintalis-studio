@@ -4,6 +4,17 @@ icon: alert
 order: 70
 ---
 
+<style>
+  @media (max-width: 768px) {
+    /* Verrouillage strict de la largeur de la page pour stopper le glissement */
+    html, body {
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+      width: 100vw !important;
+    }
+  }
+</style>
+
 # Problèmes détectés et Solutions
 
 Malgré tous nos tests, il est possible que des coquilles ou des bugs se glissent dans nos patchs. Retrouvez ici la liste des problèmes connus et les solutions fréquentes.
