@@ -58,7 +58,7 @@ Attention : les patch sont disponible uniquement pour une version PC du jeu. Une
 
 Assurez vous d'avoir toujours la dernière version en date afin de profiter d'une expérience de jeu optimale.
 
-[Consulter le patch note pour ce jeu](/static/patchs/patch-note.txt)
+[Consulter le patch note pour ce jeu](static/patchs/patch-note.txt){download="patch-note.txt"}
 +++ Five Promises Exchanged with Her
 ![](static/soon.png)
 +++ The Quintessential Princess
