@@ -6,31 +6,40 @@ order: 100
 
 <style>
   @media (max-width: 768px) {
-    /* 1. On empêche absolument TOUT le site de dépasser la largeur de l'écran */
+    /* 1. On verrouille la largeur du site pour éviter le décalage */
     html, body {
+      max-width: 100vw !important;
       overflow-x: hidden !important;
-      width: 100vw !important;
-      position: relative;
     }
 
-    /* 2. On contraint spécifiquement les éléments qui pourraient "pousser" les murs */
-    .retype-tabs, .mobile-table-fix {
-      width: 100vw !important;
+    /* 2. On rend TOUS les tableaux scrollables automatiquement */
+    table {
+      display: block !important;
+      width: 100% !important;
       max-width: 100vw !important;
       overflow-x: auto !important;
-      display: block !important;
+      white-space: nowrap !important;
       -webkit-overflow-scrolling: touch;
     }
 
-    /* 3. On libère le contenu interne des onglets pour qu'ils ne forcent pas la largeur */
-    .retype-tab-pane {
-      width: 100vw !important;
-      white-space: normal !important;
-      box-sizing: border-box !important;
-      padding-right: 15px !important;
+    /* 3. On transforme les titres des onglets en menu scrollable */
+    [role="tablist"] {
+      display: flex !important;
+      flex-wrap: nowrap !important; /* Interdit de passer à la ligne */
+      overflow-x: auto !important;   /* Active le scroll horizontal */
+      -webkit-overflow-scrolling: touch;
+      max-width: 100vw !important;
+      padding-bottom: 5px; /* Petit espace pour laisser respirer la barre de scroll */
+    }
+    
+    /* On empêche les boutons des onglets de s'écraser */
+    [role="tablist"] > * {
+      flex-shrink: 0 !important;
+      white-space: nowrap !important;
     }
   }
 </style>
+
 # Les jeux vidéo The Quintessential Quintuplets
 
 Retrouvez ici le détail des jeux de la licence.
@@ -76,11 +85,13 @@ Retrouvez ici le détail des jeux de la licence.
 
 ### État d'avancement global des patchs
 
-::: div {.mobile-table-fix}
 | Titre du Jeu | État | Progression |
 | :--- | :--- | :--- |
 | **Memories of a Quintessential Summer** | [!badge variant="warning" text="Phase d'analyse"] | -- |
 | **Five Memories Spent With You** | [!badge variant="info" text="En cours"] | 93% |
 | **Five Promises Exchanged with Her** | [!badge variant="danger" text="En attente"] | -- |
 | **The Quintessential Princess** | [!badge variant="danger" text="En attente"] | -- |
+
+::: center
+[!button text="Accéder aux téléchargements" icon="download" variant="question"](téléchargements.md)
 :::
