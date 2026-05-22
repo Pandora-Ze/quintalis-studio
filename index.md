@@ -28,7 +28,7 @@ layout: page
   }
 </style>
 
-# Quintalis STUDIO {.text-center .mt-12}
+# Quintalis <span class="block md:inline">STUDIO</span> {.text-center .mt-8}
 
 ::: center
 **Le portail officiel du groupe indépendant dédié à la traduction et au fansub.**
