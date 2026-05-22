@@ -37,7 +37,7 @@ C'est le moment de retrouver les quintuplées en version française.
 
 ### Projets en cours
 
-::: div {.overflow-x-auto}
+::: div {style="display: block; width: 100%; overflow-x: auto !important; -webkit-overflow-scrolling: touch;"}
 | Projet | Type | État | Progression |
 | :--- | :--- | :--- | :--- |
 | **Five Memories Spent With You** | Jeu Vidéo | [!badge variant="info" text="En cours"] | 93% |
