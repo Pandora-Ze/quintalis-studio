@@ -2,7 +2,6 @@
 label: Jeux Vidéo
 icon: custom-gamepad
 order: 100
-layout: page
 ---
 
 <style>
