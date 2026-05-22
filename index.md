@@ -1,12 +1,11 @@
 ---
 label: Accueil
 icon: home
-layout: page
+layout: center
 ---
 
 <style>
   @media (max-width: 768px) {
-    /* On utilise 100% au lieu de 100vw pour éviter les bugs de barre de défilement, et on retire le position: relative */
     html, body {
       max-width: 100% !important;
       overflow-x: hidden !important;
@@ -25,10 +24,15 @@ layout: page
       white-space: nowrap !important;
       -webkit-overflow-scrolling: touch;
     }
+
+    /* Le saut de ligne forcé uniquement sur mobile */
+    .mobile-studio {
+      display: block !important;
+    }
   }
 </style>
 
-# Quintalis <span class="block md:inline">STUDIO</span> {.text-center .mt-8}
+# Quintalis <span class="mobile-studio">STUDIO</span> {.text-center .mt-8}
 
 ::: center
 **Le portail officiel du groupe indépendant dédié à la traduction et au fansub.**
