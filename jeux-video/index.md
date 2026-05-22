@@ -1,29 +1,18 @@
 ---
-label: Jeux Vidéo
-icon: custom-gamepad
-order: 100
+label: Téléchargements
+icon: download
+order: 200
 ---
 
 <style>
   @media (max-width: 768px) {
-    /* 1. Sécurité absolue pour empêcher le site de tanguer */
+    /* Sécurité absolue pour empêcher le site de tanguer */
     html, body {
       max-width: 100vw !important;
       overflow-x: hidden !important;
     }
 
-    /* 2. Le tableau redevient naturellement scrollable */
-    table {
-      display: block !important;
-      width: 100% !important;
-      max-width: 100vw !important;
-      overflow-x: auto !important;
-      white-space: nowrap !important;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* 3. Ciblage structurel de la barre d'onglets Retype */
-    /* On vise le tout premier sous-élément qui contient les boutons */
+    /* Ciblage structurel de la barre d'onglets Retype */
     .mobile-tabs-fix > div > div:first-child,
     .mobile-tabs-fix > retype-tabs > div:first-child,
     .mobile-tabs-fix [role="tablist"] {
@@ -47,63 +36,51 @@ order: 100
   }
 </style>
 
-# Les jeux vidéo The Quintessential Quintuplets
+# Téléchargements des Patchs
 
-Retrouvez ici le détail des jeux de la licence.
+Retrouvez ici les liens officiels pour nos traductions. Tous nos patchs sont testés avant publication et garantis sans virus.
+
+Attention : les patch sont disponible uniquement pour une version PC du jeu. Une version Switch/PS4 pourrait être envisagée, mais cela se fera si la demande vient avec, étant donné la différence globale de la façon dont sont organisés les fichiers type "DLC".
 
 ---
 
-### Choisir un jeu
-
 ::: div {.mobile-tabs-fix}
 +++ Memories of a Quintessential Summer
-#### Memories of a Quintessential Summer
-![Affiche du jeu (version anglaise)](static/summer-banner.png)
-
-* **Genre :** Visual Novel & Gestion d'emploi du temps
-* **Histoire :** Invité sur l'île privée des Nakano avec sa petite sœur Raiha, Fûtarô se retrouve bloqué pour deux semaines à cause d'une tempête. Il doit alors gérer les rations et le quotidien tout en forçant les quintuplées à réviser coûte que coûte pour leurs examens !
-* **Particularité :** Un gameplay de survie "légère" où le joueur planifie l'emploi du temps des filles (cuisine, recherche de ressources, repos) sans jamais sacrifier le niveau de leurs études.
-
+![](static/soon.png)
 +++ Five Memories Spent With You
-#### Five Memories Spent With You
-![Affiche du jeu (version anglaise)](static/memories-banner.png)
+:::grid {cols=2 gap=4}
+[!button text="Télécharger le patch (local)" icon="custom-jeu" variant="info" color="#8b5cf6" size="l"](https://quintalis-studio.emcloudhost.fr/patchs_manuels/Patch_VF_v1.1.zip) [!badge variant="question" text="v1.1"]
 
-* **Genre :** Visual Novel & Romance (Routes multiples)
-* **Histoire :** Six mois après avoir déclaré sa flamme à la sœur de votre choix lors du festival du lycée, Fûtarô organise un grand voyage de fin d'études à Okinawa. Son objectif secret ? Trouver le moment parfait pour embrasser sa petite amie afin de solidifier leur couple avant de vivre une relation à distance à l'université.
-* **Particularité :** Dès le début du jeu, c'est vous qui choisissez à quelle sœur Fûtarô s'est confessé. Le jeu se concentre sur des scénarios 100% romantiques (avec de vrais rendez-vous) et débouche sur le mariage.
+[!button target="blank" text="Téléchargement alternatif via MEGA" icon="custom-mega" variant="info" color="#8b5cf6" size="l"](https://mega.nz/file/pPVhCT4b#3XovVIYXdghuBCO4xWncRpYSwDwmv9mbyLJAnczYCZU) [!badge variant="question" text="v1.1"]
+
+:::
+Assurez vous d'avoir toujours la dernière version en date afin de profiter d'une expérience de jeu optimale.
+
+<a href="\static\patchs\patch-note.txt" download="patch-note.txt">Consulter le patch note pour ce jeu</a>
 
 +++ Five Promises Exchanged with Her
-#### Five Promises Exchanged with Her
-![Affiche du jeu (version japonaise)](static/promises-banner.png)
-
-* **Genre :** Visual Novel & Rencontres (Dating Sim)
-* **Histoire :** Fûtarô est désormais étudiant en première année d'université à Tokyo, menant une vie très occupée. Pour combler la distance avec sa petite amie, cette dernière vient passer les vacances d'été avec lui dans la capitale. C'est l'occasion de multiplier les rendez-vous en ville et de tenir les promesses échangées.
-* **Particularité :** Le jeu se base sur un système de "dates" interactifs. Les lieux de rendez-vous dépendent des goûts de la sœur choisie, et vos choix de dialogues détermineront la réussite de la demande en mariage à la fin de l'université.
-
+![](static/soon.png)
 +++ The Quintessential Princess
-#### The Quintessential Princess : Fantasy, the Abyss, and the Magic Academy
-![Affiche du jeu (version japonaise)](static/princess-banner.png)
-
-* **Genre :** Dungeon RPG (Jeu de Rôle)
-* **Histoire :** Dans un royaume alternatif mêlant magie et science, Fûtarô est un étudiant pauvre de l'Académie de Magie qui accepte un poste de tuteur très bien payé. Ses élèves ? Cinq jeunes nobles réputées pour leur beauté, mais "nulles en magie" et sur le point de redoubler ! En les aidant, il va découvrir leur grand secret.
-* **Particularité :** Un véritable RPG avec plus de 100 quêtes ! Le joueur plonge dans des donjons et doit personnaliser l'équipement, les baguettes et les compétences magiques des sœurs pour venir à bout des monstres.
+![](static/soon.png)
 +++
 :::
 
 ---
 
-### État d'avancement global des patchs
+## Projets à venir
 
-| Titre du Jeu | État | Progression |
-| :--- | :--- | :--- |
-| **Memories of a Quintessential Summer** | [!badge variant="warning" text="Phase d'analyse"] | -- |
-| **Five Memories Spent With You** | [!badge variant="info" text="En cours"] | 93% |
-| **Five Promises Exchanged with Her** | [!badge variant="danger" text="En attente"] | -- |
-| **The Quintessential Princess** | [!badge variant="danger" text="En attente"] | -- |
-
-::: center
-[!button text="Accéder aux téléchargements" icon="download" variant="question"](téléchargements.md)
+:::list
+- **Memories of a Quintessential Summer** : [!badge variant="warning" text="Phase d'analyse"]
+- **Five Promises Exchanged with Her** : [!badge variant="danger" text="En attente"]
+- **The Quintessential Princess** : [!badge variant="danger" text="En attente"]
 :::
+
+---
+
+### Sécurité et Support
+Tous nos fichiers sont scannés et vérifiés afin de garantir qu'aucun virus ne s'est glissé dedans. Si vous rencontrez un problème lors de l'extraction ou un bug en jeu, merci de nous le signaler sur notre [Serveur Discord](https://discord.gg/w4qK3RvCeg){target="blank"}.
+
+En utilisant ce patch, vous garantissez que vous utilisez une version légale du jeu.
 
 <script>
   /* Script d'urgence : Si le CSS échoue, le navigateur forcera manuellement les onglets */
@@ -111,25 +88,20 @@ Retrouvez ici le détail des jeux de la licence.
     if (window.innerWidth <= 768) {
       const container = document.querySelector('.mobile-tabs-fix');
       if (container) {
-        // On scanne tous les sous-éléments du bloc d'onglets
         const elements = container.querySelectorAll('*');
         for (let el of elements) {
           const style = window.getComputedStyle(el);
-          // La barre d'onglets est l'unique conteneur flex aligné en "row"
           if ((style.display === 'flex' || style.display === 'inline-flex') && style.flexDirection === 'row') {
-            
-            // On injecte les règles de force brute
             el.style.setProperty('flex-wrap', 'nowrap', 'important');
             el.style.setProperty('overflow-x', 'auto', 'important');
             el.style.setProperty('max-width', '100vw', 'important');
             el.style.setProperty('padding-bottom', '12px', 'important');
             
-            // On empêche les textes des boutons de retourner à la ligne
             Array.from(el.children).forEach(btn => {
               btn.style.setProperty('flex-shrink', '0', 'important');
               btn.style.setProperty('white-space', 'nowrap', 'important');
             });
-            break; // Mission accomplie, on arrête de chercher
+            break;
           }
         }
       }

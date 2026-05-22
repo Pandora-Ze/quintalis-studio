@@ -4,6 +4,38 @@ icon: download
 order: 200
 ---
 
+<style>
+  @media (max-width: 768px) {
+    /* Sécurité absolue pour empêcher le site de tanguer */
+    html, body {
+      max-width: 100vw !important;
+      overflow-x: hidden !important;
+    }
+
+    /* Ciblage structurel de la barre d'onglets Retype */
+    .mobile-tabs-fix > div > div:first-child,
+    .mobile-tabs-fix > retype-tabs > div:first-child,
+    .mobile-tabs-fix [role="tablist"] {
+      display: flex !important;
+      flex-direction: row !important;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      max-width: 100vw !important;
+      -webkit-overflow-scrolling: touch !important;
+      padding-bottom: 10px !important;
+    }
+
+    /* On protège les titres des onglets pour ne pas qu'ils s'écrasent */
+    .mobile-tabs-fix > div > div:first-child > *,
+    .mobile-tabs-fix > retype-tabs > div:first-child > *,
+    .mobile-tabs-fix [role="tablist"] > * {
+      flex-shrink: 0 !important;
+      white-space: nowrap !important;
+      display: inline-block !important;
+    }
+  }
+</style>
+
 # Téléchargements des Patchs
 
 Retrouvez ici les liens officiels pour nos traductions. Tous nos patchs sont testés avant publication et garantis sans virus.
@@ -12,6 +44,7 @@ Attention : les patch sont disponible uniquement pour une version PC du jeu. Une
 
 ---
 
+::: div {.mobile-tabs-fix}
 +++ Memories of a Quintessential Summer
 ![](static/soon.png)
 +++ Five Memories Spent With You
@@ -30,6 +63,7 @@ Assurez vous d'avoir toujours la dernière version en date afin de profiter d'un
 +++ The Quintessential Princess
 ![](static/soon.png)
 +++
+:::
 
 ---
 
@@ -47,3 +81,30 @@ Assurez vous d'avoir toujours la dernière version en date afin de profiter d'un
 Tous nos fichiers sont scannés et vérifiés afin de garantir qu'aucun virus ne s'est glissé dedans. Si vous rencontrez un problème lors de l'extraction ou un bug en jeu, merci de nous le signaler sur notre [Serveur Discord](https://discord.gg/w4qK3RvCeg){target="blank"}.
 
 En utilisant ce patch, vous garantissez que vous utilisez une version légale du jeu.
+
+<script>
+  /* Script d'urgence : Si le CSS échoue, le navigateur forcera manuellement les onglets */
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.innerWidth <= 768) {
+      const container = document.querySelector('.mobile-tabs-fix');
+      if (container) {
+        const elements = container.querySelectorAll('*');
+        for (let el of elements) {
+          const style = window.getComputedStyle(el);
+          if ((style.display === 'flex' || style.display === 'inline-flex') && style.flexDirection === 'row') {
+            el.style.setProperty('flex-wrap', 'nowrap', 'important');
+            el.style.setProperty('overflow-x', 'auto', 'important');
+            el.style.setProperty('max-width', '100vw', 'important');
+            el.style.setProperty('padding-bottom', '12px', 'important');
+            
+            Array.from(el.children).forEach(btn => {
+              btn.style.setProperty('flex-shrink', '0', 'important');
+              btn.style.setProperty('white-space', 'nowrap', 'important');
+            });
+            break;
+          }
+        }
+      }
+    }
+  });
+</script>
