@@ -37,7 +37,8 @@ C'est le moment de retrouver les quintuplées en version française.
 
 ### Projets en cours
 
-<div style="overflow-x: auto; white-space: nowrap;">
+```html   
+<div class="overflow-x-auto">
 
 | Projet | Type | État | Progression |
 | :--- | :--- | :--- | :--- |
