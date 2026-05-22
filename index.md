@@ -37,6 +37,8 @@ C'est le moment de retrouver les quintuplées en version française.
 
 ### Projets en cours
 
+<div style="overflow-x: auto; white-space: nowrap;">
+
 | Projet | Type | État | Progression |
 | :--- | :--- | :--- | :--- |
 | **Five Memories Spent With You** | Jeu Vidéo | [!badge variant="info" text="En cours"] | 93% |
@@ -45,6 +47,8 @@ C'est le moment de retrouver les quintuplées en version française.
 | **Petals of Reincarnation** | Fansub | [!badge variant="info" text="En cours"] | 41% |
 | **Marika's Love Meter** | Fansub | [!badge variant="info" text="En cours"] | 12% |
 | **Kosmos Beta** | Scantrad | [!badge variant="warning" text="Teaser"] | 6% |
+
+</div>
 
 ---
 
