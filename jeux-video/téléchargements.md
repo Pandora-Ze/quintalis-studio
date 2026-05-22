@@ -6,10 +6,16 @@ order: 200
 
 <style>
   @media (max-width: 768px) {
-    /* Sécurité absolue pour empêcher le site de tanguer */
+    /* Sécurité absolue avec 100% au lieu de 100vw pour éviter d'écraser le texte */
     html, body {
-      max-width: 100vw !important;
+      max-width: 100% !important;
       overflow-x: hidden !important;
+    }
+
+    /* On interdit formellement au titre de couper les mots au milieu */
+    h1 {
+      word-break: normal !important;
+      overflow-wrap: normal !important;
     }
 
     /* Ciblage structurel de la barre d'onglets Retype */
@@ -20,7 +26,7 @@ order: 200
       flex-direction: row !important;
       flex-wrap: nowrap !important;
       overflow-x: auto !important;
-      max-width: 100vw !important;
+      max-width: 100% !important;
       -webkit-overflow-scrolling: touch !important;
       padding-bottom: 10px !important;
     }
@@ -44,7 +50,7 @@ Attention : les patch sont disponible uniquement pour une version PC du jeu. Une
 
 ---
 
-::: div {.mobile-tabs-fix}
+:::: div {.mobile-tabs-fix}
 +++ Memories of a Quintessential Summer
 ![](static/soon.png)
 +++ Five Memories Spent With You
@@ -54,6 +60,7 @@ Attention : les patch sont disponible uniquement pour une version PC du jeu. Une
 [!button target="blank" text="Téléchargement alternatif via MEGA" icon="custom-mega" variant="info" color="#8b5cf6" size="l"](https://mega.nz/file/pPVhCT4b#3XovVIYXdghuBCO4xWncRpYSwDwmv9mbyLJAnczYCZU) [!badge variant="question" text="v1.1"]
 
 :::
+
 Assurez vous d'avoir toujours la dernière version en date afin de profiter d'une expérience de jeu optimale.
 
 <a href="\static\patchs\patch-note.txt" download="patch-note.txt">Consulter le patch note pour ce jeu</a>
@@ -63,7 +70,7 @@ Assurez vous d'avoir toujours la dernière version en date afin de profiter d'un
 +++ The Quintessential Princess
 ![](static/soon.png)
 +++
-:::
+::::
 
 ---
 
@@ -83,7 +90,7 @@ Tous nos fichiers sont scannés et vérifiés afin de garantir qu'aucun virus ne
 En utilisant ce patch, vous garantissez que vous utilisez une version légale du jeu.
 
 <script>
-  /* Script d'urgence : Si le CSS échoue, le navigateur forcera manuellement les onglets */
+  /* Script d'urgence mis à jour pour respecter le max-width: 100% */
   window.addEventListener('DOMContentLoaded', () => {
     if (window.innerWidth <= 768) {
       const container = document.querySelector('.mobile-tabs-fix');
@@ -94,7 +101,7 @@ En utilisant ce patch, vous garantissez que vous utilisez une version légale du
           if ((style.display === 'flex' || style.display === 'inline-flex') && style.flexDirection === 'row') {
             el.style.setProperty('flex-wrap', 'nowrap', 'important');
             el.style.setProperty('overflow-x', 'auto', 'important');
-            el.style.setProperty('max-width', '100vw', 'important');
+            el.style.setProperty('max-width', '100%', 'important');
             el.style.setProperty('padding-bottom', '12px', 'important');
             
             Array.from(el.children).forEach(btn => {
