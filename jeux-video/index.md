@@ -6,13 +6,13 @@ order: 100
 
 <style>
   @media (max-width: 768px) {
-    /* 1. Sécurité anti-décalage sur tout le site */
+    /* 1. Sécurité absolue pour empêcher le site de tanguer */
     html, body {
       max-width: 100vw !important;
       overflow-x: hidden !important;
     }
 
-    /* 2. Rendre TOUS les tableaux scrollables automatiquement */
+    /* 2. Le tableau redevient naturellement scrollable */
     table {
       display: block !important;
       width: 100% !important;
@@ -22,25 +22,24 @@ order: 100
       -webkit-overflow-scrolling: touch;
     }
 
-    /* 3. Force TOUTES les barres d'onglets possibles de Retype à scroller horizontalement */
-    .retype-tabs > ul, 
-    .retype-tabs-navigation, 
-    [role="tablist"], 
-    .tabs-navigation {
+    /* 3. Ciblage structurel de la barre d'onglets Retype */
+    /* On vise le tout premier sous-élément qui contient les boutons */
+    .mobile-tabs-fix > div > div:first-child,
+    .mobile-tabs-fix > retype-tabs > div:first-child,
+    .mobile-tabs-fix [role="tablist"] {
       display: flex !important;
       flex-direction: row !important;
-      flex-wrap: nowrap !important; /* Interdit le retour à la ligne */
-      overflow-x: auto !important;   /* Active le scroll horizontal */
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
       max-width: 100vw !important;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: 12px !important; /* Espace pour le défilement au doigt */
+      -webkit-overflow-scrolling: touch !important;
+      padding-bottom: 10px !important;
     }
 
-    /* 4. Empêche chaque élément/bouton d'onglet de rétrécir ou de se couper */
-    .retype-tabs > ul > li, 
-    .retype-tabs-navigation > *, 
-    [role="tablist"] > *, 
-    .tabs-navigation > * {
+    /* On protège les titres des onglets pour ne pas qu'ils s'écrasent */
+    .mobile-tabs-fix > div > div:first-child > *,
+    .mobile-tabs-fix > retype-tabs > div:first-child > *,
+    .mobile-tabs-fix [role="tablist"] > * {
       flex-shrink: 0 !important;
       white-space: nowrap !important;
       display: inline-block !important;
@@ -56,6 +55,7 @@ Retrouvez ici le détail des jeux de la licence.
 
 ### Choisir un jeu
 
+::: div {.mobile-tabs-fix}
 +++ Memories of a Quintessential Summer
 #### Memories of a Quintessential Summer
 ![Affiche du jeu (version anglaise)](static/summer-banner.png)
@@ -88,6 +88,7 @@ Retrouvez ici le détail des jeux de la licence.
 * **Histoire :** Dans un royaume alternatif mêlant magie et science, Fûtarô est un étudiant pauvre de l'Académie de Magie qui accepte un poste de tuteur très bien payé. Ses élèves ? Cinq jeunes nobles réputées pour leur beauté, mais "nulles en magie" et sur le point de redoubler ! En les aidant, il va découvrir leur grand secret.
 * **Particularité :** Un véritable RPG avec plus de 100 quêtes ! Le joueur plonge dans des donjons et doit personnaliser l'équipement, les baguettes et les compétences magiques des sœurs pour venir à bout des monstres.
 +++
+:::
 
 ---
 
@@ -103,3 +104,35 @@ Retrouvez ici le détail des jeux de la licence.
 ::: center
 [!button text="Accéder aux téléchargements" icon="download" variant="question"](téléchargements.md)
 :::
+
+<script>
+  /* Script d'urgence : Si le CSS échoue, le navigateur forcera manuellement les onglets */
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.innerWidth <= 768) {
+      const container = document.querySelector('.mobile-tabs-fix');
+      if (container) {
+        // On scanne tous les sous-éléments du bloc d'onglets
+        const elements = container.querySelectorAll('*');
+        for (let el of elements) {
+          const style = window.getComputedStyle(el);
+          // La barre d'onglets est l'unique conteneur flex aligné en "row"
+          if ((style.display === 'flex' || style.display === 'inline-flex') && style.flexDirection === 'row') {
+            
+            // On injecte les règles de force brute
+            el.style.setProperty('flex-wrap', 'nowrap', 'important');
+            el.style.setProperty('overflow-x', 'auto', 'important');
+            el.style.setProperty('max-width', '100vw', 'important');
+            el.style.setProperty('padding-bottom', '12px', 'important');
+            
+            // On empêche les textes des boutons de retourner à la ligne
+            Array.from(el.children).forEach(btn => {
+              btn.style.setProperty('flex-shrink', '0', 'important');
+              btn.style.setProperty('white-space', 'nowrap', 'important');
+            });
+            break; // Mission accomplie, on arrête de chercher
+          }
+        }
+      }
+    }
+  });
+</script>
