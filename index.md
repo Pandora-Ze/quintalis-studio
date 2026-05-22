@@ -5,7 +5,7 @@ icon: home
 
 # Quintalis STUDIO {.text-center}
 
-:::center
+::: center
 **Le portail officiel du groupe indépendant dédié à la traduction et au fansub.**
 :::
 
@@ -36,7 +36,7 @@ C'est le moment de retrouver les quintuplées en version française.
 
 ### Projets en cours
 
-::: div {.w-full .overflow-x-auto}
+::: div {.max-w-full .overflow-x-auto}
 | Projet | Type | État | Progression |
 | :--- | :--- | :--- | :--- |
 | **Five Memories Spent With You** | Jeu Vidéo | [!badge variant="info" text="En cours"] | 93% |
