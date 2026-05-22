@@ -6,13 +6,13 @@ order: 100
 
 <style>
   @media (max-width: 768px) {
-    /* 1. On verrouille la largeur du site pour éviter le décalage */
+    /* 1. Sécurité anti-décalage sur tout le site */
     html, body {
       max-width: 100vw !important;
       overflow-x: hidden !important;
     }
 
-    /* 2. On rend TOUS les tableaux scrollables automatiquement */
+    /* 2. Rendre TOUS les tableaux scrollables automatiquement */
     table {
       display: block !important;
       width: 100% !important;
@@ -22,18 +22,18 @@ order: 100
       -webkit-overflow-scrolling: touch;
     }
 
-    /* 3. On transforme les titres des onglets en menu scrollable */
-    [role="tablist"] {
+    /* 3. Force la liste des catégories/onglets à scroller horizontalement */
+    .retype-tabs-navigation, [role="tablist"] {
       display: flex !important;
-      flex-wrap: nowrap !important; /* Interdit de passer à la ligne */
+      flex-wrap: nowrap !important; /* Interdit le retour à la ligne des titres */
       overflow-x: auto !important;   /* Active le scroll horizontal */
-      -webkit-overflow-scrolling: touch;
       max-width: 100vw !important;
-      padding-bottom: 5px; /* Petit espace pour laisser respirer la barre de scroll */
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px !important; /* Laisse de la place pour le mouvement du doigt */
     }
-    
-    /* On empêche les boutons des onglets de s'écraser */
-    [role="tablist"] > * {
+
+    /* 4. Empêche chaque titre de jeu de s'écraser ou de rétrécir */
+    .retype-tabs-navigation > *, [role="tablist"] > * {
       flex-shrink: 0 !important;
       white-space: nowrap !important;
     }
