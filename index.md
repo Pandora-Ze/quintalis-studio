@@ -4,7 +4,7 @@ icon: home
 layout: central
 ---
 
-<h1 class="text-center text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">Quintalis&nbsp;STUDIO</h1>
+# Quintalis&nbsp;STUDIO {.text-center}
 
 :::center
 **Le portail officiel du groupe indépendant dédié à la traduction et au fansub.**
