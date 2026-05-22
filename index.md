@@ -1,7 +1,7 @@
 ---
 label: Accueil
 icon: home
-layout: center
+layout: page
 ---
 
 <style>

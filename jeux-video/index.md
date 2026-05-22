@@ -2,7 +2,38 @@
 label: Jeux Vidéo
 icon: custom-gamepad
 order: 100
+layout: page
 ---
+
+<style>
+  @media (max-width: 768px) {
+    /* Verrouillage global pour éviter le décalage du site */
+    html, body {
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+    }
+
+    /* Protection du tableau */
+    .mobile-table-fix {
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+    }
+    .mobile-table-fix table {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow-x: auto !important;
+      white-space: nowrap !important;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Protection du sélecteur de jeux pour éviter le décalage */
+    .retype-tabs {
+      max-width: 100% !important;
+      overflow: hidden !important;
+    }
+  }
+</style>
 
 # Les jeux vidéo The Quintessential Quintuplets
 
@@ -49,13 +80,15 @@ Retrouvez ici le détail des jeux de la licence.
 
 ### État d'avancement global des patchs
 
+::: div {.mobile-table-fix}
 | Titre du Jeu | État | Progression |
 | :--- | :--- | :--- |
 | **Memories of a Quintessential Summer** | [!badge variant="warning" text="Phase d'analyse"] | -- |
 | **Five Memories Spent With You** | [!badge variant="info" text="En cours"] | 93% |
 | **Five Promises Exchanged with Her** | [!badge variant="danger" text="En attente"] | -- |
 | **The Quintessential Princess** | [!badge variant="danger" text="En attente"] | -- |
+:::
 
-:::center
+::: center
 [!button text="Accéder aux téléchargements" icon="download" variant="question"](téléchargements.md)
 :::
