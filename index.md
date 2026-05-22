@@ -6,21 +6,17 @@ layout: page
 
 <style>
   @media (max-width: 768px) {
-    /* 1. On verrouille la racine absolue du site */
+    /* On utilise 100% au lieu de 100vw pour éviter les bugs de barre de défilement, et on retire le position: relative */
     html, body {
-      width: 100vw !important;
-      max-width: 100vw !important;
+      max-width: 100% !important;
       overflow-x: hidden !important;
-      position: relative;
     }
     
-    /* 2. On empêche le conteneur du tableau de pousser les murs */
     .mobile-table-fix {
-      max-width: 100vw !important;
+      max-width: 100% !important;
       overflow-x: hidden !important;
     }
 
-    /* 3. On autorise uniquement le tableau à scroller à l'intérieur de sa boîte */
     .mobile-table-fix table {
       display: block !important;
       width: 100% !important;
@@ -32,7 +28,7 @@ layout: page
   }
 </style>
 
-# Quintalis STUDIO {.text-center}
+# Quintalis STUDIO {.text-center .mt-12}
 
 ::: center
 **Le portail officiel du groupe indépendant dédié à la traduction et au fansub.**
