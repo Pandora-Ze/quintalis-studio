@@ -22,20 +22,28 @@ order: 100
       -webkit-overflow-scrolling: touch;
     }
 
-    /* 3. Force la liste des catégories/onglets à scroller horizontalement */
-    .retype-tabs-navigation, [role="tablist"] {
+    /* 3. Force TOUTES les barres d'onglets possibles de Retype à scroller horizontalement */
+    .retype-tabs > ul, 
+    .retype-tabs-navigation, 
+    [role="tablist"], 
+    .tabs-navigation {
       display: flex !important;
-      flex-wrap: nowrap !important; /* Interdit le retour à la ligne des titres */
+      flex-direction: row !important;
+      flex-wrap: nowrap !important; /* Interdit le retour à la ligne */
       overflow-x: auto !important;   /* Active le scroll horizontal */
       max-width: 100vw !important;
       -webkit-overflow-scrolling: touch;
-      padding-bottom: 8px !important; /* Laisse de la place pour le mouvement du doigt */
+      padding-bottom: 12px !important; /* Espace pour le défilement au doigt */
     }
 
-    /* 4. Empêche chaque titre de jeu de s'écraser ou de rétrécir */
-    .retype-tabs-navigation > *, [role="tablist"] > * {
+    /* 4. Empêche chaque élément/bouton d'onglet de rétrécir ou de se couper */
+    .retype-tabs > ul > li, 
+    .retype-tabs-navigation > *, 
+    [role="tablist"] > *, 
+    .tabs-navigation > * {
       flex-shrink: 0 !important;
       white-space: nowrap !important;
+      display: inline-block !important;
     }
   }
 </style>
