@@ -4,6 +4,24 @@ icon: home
 layout: page
 ---
 
+<style>
+  /* 1. Verrouille la largeur du site pour qu'il ne tangue plus de gauche à droite */
+  html, body {
+    max-width: 100vw;
+    overflow-x: hidden !important;
+  }
+  
+  /* 2. Force le tableau Markdown à garder sa taille réelle et à scroller proprement */
+  table {
+    display: block !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 auto;
+  }
+</style>
+
 # Quintalis STUDIO {.text-center}
 
 ::: center
@@ -14,7 +32,7 @@ layout: page
 
 ### À la une
 
-:::success [Nouveauté] Patch Gotokisu (v1.1)
+::: success [Nouveauté] Patch Gotokisu (v1.1)
 La traduction française (quasi) intégrale du jeu The Quintessential Quintuplets : Five Memories Spent With You est enfin disponible ! 
 C'est le moment de retrouver les quintuplées en version française.
 
@@ -25,7 +43,7 @@ C'est le moment de retrouver les quintuplées en version française.
 
 ### Nos Sections
 
-:::cols 3
+::: cols 3
 [!card title="Jeux Vidéo" text="Retrouvez nos patchs FR pour les jeux et Visual Novels." icon="play" color="#ff6b6b"](jeux-video/)
 
 [!card title="Fansub" text="Nos sorties animées en VOSTFR." icon="video" color="#ff6b6b"](fansub/)
@@ -37,7 +55,6 @@ C'est le moment de retrouver les quintuplées en version française.
 
 ### Projets en cours
 
-::: div {.max-w-full .overflow-x-auto}
 | Projet | Type | État | Progression |
 | :--- | :--- | :--- | :--- |
 | **Five Memories Spent With You** | Jeu Vidéo | [!badge variant="info" text="En cours"] | 93% |
@@ -46,13 +63,12 @@ C'est le moment de retrouver les quintuplées en version française.
 | **Petals of Reincarnation** | Fansub | [!badge variant="info" text="En cours"] | 41% |
 | **Marika's Love Meter** | Fansub | [!badge variant="info" text="En cours"] | 12% |
 | **Kosmos Beta** | Scantrad | [!badge variant="warning" text="Teaser"] | 6% |
-:::
 
 ---
 
 ### Communauté
 
-:::center
+::: center
 Rejoignez notre serveur pour suivre l'avancée des projets et discuter avec l'équipe !
 
 [!button target="blank" text="Rejoindre le Discord Officiel" variant="question" icon="custom-discord" color="#5865F2" size="l"](https://discord.gg/w4qK3RvCeg)
