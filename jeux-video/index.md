@@ -6,24 +6,31 @@ order: 100
 
 <style>
   @media (max-width: 768px) {
-    /* Sécurise le conteneur du tableau */
-    .mobile-table-fix {
-      max-width: 100% !important;
-      overflow-x: auto !important;
+    /* 1. On empêche absolument TOUT le site de dépasser la largeur de l'écran */
+    html, body {
+      overflow-x: hidden !important;
+      width: 100vw !important;
+      position: relative;
     }
-    /* Permet aux onglets de défiler à l'horizontale sans casser le site */
-    .retype-tabs {
+
+    /* 2. On contraint spécifiquement les éléments qui pourraient "pousser" les murs */
+    .retype-tabs, .mobile-table-fix {
+      width: 100vw !important;
+      max-width: 100vw !important;
       overflow-x: auto !important;
-      white-space: nowrap !important;
       display: block !important;
       -webkit-overflow-scrolling: touch;
     }
+
+    /* 3. On libère le contenu interne des onglets pour qu'ils ne forcent pas la largeur */
     .retype-tab-pane {
+      width: 100vw !important;
       white-space: normal !important;
+      box-sizing: border-box !important;
+      padding-right: 15px !important;
     }
   }
 </style>
-
 # Les jeux vidéo The Quintessential Quintuplets
 
 Retrouvez ici le détail des jeux de la licence.
