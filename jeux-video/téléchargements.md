@@ -6,30 +6,34 @@ order: 200
 
 <style>
   @media (max-width: 768px) {
-    /* Sécurité absolue anti-tangage (100% au lieu de 100vw pour ne pas écraser le titre) */
+    /* 1. Exactement le même CSS que la page d'avant */
     html, body {
-      max-width: 100% !important;
+      max-width: 100vw !important;
       overflow-x: hidden !important;
     }
 
-    /* On s'assure que le titre ne se coupe plus au milieu d'une lettre */
+    /* Règle pour empêcher le long mot "Téléchargements" de se couper */
     h1 {
       word-break: normal !important;
       overflow-wrap: normal !important;
     }
 
-    /* On cible directement le composant d'onglets natif de Retype (sans wrapper !) */
-    [role="tablist"], .retype-tabs-navigation {
+    /* 3. Ciblage de la page d'avant */
+    .mobile-tabs-fix > div > div:first-child,
+    .mobile-tabs-fix > retype-tabs > div:first-child,
+    .mobile-tabs-fix [role="tablist"] {
       display: flex !important;
       flex-direction: row !important;
       flex-wrap: nowrap !important;
       overflow-x: auto !important;
-      max-width: 100% !important;
+      max-width: 100vw !important;
       -webkit-overflow-scrolling: touch !important;
       padding-bottom: 10px !important;
     }
 
-    [role="tablist"] > *, .retype-tabs-navigation > * {
+    .mobile-tabs-fix > div > div:first-child > *,
+    .mobile-tabs-fix > retype-tabs > div:first-child > *,
+    .mobile-tabs-fix [role="tablist"] > * {
       flex-shrink: 0 !important;
       white-space: nowrap !important;
       display: inline-block !important;
@@ -45,15 +49,17 @@ Attention : les patch sont disponible uniquement pour une version PC du jeu. Une
 
 ---
 
+::: div {.mobile-tabs-fix}
 +++ Memories of a Quintessential Summer
 ![](static/soon.png)
 +++ Five Memories Spent With You
-:::grid {cols=2 gap=4}
+
 [!button text="Télécharger le patch (local)" icon="custom-jeu" variant="info" color="#8b5cf6" size="l"](https://quintalis-studio.emcloudhost.fr/patchs_manuels/Patch_VF_v1.1.zip) [!badge variant="question" text="v1.1"]
+
+<br>
 
 [!button target="blank" text="Téléchargement alternatif via MEGA" icon="custom-mega" variant="info" color="#8b5cf6" size="l"](https://mega.nz/file/pPVhCT4b#3XovVIYXdghuBCO4xWncRpYSwDwmv9mbyLJAnczYCZU) [!badge variant="question" text="v1.1"]
 
-:::
 Assurez vous d'avoir toujours la dernière version en date afin de profiter d'une expérience de jeu optimale.
 
 <a href="/static/patchs/patch-note.txt" download="patch-note.txt">Consulter le patch note pour ce jeu</a>
@@ -63,6 +69,7 @@ Assurez vous d'avoir toujours la dernière version en date afin de profiter d'un
 +++ The Quintessential Princess
 ![](static/soon.png)
 +++
+:::
 
 ---
 
@@ -82,23 +89,28 @@ Tous nos fichiers sont scannés et vérifiés afin de garantir qu'aucun virus ne
 En utilisant ce patch, vous garantissez que vous utilisez une version légale du jeu.
 
 <script>
-  /* Nouveau script d'urgence : Il cherche directement la liste d'onglets native */
+  /* Exactement le même script d'urgence que la page d'avant */
   window.addEventListener('DOMContentLoaded', () => {
     if (window.innerWidth <= 768) {
-      /* On attrape l'élément natif généré par Retype grâce à son attribut role */
-      const tabLists = document.querySelectorAll('[role="tablist"]');
-      
-      tabLists.forEach(el => {
-        el.style.setProperty('flex-wrap', 'nowrap', 'important');
-        el.style.setProperty('overflow-x', 'auto', 'important');
-        el.style.setProperty('max-width', '100%', 'important');
-        el.style.setProperty('padding-bottom', '12px', 'important');
-        
-        Array.from(el.children).forEach(btn => {
-          btn.style.setProperty('flex-shrink', '0', 'important');
-          btn.style.setProperty('white-space', 'nowrap', 'important');
-        });
-      });
+      const container = document.querySelector('.mobile-tabs-fix');
+      if (container) {
+        const elements = container.querySelectorAll('*');
+        for (let el of elements) {
+          const style = window.getComputedStyle(el);
+          if ((style.display === 'flex' || style.display === 'inline-flex') && style.flexDirection === 'row') {
+            el.style.setProperty('flex-wrap', 'nowrap', 'important');
+            el.style.setProperty('overflow-x', 'auto', 'important');
+            el.style.setProperty('max-width', '100vw', 'important');
+            el.style.setProperty('padding-bottom', '12px', 'important');
+            
+            Array.from(el.children).forEach(btn => {
+              btn.style.setProperty('flex-shrink', '0', 'important');
+              btn.style.setProperty('white-space', 'nowrap', 'important');
+            });
+            break;
+          }
+        }
+      }
     }
   });
 </script>
