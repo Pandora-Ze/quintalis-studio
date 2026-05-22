@@ -4,7 +4,7 @@ icon: home
 layout: central
 ---
 
-# Quintalis STUDIO {.text-center}
+# Quintalis STUDIO {.text-center .whitespace-nowrap}
 
 :::center
 **Le portail officiel du groupe indépendant dédié à la traduction et au fansub.**
