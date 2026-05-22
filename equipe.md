@@ -11,8 +11,8 @@ icon: info
       overflow-x: hidden !important;
     }
 
-    /* Rend le tableau scrollable horizontalement sur mobile */
-    .mobile-table-fix {
+    /* On cible directement le tableau HTML, méthode infaillible */
+    table {
       display: block !important;
       width: 100% !important;
       max-width: 100vw !important;
@@ -53,11 +53,9 @@ Cependant, à l'origine, je n'avais pas pour but de créer Quintalis STUDIO. C'e
 
 Voici les membres qui travaillent dans l'ombre pour vous proposer ces projets de qualité :
 
-::: div {.mobile-table-fix}
 | Membre | Grade | Rôle(s) |
 | :--- | :--- | :--- |
 | **Kaelis (anciennement PandoraZe)** | [!badge variant="success" corners="pill" text="Fondateur / Directeur Général"] | *Traducteur de texte / Éditeur d'images / Sous-titrage* |
-:::
 
 :::center
 *Vous souhaitez nous aider et rejoindre l'aventure ? [Ouvrez un ticket sur Discord !](https://discord.gg/w4qK3RvCeg) {target="blank"}*
