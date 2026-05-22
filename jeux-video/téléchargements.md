@@ -6,19 +6,16 @@ order: 200
 
 <style>
   @media (max-width: 768px) {
-    /* 1. Exactement le même CSS que la page d'avant */
     html, body {
       max-width: 100vw !important;
       overflow-x: hidden !important;
     }
 
-    /* Règle pour empêcher le long mot "Téléchargements" de se couper */
     h1 {
       word-break: normal !important;
       overflow-wrap: normal !important;
     }
 
-    /* 3. Ciblage de la page d'avant */
     .mobile-tabs-fix > div > div:first-child,
     .mobile-tabs-fix > retype-tabs > div:first-child,
     .mobile-tabs-fix [role="tablist"] {
@@ -51,23 +48,27 @@ Attention : les patch sont disponible uniquement pour une version PC du jeu. Une
 
 ::: div {.mobile-tabs-fix}
 +++ Memories of a Quintessential Summer
+
 ![](static/soon.png)
+
 +++ Five Memories Spent With You
 
 [!button text="Télécharger le patch (local)" icon="custom-jeu" variant="info" color="#8b5cf6" size="l"](https://quintalis-studio.emcloudhost.fr/patchs_manuels/Patch_VF_v1.1.zip) [!badge variant="question" text="v1.1"]
-
-<br>
 
 [!button target="blank" text="Téléchargement alternatif via MEGA" icon="custom-mega" variant="info" color="#8b5cf6" size="l"](https://mega.nz/file/pPVhCT4b#3XovVIYXdghuBCO4xWncRpYSwDwmv9mbyLJAnczYCZU) [!badge variant="question" text="v1.1"]
 
 Assurez vous d'avoir toujours la dernière version en date afin de profiter d'une expérience de jeu optimale.
 
-<a href="/static/patchs/patch-note.txt" download="patch-note.txt">Consulter le patch note pour ce jeu</a>
+[Consulter le patch note pour ce jeu](/static/patchs/patch-note.txt)
 
 +++ Five Promises Exchanged with Her
+
 ![](static/soon.png)
+
 +++ The Quintessential Princess
+
 ![](static/soon.png)
+
 +++
 :::
 
@@ -89,7 +90,6 @@ Tous nos fichiers sont scannés et vérifiés afin de garantir qu'aucun virus ne
 En utilisant ce patch, vous garantissez que vous utilisez une version légale du jeu.
 
 <script>
-  /* Exactement le même script d'urgence que la page d'avant */
   window.addEventListener('DOMContentLoaded', () => {
     if (window.innerWidth <= 768) {
       const container = document.querySelector('.mobile-tabs-fix');
