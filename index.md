@@ -1,7 +1,6 @@
 ---
 label: Accueil
 icon: home
-layout: central
 ---
 
 # Quintalis STUDIO {.text-center}
