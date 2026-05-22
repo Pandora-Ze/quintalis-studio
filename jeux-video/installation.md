@@ -4,6 +4,17 @@ icon: package
 order: 100
 ---
 
+<style>
+  @media (max-width: 768px) {
+    /* Verrouillage strict de la largeur de la page pour stopper le glissement */
+    html, body {
+      max-width: 100% !important;
+      overflow-x: hidden !important;
+      width: 100vw !important;
+    }
+  }
+</style>
+
 # Guide d'installation
 
 Retrouvez ici toutes les étapes pour appliquer correctement notre patch de traduction sur votre jeu.
