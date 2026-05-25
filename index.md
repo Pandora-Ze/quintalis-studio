@@ -68,7 +68,7 @@ C'est le moment de retrouver les quintuplées en version française.
 ::: div {.mobile-table-fix}
 | Projet | Type | État | Progression |
 | :--- | :--- | :--- | :--- |
-| **Five Memories Spent With You** | Jeu Vidéo | [!badge variant="info" text="En cours"] | 93% |
+| **Five Memories Spent With You** | Jeu Vidéo | [!badge variant="question" text="Post-prod"] | 100% |
 | **TQQ : Honeymoon** | Fansub | [!badge variant="success" text="Terminé"] | 100% |
 | **Kirio Fanclub** | Fansub | [!badge variant="info" text="En cours"] | 66% |
 | **Petals of Reincarnation** | Fansub | [!badge variant="info" text="En cours"] | 61% |

@@ -36,6 +36,7 @@ Voici la liste des problèmes actuellement étudiés par l'équipe sur la versio
 - Correction des guillemets apparaissants dans la voie d'Ichika
 - Lettre manquante lors d'une phrase de Nino au niveau de la remise des diplômes
 - Sous-titres des vidéos touristiques maintenant lisibles
+- Voie des Quintuplées traduite entièrement en français
 
 <div style="text-align: center;">
 
@@ -43,7 +44,6 @@ Voici la liste des problèmes actuellement étudiés par l'équipe sur la versio
 
 </div>
 
-- Route des Quintuplées en cours de traduction. Sortie prévue pour la v1.2
 - Au niveau des choix, le texte est resté en anglais (même si la phrase d'origine est bien en français)
 
 
