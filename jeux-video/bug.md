@@ -55,6 +55,7 @@ Voici la liste des problèmes actuellement étudiés par l'équipe sur la versio
 </div>
 
 - Allignements des textes en jeu
+- Saut de lignes incorrects pour la ponctuation.
 
 ===
 
