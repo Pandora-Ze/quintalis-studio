@@ -61,7 +61,7 @@ Version 1.1 :
 
 
 
-Version 2.2 : 
+Version 1.2 : 
 
 - Nouveautés : 
 	
@@ -76,6 +76,8 @@ Version 2.2 :
 - Corrections : 
 
 	- Correction sous-titres vidéos touristiques d'Okinawa (via un éditeur de sous-titres)
+
+	- Correction des noms lors de la déclaration pour mieux les centrer et les faire rentrer entièrement dans leur emplacement
 
 	- Correction des choix qui s'affichaient en anglais (problème au niveau de remplacement dans le .json)
 
