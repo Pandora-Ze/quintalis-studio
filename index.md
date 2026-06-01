@@ -42,7 +42,7 @@ layout: page
 
 ### À la une
 
-::: success [Nouveauté] Patch Gotokisu (v1.1)
+::: success [Nouveauté] Patch Gotokisu (v1.2)
 La traduction française (quasi) intégrale du jeu The Quintessential Quintuplets : Five Memories Spent With You est enfin disponible ! 
 C'est le moment de retrouver les quintuplées en version française.
 

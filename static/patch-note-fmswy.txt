@@ -29,6 +29,8 @@ Version 1.0 :
 
 		- Traduction complète du tutoriel
 
+		- Traduction complète du Manuel
+
 		- Traduction compète des "Du côté de..."
 
 
@@ -73,6 +75,8 @@ Version 1.2 :
 
 	- Modifications du script du jeu pour enlever certains textes du système de sauvegarde (No et Jour)
 
+	- Correction "Garder le silence", où le texte dépassait de ses dimensions
+
 - Corrections : 
 
 	- Correction sous-titres vidéos touristiques d'Okinawa (via un éditeur de sous-titres)
@@ -90,3 +94,7 @@ Version 1.2 :
 		- Guillemets apparaissant dans la voie d'Ichika supprimés
 
 		- Déclaration corrigée, où un "I" est resté au lieu d'un "Je"
+
+	- Corrections de la voie de Miku
+
+		- Remplacement de "Both" par "Fûtarô & Miku" (oubli de traduction)

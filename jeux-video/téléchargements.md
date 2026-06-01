@@ -53,13 +53,13 @@ Attention : les patch sont disponible uniquement pour une version PC du jeu. Une
 +++ Memories of a Quintessential Summer
 ![](static/soon.png)
 +++ Five Memories Spent With You
-[!button text="Télécharger le patch (local)" icon="custom-jeu" variant="info" color="#8b5cf6" size="l"](https://quintalis-studio.emcloudhost.fr/patchs_manuels/Patch_VF_v1.1.zip) [!badge variant="question" text="v1.1"]
+[!button text="Télécharger le patch (local)" icon="custom-jeu" variant="info" color="#8b5cf6" size="l"](https://quintalis-studio.emcloudhost.fr/patchs_manuels/Patch_VF_v1.2.zip) [!badge variant="question" text="v1.2"]
 
-[!button target="blank" text="Téléchargement alternatif via MEGA" icon="custom-mega" variant="info" color="#8b5cf6" size="l"](https://mega.nz/file/pPVhCT4b#3XovVIYXdghuBCO4xWncRpYSwDwmv9mbyLJAnczYCZU) [!badge variant="question" text="v1.1"]
+[!button target="blank" text="Téléchargement alternatif via MEGA" icon="custom-mega" variant="info" color="#8b5cf6" size="l"](https://mega.nz/file/peslka6A#KSsYCY9pWuJbbrqieAj8LvIBFFFh_viusE5ztGyfAqY) [!badge variant="question" text="v1.2"]
 
 Assurez vous d'avoir toujours la dernière version en date afin de profiter d'une expérience de jeu optimale.
 
-[Consulter le patch note pour ce jeu](static/patch-note.txt){download="patch-note.txt"}
+[Consulter le patch note pour ce jeu](static/patch-note-fmswy.txt){download="patch-note-fmswy.txt"}
 +++ Five Promises Exchanged with Her
 ![](static/soon.png)
 +++ The Quintessential Princess
