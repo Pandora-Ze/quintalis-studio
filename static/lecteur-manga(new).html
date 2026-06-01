@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lecteur Quintalis</title>
+    <style>
+        :root {
+            --bg: #0d0d0d;
+            --bg2: #181818;
+            --bg3: #222;
+            --border: #2e2e2e;
+            --text: #e8e8e8;
+            --text2: #999;
+            --accent: #3498db;
+            --accent2: #2176ae;
+            --radius: 6px;
+            --topbar: 50px;
+            --bottombar: 56px;
+            --transition: 0.18s ease;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            overflow: hidden;
+        }
+
+        /* ══════════════════════════════════════════
+           TOPBAR
+        ══════════════════════════════════════════ */
+        #topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--topbar);
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 14px;
+            z-index: 100;
+            transition: transform var(--transition), opacity var(--transition);
+        }
+
+            #topbar .manga-title {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                flex: 1;
+                min-width: 0;
+            }
+
+            #topbar .breadcrumb {
+                font-size: 12px;
+                color: var(--text2);
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+                #topbar .breadcrumb span {
+                    color: var(--accent);
+                }
+
+        .topbar-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text2);
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+
+            .topbar-btn:hover {
+                background: var(--bg3);
+                color: var(--text);
+                border-color: #444;
+            }
+
+            .topbar-btn.active {
+                background: var(--accent);
+                color: #fff;
+                border-color: var(--accent);
+            }
+
+        /* ══════════════════════════════════════════
+           ZONE LECTURE
+        ══════════════════════════════════════════ */
+        #viewport {
+            position: fixed;
+            top: var(--topbar);
+            bottom: var(--bottombar);
+            left: 0;
+            right: 0;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        #zone-prev, #zone-next {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 30%;
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        #zone-prev {
+            left: 0;
+        }
+
+        #zone-next {
+            right: 0;
+        }
+
+            #zone-prev .arrow, #zone-next .arrow {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                background: rgba(0,0,0,0.55);
+                border: 1px solid rgba(255,255,255,0.1);
+                color: #fff;
+                width: 40px;
+                height: 60px;
+                border-radius: var(--radius);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                opacity: 0;
+                transition: opacity var(--transition);
+            }
+
+        #zone-prev .arrow {
+            left: 10px;
+        }
+
+        #zone-next .arrow {
+            right: 10px;
+        }
+
+        #zone-prev:hover .arrow, #zone-next:hover .arrow {
+            opacity: 1;
+        }
+
+        #page-view {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #manga-page {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            user-select: none;
+            -webkit-user-drag: none;
+            pointer-events: none;
+        }
+
+        #scroll-view {
+            display: none;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+            #scroll-view.active {
+                display: block;
+            }
+
+                #scroll-view.active ~ #page-view {
+                    display: none;
+                }
+
+        #scroll-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+        }
+
+            #scroll-content img {
+                width: 100%;
+                max-width: 850px;
+                display: block;
+                user-select: none;
+                -webkit-user-drag: none;
+            }
+
+        #loader {
+            position: absolute;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 3px solid #333;
+            border-top-color: var(--accent);
+            animation: spin 0.8s linear infinite;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #error-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: #e74c3c;
+            text-align: center;
+            padding: 30px;
+            font-size: 14px;
+        }
+
+        #error-detail {
+            color: var(--text2);
+            font-size: 13px;
+            white-space: pre-line;
+        }
+
+        /* ══════════════════════════════════════════
+           BOTTOMBAR
+        ══════════════════════════════════════════ */
+        #bottombar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--bottombar);
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 12px;
+            z-index: 100;
+            transition: transform var(--transition), opacity var(--transition);
+        }
+
+        .nav-btn {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            color: var(--text);
+            height: 36px;
+            padding: 0 12px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: background var(--transition), border-color var(--transition);
+        }
+
+            .nav-btn:hover {
+                background: #2c2c2c;
+                border-color: #444;
+            }
+
+            .nav-btn:disabled {
+                opacity: 0.35;
+                cursor: not-allowed;
+            }
+
+            .nav-btn span {
+                font-size: 11px;
+                color: var(--text2);
+            }
+
+        #chapter-select {
+            background: var(--bg3);
+            color: var(--text);
+            border: 1px solid var(--border);
+            height: 36px;
+            padding: 0 8px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            outline: none;
+            font-size: 13px;
+            max-width: 180px;
+            flex-shrink: 1;
+            min-width: 0;
+        }
+
+            #chapter-select:focus {
+                border-color: var(--accent);
+            }
+
+        #progress-wrap {
+            flex: 1;
+            position: relative;
+            min-width: 60px;
+        }
+
+        #progress-bar-bg {
+            height: 4px;
+            background: var(--bg3);
+            border-radius: 99px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+        }
+
+        #progress-bar-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 99px;
+            transition: width 0.15s ease;
+            pointer-events: none;
+        }
+
+        #progress-tooltip {
+            position: absolute;
+            bottom: 14px;
+            transform: translateX(-50%);
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 4px 8px;
+            font-size: 11px;
+            color: var(--text);
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.15s;
+            z-index: 200;
+        }
+
+        #page-info {
+            font-size: 12px;
+            color: var(--text2);
+            flex-shrink: 0;
+            font-variant-numeric: tabular-nums;
+            min-width: 48px;
+            text-align: right;
+        }
+
+        /* ══════════════════════════════════════════
+           PANNEAU PARAMÈTRES
+        ══════════════════════════════════════════ */
+        #settings-panel {
+            position: fixed;
+            top: var(--topbar);
+            right: -280px;
+            width: 260px;
+            bottom: var(--bottombar);
+            background: var(--bg2);
+            border-left: 1px solid var(--border);
+            z-index: 90;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            overflow-y: auto;
+            transition: right 0.22s ease;
+        }
+
+            #settings-panel.open {
+                right: 0;
+            }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .setting-label {
+            font-size: 11px;
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            font-weight: 600;
+        }
+
+        .toggle-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            color: var(--text2);
+            height: 32px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 12px;
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+
+            .toggle-btn:hover {
+                border-color: #444;
+                color: var(--text);
+            }
+
+            .toggle-btn.active {
+                background: var(--accent);
+                color: #fff;
+                border-color: var(--accent);
+            }
+
+        /* ══════════════════════════════════════════
+           OVERLAY TRANSITION CHAPITRE
+        ══════════════════════════════════════════ */
+        #transition-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.88);
+            z-index: 200;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.25s ease, visibility 0.25s ease;
+        }
+
+            #transition-overlay.show {
+                visibility: visible;
+                opacity: 1;
+            }
+
+        #transition-text {
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        #transition-sub {
+            font-size: 13px;
+            color: var(--text2);
+        }
+
+        /* ══════════════════════════════════════════
+           MODAL AIDE CLAVIER
+        ══════════════════════════════════════════ */
+        #help-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            z-index: 300;
+            align-items: center;
+            justify-content: center;
+        }
+
+            #help-modal.open {
+                display: flex;
+            }
+
+        #help-box {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px 24px;
+            width: min(400px, 90vw);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+            #help-box h3 {
+                font-size: 15px;
+                margin-bottom: 14px;
+                color: var(--text);
+            }
+
+        .shortcut-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+        }
+
+            .shortcut-row:last-child {
+                border-bottom: none;
+            }
+
+            .shortcut-row .keys {
+                display: flex;
+                gap: 4px;
+            }
+
+        kbd {
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 7px;
+            font-family: monospace;
+            font-size: 12px;
+            color: var(--text);
+        }
+
+        .shortcut-row .desc {
+            color: var(--text2);
+        }
+
+        #help-close {
+            margin-top: 14px;
+            width: 100%;
+            height: 34px;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+            #help-close:hover {
+                border-color: #444;
+            }
+
+        /* ══════════════════════════════════════════
+           PLEIN ÉCRAN : MASQUAGE UI INACTIF
+        ══════════════════════════════════════════ */
+        .idle #topbar,
+        .idle #bottombar {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .idle #bottombar {
+            transform: translateY(100%);
+        }
+
+        .idle #settings-panel {
+            right: -280px !important;
+        }
+
+        .idle #viewport {
+            top: 0;
+            bottom: 0;
+        }
+
+        .idle, .idle * {
+            cursor: none !important;
+        }
+
+        /* ══════════════════════════════════════════
+           RESPONSIVE MOBILE
+        ══════════════════════════════════════════ */
+        @media (max-width: 600px) {
+            #topbar .breadcrumb {
+                display: none;
+            }
+
+            #bottombar {
+                gap: 6px;
+                padding: 0 8px;
+            }
+
+            .nav-btn span {
+                display: none;
+            }
+
+            #chapter-select {
+                max-width: 120px;
+                font-size: 12px;
+            }
+
+            #settings-panel {
+                width: 100%;
+                right: -100%;
+            }
+
+                #settings-panel.open {
+                    right: 0;
+                }
+        }
+    </style>
+</head>
+<body>
+
+    <header id="topbar">
+        <div class="manga-title" id="manga-title-display">Manga</div>
+        <div class="breadcrumb" id="chapter-breadcrumb">Ch. <span id="breadcrumb-ch">–</span></div>
+        <button class="topbar-btn" id="btn-scroll" title="Mode défilement (W)">↕</button>
+        <button class="topbar-btn" id="btn-settings" title="Paramètres (S)">⚙</button>
+        <button class="topbar-btn" id="btn-help" title="Raccourcis clavier (?)">?</button>
+        <button class="topbar-btn" id="fullscreen-btn" title="Plein écran (F)">⛶</button>
+    </header>
+
+    <div id="viewport">
+        <div id="loader"></div>
+
+        <div id="page-view">
+            <div id="zone-prev"><div class="arrow">‹</div></div>
+            <img id="manga-page" src="" alt="Page manga">
+            <div id="zone-next"><div class="arrow">›</div></div>
+        </div>
+
+        <div id="scroll-view">
+            <div id="scroll-content"></div>
+        </div>
+
+        <div id="error-screen">
+            <div style="font-size:2em">⚠️</div>
+            <strong>Impossible de charger les données du manga.</strong>
+            <p id="error-detail"></p>
+        </div>
+    </div>
+
+    <footer id="bottombar">
+        <button class="nav-btn" id="btn-prev-ch" title="Chapitre précédent">‹ <span>Préc.</span></button>
+        <select id="chapter-select"></select>
+        <div id="progress-wrap">
+            <div id="progress-bar-bg">
+                <div id="progress-bar-fill" style="width:0%"></div>
+            </div>
+            <div id="progress-tooltip">1 / 1</div>
+        </div>
+        <span id="page-info">– / –</span>
+        <button class="nav-btn" id="btn-next-ch" title="Chapitre suivant"><span>Suiv.</span> ›</button>
+    </footer>
+
+    <aside id="settings-panel">
+        <div class="setting-group">
+            <div class="setting-label">Mode de lecture</div>
+            <div class="toggle-row">
+                <button class="toggle-btn active" id="mode-page">📄 Pages</button>
+                <button class="toggle-btn" id="mode-scroll">↕ Défilement</button>
+            </div>
+        </div>
+        <div class="setting-group">
+            <div class="setting-label">Ajustement image</div>
+            <div class="toggle-row">
+                <button class="toggle-btn active" id="fit-contain">Contenir</button>
+                <button class="toggle-btn" id="fit-width">Largeur</button>
+                <button class="toggle-btn" id="fit-height">Hauteur</button>
+            </div>
+        </div>
+    </aside>
+
+    <div id="transition-overlay">
+        <div id="loader-tr" style="width:28px;height:28px;border-radius:50%;border:3px solid #333;border-top-color:var(--accent);animation:spin 0.8s linear infinite"></div>
+        <div id="transition-text">Chapitre suivant…</div>
+        <div id="transition-sub"></div>
+    </div>
+
+    <!-- AIDE CLAVIER -->
+    <div id="help-modal">
+        <div id="help-box">
+            <h3>🎮 Raccourcis clavier</h3>
+            <div class="shortcut-row"><span class="desc">Page / Image suivante</span><span class="keys"><kbd>→</kbd> ou <kbd>D</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Page / Image précédente</span><span class="keys"><kbd>←</kbd> ou <kbd>A</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Défilement (Webtoon)</span><span class="keys"><kbd>↑</kbd> ou <kbd>↓</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Saut de page (Webtoon)</span><span class="keys"><kbd>Espace</kbd> ou <kbd>PgUp/Dn</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Chapitre suivant</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>→</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Chapitre précédent</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>←</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Plein écran</span><span class="keys"><kbd>F</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Mode défilement</span><span class="keys"><kbd>W</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Paramètres</span><span class="keys"><kbd>S</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Fermer menu / Quitter plein écran</span><span class="keys"><kbd>Échap</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Cette aide</span><span class="keys"><kbd>?</kbd></span></div>
+            <button id="help-close">Fermer</button>
+        </div>
+    </div>
+
+    <script>
+        let mangaData = null;
+        let currentPages = [];
+        let currentPage = 0;
+        let scrollMode = false;
+        let fitMode = 'contain';
+
+        const mangaPageEl = document.getElementById('manga-page');
+        const pageInfo = document.getElementById('page-info');
+        const chapterSelect = document.getElementById('chapter-select');
+        const loader = document.getElementById('loader');
+        const errorScreen = document.getElementById('error-screen');
+        const errorDetail = document.getElementById('error-detail');
+        const transitionOverlay = document.getElementById('transition-overlay');
+        const transitionText = document.getElementById('transition-text');
+        const transitionSub = document.getElementById('transition-sub');
+        const progressFill = document.getElementById('progress-bar-fill');
+        const progressTooltip = document.getElementById('progress-tooltip');
+        const progressBg = document.getElementById('progress-bar-bg');
+        const scrollView = document.getElementById('scroll-view');
+        const scrollContent = document.getElementById('scroll-content');
+        const pageView = document.getElementById('page-view');
+        const viewport = document.getElementById('viewport');
+        const settingsPanel = document.getElementById('settings-panel');
+        const breadcrumbCh = document.getElementById('breadcrumb-ch');
+        const mangaTitleDisplay = document.getElementById('manga-title-display');
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const mangaId = urlParams.get('id') || 'default';
+        const themeColor = '#' + (urlParams.get('color') || '3498db');
+        document.documentElement.style.setProperty('--accent', themeColor);
+
+        function showError(msg) {
+        loader.style.display = 'none';
+        mangaPageEl.style.display = 'none';
+        errorScreen.style.display = 'flex';
+        errorDetail.innerText = msg;
+        }
+
+        const jsonUrl = new URL('manga-data.json', window.location.href).href;
+        fetch(jsonUrl)
+        .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}\n${jsonUrl}`); return r.json(); })
+        .then(data => {
+        if (!data[mangaId]) { showError(`Projet "${mangaId}" introuvable dans manga-data.json.`); return; }
+        mangaData = data[mangaId];
+        if (data._meta && data._meta[mangaId] && data._meta[mangaId].name) {
+        mangaTitleDisplay.textContent = data._meta[mangaId].name;
+        document.title = data._meta[mangaId].name + ' — Lecteur Quintalis';
+        }
+        setupSelector();
+
+        // --- NOUVEAU : Récupération de la sauvegarde locale ---
+        const savedProgress = localStorage.getItem('manga_progress_' + mangaId);
+        let startCh = Object.keys(mangaData)[0];
+        let startPg = 0;
+
+        if (savedProgress) {
+        try {
+        const parsed = JSON.parse(savedProgress);
+        // On vérifie que le chapitre sauvegardé existe toujours dans le JSON
+        if (mangaData[parsed.chapter]) {
+        startCh = parsed.chapter;
+        startPg = parsed.page;
+        }
+        } catch(e) { console.error("Erreur de lecture de la sauvegarde", e); }
+        }
+
+        // On lance le chapitre avec la page sauvegardée
+        loadChapter(startCh, false, startPg);
+        })
+        .catch(err => showError(`Fichier manga-data.json inaccessible.\n${err.message}`));
+
+        function setupSelector() {
+        chapterSelect.innerHTML = '';
+        Object.keys(mangaData).forEach(ch => {
+        const opt = document.createElement('option');
+        opt.value = ch;
+        const t = mangaData[ch].title ? ' : ' + mangaData[ch].title : '';
+        opt.textContent = 'Ch. ' + ch + t;
+        chapterSelect.appendChild(opt);
+        });
+        chapterSelect.onchange = e => loadChapter(e.target.value);
+        }
+
+        // Ajout d'un paramètre optionnel pour forcer une page précise au chargement
+        function loadChapter(chId, startAtEnd = false, specificPage = null) {
+        chapterSelect.value = chId;
+        breadcrumbCh.textContent = chId;
+        currentPages = Array.isArray(mangaData[chId]) ? mangaData[chId] : mangaData[chId].pages;
+
+        if (specificPage !== null && specificPage >= 0 && specificPage < currentPages.length) {
+        currentPage = specificPage;
+        } else {
+        currentPage = startAtEnd ? currentPages.length - 1 : 0;
+        }
+
+        updateNavButtons();
+
+        if (scrollMode) {
+        buildScrollMode();
+        } else {
+        updatePageView();
+        }
+        }
+
+        function updateNavButtons() {
+        const chapters = Object.keys(mangaData);
+        const idx = chapters.indexOf(chapterSelect.value);
+        document.getElementById('btn-prev-ch').disabled = idx <= 0;
+        document.getElementById('btn-next-ch').disabled = idx >= chapters.length - 1;
+        }
+
+        function updatePageView() {
+        loader.style.display = 'block';
+        mangaPageEl.style.opacity = '0';
+
+        mangaPageEl.onload = () => {
+        mangaPageEl.style.opacity = '1';
+        loader.style.display = 'none';
+        };
+        mangaPageEl.src = currentPages[currentPage];
+
+        updateUI();
+
+        if (currentPage < currentPages.length - 1) {
+        const pre = new Image();
+        pre.src = currentPages[currentPage + 1];
+        }
+        }
+
+        function applyFit() {
+        if (fitMode === 'contain') {
+        mangaPageEl.style.maxWidth = '100%';
+        mangaPageEl.style.maxHeight = '100%';
+        mangaPageEl.style.width = 'auto';
+        mangaPageEl.style.height = 'auto';
+        } else if (fitMode === 'width') {
+        mangaPageEl.style.maxWidth = '100%';
+        mangaPageEl.style.maxHeight = 'none';
+        mangaPageEl.style.width = '100%';
+        mangaPageEl.style.height = 'auto';
+        } else if (fitMode === 'height') {
+        mangaPageEl.style.maxWidth = 'none';
+        mangaPageEl.style.maxHeight = '100%';
+        mangaPageEl.style.width = 'auto';
+        mangaPageEl.style.height = '100%';
+        }
+        }
+
+        function buildScrollMode() {
+        scrollContent.innerHTML = '';
+        loader.style.display = 'block';
+
+        let loaded = 0;
+        currentPages.forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = '';
+        img.onload = img.onerror = () => {
+        loaded++;
+        // Quand toutes les images sont chargées...
+        if (loaded === currentPages.length) {
+        loader.style.display = 'none';
+
+        // ... On défile jusqu'à l'image en cours (utile si on vient de recharger la page)
+        const imgs = scrollContent.querySelectorAll('img');
+        if (imgs[currentPage]) {
+        imgs[currentPage].scrollIntoView({ behavior: 'auto' });
+        }
+        }
+        };
+        scrollContent.appendChild(img);
+        });
+
+        updateUI();
+
+        scrollView.onscroll = () => {
+        const imgs = scrollContent.querySelectorAll('img');
+        const mid = scrollView.scrollTop + scrollView.clientHeight / 2;
+        let best = 0, bestDist = Infinity;
+        imgs.forEach((img, i) => {
+        const imgMid = img.offsetTop + img.offsetHeight / 2;
+        const d = Math.abs(mid - imgMid);
+        if (d < bestDist) { bestDist = d; best = i; }
+        });
+        if (best !== currentPage) {
+        currentPage = best;
+        updateUI();
+        }
+        };
+        }
+
+        function updateUI() {
+        const total = currentPages.length;
+        const cur = currentPage + 1;
+        pageInfo.textContent = cur + ' / ' + total;
+        const pct = total > 1 ? ((currentPage) / (total - 1)) * 100 : 100;
+        progressFill.style.width = pct + '%';
+
+        // --- NOUVEAU : Sauvegarde locale de la progression ---
+        if (mangaId) {
+        localStorage.setItem('manga_progress_' + mangaId, JSON.stringify({
+        chapter: chapterSelect.value,
+        page: currentPage
+        }));
+        }
+        }
+
+        function setScrollMode(on) {
+        scrollMode = on;
+        document.getElementById('mode-page').classList.toggle('active', !on);
+        document.getElementById('mode-scroll').classList.toggle('active', on);
+        document.getElementById('btn-scroll').classList.toggle('active', on);
+
+        document.getElementById('zone-prev').style.display = on ? 'none' : '';
+        document.getElementById('zone-next').style.display = on ? 'none' : '';
+
+        if (on) {
+        pageView.style.display = 'none';
+        scrollView.style.display = 'block';
+        buildScrollMode();
+        } else {
+        scrollView.style.display = 'none';
+        pageView.style.display = 'flex';
+        applyFit();
+        updatePageView();
+        }
+        }
+
+        function nextPage() {
+        if (scrollMode) {
+        const imgs = scrollContent.querySelectorAll('img');
+        if (currentPage < imgs.length - 1) {
+        imgs[currentPage + 1].scrollIntoView({ behavior: 'smooth' });
+        } else {
+        goToNextChapter();
+        }
+        return;
+        }
+
+        if (currentPage < currentPages.length - 1) {
+        currentPage++;
+        updatePageView();
+        } else {
+        goToNextChapter();
+        }
+        }
+
+        function prevPage() {
+        if (scrollMode) {
+        const imgs = scrollContent.querySelectorAll('img');
+        if (currentPage > 0) {
+        imgs[currentPage - 1].scrollIntoView({ behavior: 'smooth' });
+        } else {
+        goToPrevChapter();
+        }
+        return;
+        }
+
+        if (currentPage > 0) {
+        currentPage--;
+        updatePageView();
+        } else {
+        goToPrevChapter();
+        }
+        }
+
+        function goToNextChapter() {
+        const chs = Object.keys(mangaData);
+        const i = chs.indexOf(chapterSelect.value);
+        if (i < 0 || i >= chs.length - 1) return;
+        const next = chs[i + 1];
+        const title = mangaData[next].title || '';
+        showTransition('Chapitre suivant', 'Ch. ' + next + (title ? ' — ' + title : ''), () => {
+        loadChapter(next);
+        });
+        }
+
+        function goToPrevChapter() {
+        const chs = Object.keys(mangaData);
+        const i = chs.indexOf(chapterSelect.value);
+        if (i <= 0) return;
+        const prev = chs[i - 1];
+        const title = mangaData[prev].title || '';
+        showTransition('Chapitre précédent', 'Ch. ' + prev + (title ? ' — ' + title : ''), () => {
+        loadChapter(prev, true);
+        });
+        }
+
+        function showTransition(label, sub, callback) {
+        transitionText.textContent = label;
+        transitionSub.textContent = sub;
+        transitionOverlay.classList.add('show');
+        setTimeout(() => {
+        callback();
+        transitionOverlay.classList.remove('show');
+        }, 1400);
+        }
+
+        progressBg.addEventListener('click', e => {
+        if (scrollMode) return;
+        const rect = progressBg.getBoundingClientRect();
+        const pct = (e.clientX - rect.left) / rect.width;
+        currentPage = Math.round(pct * (currentPages.length - 1));
+        currentPage = Math.max(0, Math.min(currentPages.length - 1, currentPage));
+        updatePageView();
+        });
+
+        progressBg.addEventListener('mousemove', e => {
+        if (scrollMode) return;
+        const rect = progressBg.getBoundingClientRect();
+        const pct = (e.clientX - rect.left) / rect.width;
+        const pg = Math.round(pct * (currentPages.length - 1)) + 1;
+        progressTooltip.textContent = pg + ' / ' + currentPages.length;
+        progressTooltip.style.left = (e.clientX - rect.left) + 'px';
+        progressTooltip.style.opacity = '1';
+        });
+
+        progressBg.addEventListener('mouseleave', () => {
+        progressTooltip.style.opacity = '0';
+        });
+
+        document.getElementById('zone-prev').addEventListener('click', prevPage);
+        document.getElementById('zone-next').addEventListener('click', nextPage);
+        document.getElementById('btn-prev-ch').addEventListener('click', goToPrevChapter);
+        document.getElementById('btn-next-ch').addEventListener('click', goToNextChapter);
+
+        document.getElementById('btn-settings').addEventListener('click', () => {
+        settingsPanel.classList.toggle('open');
+        document.getElementById('btn-settings').classList.toggle('active', settingsPanel.classList.contains('open'));
+        });
+
+        document.getElementById('btn-scroll').addEventListener('click', () => setScrollMode(!scrollMode));
+        document.getElementById('btn-help').addEventListener('click', () => { document.getElementById('help-modal').classList.add('open'); });
+        document.getElementById('help-close').addEventListener('click', () => { document.getElementById('help-modal').classList.remove('open'); });
+        document.getElementById('help-modal').addEventListener('click', e => {
+        if (e.target === document.getElementById('help-modal')) document.getElementById('help-modal').classList.remove('open');
+        });
+
+        document.getElementById('mode-page').addEventListener('click', () => { if (scrollMode) setScrollMode(false); });
+        document.getElementById('mode-scroll').addEventListener('click', () => { if (!scrollMode) setScrollMode(true); });
+
+        ['contain','width','height'].forEach(f => {
+        document.getElementById('fit-'+f).addEventListener('click', () => {
+        fitMode = f;
+        ['contain','width','height'].forEach(x => document.getElementById('fit-'+x).classList.toggle('active', x === f));
+        if (!scrollMode) applyFit();
+        });
+        });
+
+        // ══════════════════════════════════════════
+        // PLEIN ÉCRAN CORRIGÉ (API Keyboard Lock)
+        // ══════════════════════════════════════════
+        function isFS() {
+        return !!(document.fullscreenElement || document.webkitFullscreenElement);
+        }
+
+        function toggleFS() {
+        if (!isFS()) {
+        const req = (document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen).call(document.documentElement);
+
+        if (navigator.keyboard && navigator.keyboard.lock) {
+        if (req && req.then) {
+        req.then(() => navigator.keyboard.lock(['Escape'])).catch(() => {});
+        } else {
+        setTimeout(() => navigator.keyboard.lock(['Escape']).catch(() => {}), 100);
+        }
+        }
+        } else {
+        if (navigator.keyboard && navigator.keyboard.unlock) {
+        navigator.keyboard.unlock();
+        }
+        (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+        }
+        }
+        document.getElementById('fullscreen-btn').addEventListener('click', toggleFS);
+
+        // ══════════════════════════════════════════
+        // INACTIVITÉ (Plein écran) ET TOLÉRANCE SOURIS
+        // ══════════════════════════════════════════
+        let idleTimer;
+        function resetIdle() {
+        document.body.classList.remove('idle');
+        clearTimeout(idleTimer);
+        if (isFS()) {
+        idleTimer = setTimeout(() => document.body.classList.add('idle'), 2500);
+        }
+        }
+
+        let lastMouseX = -1, lastMouseY = -1;
+        function checkMouseMove(e) {
+        if (lastMouseX === -1) { lastMouseX = e.clientX; lastMouseY = e.clientY; return; }
+        const dist = Math.abs(e.clientX - lastMouseX) + Math.abs(e.clientY - lastMouseY);
+        if (dist > 50) {
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+        resetIdle();
+        }
+        }
+
+        ['mousedown','touchstart','fullscreenchange','webkitfullscreenchange'].forEach(e => {
+        document.addEventListener(e, resetIdle, { passive: true });
+        });
+        document.addEventListener('mousemove', checkMouseMove, { passive: true });
+
+        document.addEventListener('fullscreenchange', () => {
+        if (!isFS()) {
+        document.body.classList.remove('idle');
+        if (navigator.keyboard && navigator.keyboard.unlock) navigator.keyboard.unlock();
+
+        document.getElementById('help-modal').classList.remove('open');
+        settingsPanel.classList.remove('open');
+        document.getElementById('btn-settings').classList.remove('active');
+        }
+        viewport.style.top = isFS() ? '0' : '';
+        viewport.style.bottom = isFS() ? '0' : '';
+        });
+
+        let touchStartX = 0, touchStartY = 0;
+        viewport.addEventListener('touchstart', e => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        viewport.addEventListener('touchend', e => {
+        if (scrollMode) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+        dx < 0 ? nextPage() : prevPage();
+        }
+        }, { passive: true });
+
+        // ══════════════════════════════════════════
+        // CLAVIER
+        // ══════════════════════════════════════════
+        document.addEventListener('keydown', e => {
+        if (e.target.tagName === 'SELECT') return;
+
+        const navKeys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ', 'ArrowLeft', 'ArrowRight', 'a', 'A', 'd', 'D'];
+
+        if (!navKeys.includes(e.key)) {
+        resetIdle();
+        }
+
+        if (scrollMode) {
+        const scrollAmt = window.innerHeight * 0.7;
+        if (e.key === 'ArrowDown') { e.preventDefault(); scrollView.scrollBy({ top: 60, behavior: 'smooth' }); }
+        if (e.key === 'ArrowUp') { e.preventDefault(); scrollView.scrollBy({ top: -60, behavior: 'smooth' }); }
+        if (e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); scrollView.scrollBy({ top: scrollAmt, behavior: 'smooth' }); }
+        if (e.key === 'PageUp') { e.preventDefault(); scrollView.scrollBy({ top: -scrollAmt, behavior: 'smooth' }); }
+        }
+
+        if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        if (e.ctrlKey || e.metaKey) goToNextChapter();
+        else nextPage();
+        }
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        if (e.ctrlKey || e.metaKey) goToPrevChapter();
+        else prevPage();
+        }
+
+        if (e.key === 'f' || e.key === 'F') toggleFS();
+        if (e.key === 'w' || e.key === 'W') setScrollMode(!scrollMode);
+        if (e.key === 's' || e.key === 'S') {
+        settingsPanel.classList.toggle('open');
+        document.getElementById('btn-settings').classList.toggle('active', settingsPanel.classList.contains('open'));
+        }
+        if (e.key === '?') {
+        document.getElementById('help-modal').classList.add('open');
+        }
+
+        if (e.key === 'Escape') {
+        const helpModal = document.getElementById('help-modal');
+        const isHelpOpen = helpModal.classList.contains('open');
+        const isSettingsOpen = settingsPanel.classList.contains('open');
+
+        if (isHelpOpen || isSettingsOpen) {
+        e.preventDefault();
+        helpModal.classList.remove('open');
+        settingsPanel.classList.remove('open');
+        document.getElementById('btn-settings').classList.remove('active');
+        } else if (isFS()) {
+        toggleFS();
+        }
+        }
+        });
+
+        document.addEventListener('click', e => {
+        if (!settingsPanel.contains(e.target) && !document.getElementById('btn-settings').contains(e.target)) {
+        settingsPanel.classList.remove('open');
+        document.getElementById('btn-settings').classList.remove('active');
+        }
+        });
+    </script>
+</body>
+</html>
