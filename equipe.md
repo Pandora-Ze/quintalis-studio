@@ -55,7 +55,7 @@ Voici les membres qui travaillent dans l'ombre pour vous proposer ces projets de
 
 | Membre | Grade | Rôle(s) |
 | :--- | :--- | :--- |
-| **Kaelis (anciennement PandoraZe)** | [!badge variant="success" corners="pill" text="Fondateur / Directeur Général"] | *Traducteur de texte / Éditeur d'images / Sous-titrage* |
+| **Kaelis (anciennement PandoraZe)** | [!badge variant="success" corners="pill" text="Fondateur / Directeur Général"] | *Traducteur de texte / Éditeur d'images / Sous-titrage / Assistance Utilisateur* |
 
 :::center
 *Vous souhaitez nous aider et rejoindre l'aventure ? [Ouvrez un ticket sur Discord !](https://discord.gg/w4qK3RvCeg) {target="blank"}*

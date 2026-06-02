@@ -62,7 +62,7 @@ Voici la liste des problèmes actuellement étudiés par l'équipe sur la versio
 
 Si votre jeu ne fonctionne pas correctement, vérifiez ces solutions avant de nous contacter :
 
-==- Le jeu est toujours en Anglais / Japonais après l'installation
+==- Le jeu est toujours en Anglais / Japonais après l'installation (PC)
 C'est le problème le plus courant. Cela signifie que les fichiers n'ont pas été placés au bon endroit.
 1. Assurez-vous d'avoir extrait le contenu de l'archive **à l'intérieur** du dossier `windata`.
 2. Si vous mettez à jour votre patch, Windows doit obligatoirement vous demander de **"Remplacer les fichiers existants"**. Si ce n'est pas le cas, c'est que vous avez créé un sous-dossier inutile.
@@ -73,7 +73,7 @@ C'est le problème le plus courant. Cela signifie que les fichiers n'ont pas ét
 Si le jeu se ferme tout seul lors d'une ligne de dialogue spécifique, c'est probablement lié à une erreur dans notre code de traduction (une balise manquante, par exemple). Notez bien le moment précis (chapitre, personnage qui parle) et venez nous le signaler !
 ===
 
-==- Le jeu indique des fichiers .dll manquants
+==- Le jeu indique des fichiers .dll manquants (PC)
 Cette erreur est souvent présente quand vous installez une version crackée du jeu. En effet, Steam télécharge automatiquement les librairies pour que le jeu fonctionne correctement. 
 Si cette erreur vous arrive, rendez-vous sur la <a href="https://www.microsoft.com/fr-fr/download/details.aspx?id=35" target="_blank" rel="noopener noreferrer" style="color: #5297f0; text-decoration: underline;">page officielle de Microsoft</a> pour télécharger les librairies requises au bon fonctionnement du jeu.
 ===
@@ -88,5 +88,7 @@ Pour le signaler efficacement, essayez de fournir :
 * Une capture d'écran du problème.
 * La version du patch que vous utilisez.
 * Le contexte exact (à quel moment cela s'est produit).
+
+Si cela concerne un problème concernant le lancement du jeu, le Directeur Général de Quintalis STUDIO, Kaelis, tentera de vous prendre en charge dans les plus brefs délais dès le signalement de votre problème.
 
 [!button target="blank" text="Signaler le bug sur notre Discord" icon="comment-discussion" variant="danger"](https://discord.gg/w4qK3RvCeg)

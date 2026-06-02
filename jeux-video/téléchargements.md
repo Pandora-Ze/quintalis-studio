@@ -45,7 +45,7 @@ order: 200
 
 Retrouvez ici les liens officiels pour nos traductions. Tous nos patchs sont testés avant publication et garantis sans virus.
 
-Attention : les patch sont disponible uniquement pour une version PC du jeu. Une version Switch/PS4 pourrait être envisagée, mais cela se fera si la demande vient avec, étant donné la différence globale de la façon dont sont organisés les fichiers type "DLC".
+Attention : plusieurs liens de téléchargements vous sont proposés, ainsi que différentes plateformes. Veillez-bien à télécharger les fichiers correspondant à votre plateforme (PC/Switch)
 
 ---
 
@@ -53,13 +53,25 @@ Attention : les patch sont disponible uniquement pour une version PC du jeu. Une
 +++ Memories of a Quintessential Summer
 ![](static/soon.png)
 +++ Five Memories Spent With You
-[!button text="Télécharger le patch (local)" icon="custom-jeu" variant="info" color="#8b5cf6" size="l"](https://quintalis-studio.emcloudhost.fr/patchs_manuels/Patch_VF_v1.2.zip) [!badge variant="question" text="v1.2"]
+[!button text="Télécharger le patch PC (local)" icon="custom-jeu" variant="success" color="#8b5cf6" size="l"](https://quintalis-studio.emcloudhost.fr/patchs_manuels/Patch_VF_v1.2.zip) [!badge variant="question" text="v1.2"]
 
-[!button target="blank" text="Téléchargement alternatif via MEGA" icon="custom-mega" variant="info" color="#8b5cf6" size="l"](https://mega.nz/file/peslka6A#KSsYCY9pWuJbbrqieAj8LvIBFFFh_viusE5ztGyfAqY) [!badge variant="question" text="v1.2"]
+[!button target="blank" text="Téléchargement alternatif PC (via MEGA)" icon="custom-mega" variant="success" color="#8b5cf6" size="l"](https://mega.nz/file/peslka6A#KSsYCY9pWuJbbrqieAj8LvIBFFFh_viusE5ztGyfAqY) [!badge variant="question" text="v1.2"]
+
+[!button text="Télécharger le patch Switch (local)" icon="custom-jeu" variant="danger" color="#8b5cf6" size="l"](https://quintalis-studio.emcloudhost.fr/patchs_manuels/Patch_VF_Switch_v1.0.zip) [!badge variant="question" text="v1.0"]
+
+[!button target="blank" text="Téléchargement alternatif Switch (via MEGA)" icon="custom-mega" variant="danger" color="#8b5cf6" size="l"](https://mega.nz/file/0eNilJAb#yF2qdzSDXTSGh2MjZPDnTbPHYHd-k-qFa2RbbUeiA0s) [!badge variant="question" text="v1.0"]
 
 Assurez vous d'avoir toujours la dernière version en date afin de profiter d'une expérience de jeu optimale.
 
-[Consulter le patch note pour ce jeu](static/patch-note-fmswy.txt){download="patch-note-fmswy.txt"}
+
+[Consulter le patch note pour ce jeu](static/patch-note-fmswy.txt){download="patch-note-fmswy.txt"} (version PC uniquement)
+
+==- Informations du patch Switch
+La version actuelle (soit la 1.0) ne comprends, pour l'instant, que le scénario et quelques autres textes de traduits. L'interface et les menus sont toujours en anglais. Cela sera corrigé lors de la version final du patch pour cette plateforme (si aucun bug n'est à survenir) : la 1.1. Cette dernière sortira lorsque la post-production du patch PC sera entièrement terminée car étant plus simple à développer et à tester.
+
+Merci de votre compréhension.
+===
+
 +++ Five Promises Exchanged with Her
 ![](static/soon.png)
 +++ The Quintessential Princess

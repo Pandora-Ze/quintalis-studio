@@ -181,10 +181,35 @@
             object-fit: contain;
             display: block;
             opacity: 0;
-            transition: opacity 0.2s ease;
             user-select: none;
             -webkit-user-drag: none;
             pointer-events: none;
+            /* On a retiré la vieille transition pour laisser place à l'animation */
+        }
+
+        /* L'animation fluide et élégante que j'ai créée pour toi */
+        @keyframes slideNext {
+            0% {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slidePrev {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         #scroll-view {
@@ -208,7 +233,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 0;
+            padding: 20px 0; /* Ajout d'un espace en haut et en bas du chapitre */
         }
 
             #scroll-content img {
@@ -217,6 +242,7 @@
                 display: block;
                 user-select: none;
                 -webkit-user-drag: none;
+                margin-bottom: 20px; /* Séparation entre chaque page */
             }
 
         #loader {
@@ -670,9 +696,9 @@
         <div class="setting-group">
             <div class="setting-label">Ajustement image</div>
             <div class="toggle-row">
-                <button class="toggle-btn active" id="fit-contain">Contenir</button>
+                <button class="toggle-btn active" id="fit-contain">Adapter</button>
                 <button class="toggle-btn" id="fit-width">Largeur</button>
-                <button class="toggle-btn" id="fit-height">Hauteur</button>
+                <button class="toggle-btn" id="fit-height">Page entière</button>
             </div>
         </div>
     </aside>
@@ -708,6 +734,7 @@
         let currentPage = 0;
         let scrollMode = false;
         let fitMode = 'contain';
+        let animDirection = 'next'; // NOUVEAU : Le lecteur retient dans quel sens tu vas !
 
         const mangaPageEl = document.getElementById('manga-page');
         const pageInfo = document.getElementById('page-info');
@@ -742,37 +769,40 @@
         }
 
         const jsonUrl = new URL('manga-data.json', window.location.href).href;
-        fetch(jsonUrl)
-        .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}\n${jsonUrl}`); return r.json(); })
-        .then(data => {
-        if (!data[mangaId]) { showError(`Projet "${mangaId}" introuvable dans manga-data.json.`); return; }
-        mangaData = data[mangaId];
-        if (data._meta && data._meta[mangaId] && data._meta[mangaId].name) {
-        mangaTitleDisplay.textContent = data._meta[mangaId].name;
-        document.title = data._meta[mangaId].name + ' — Lecteur Quintalis';
-        }
-        setupSelector();
-
-        // --- NOUVEAU : Récupération de la sauvegarde locale ---
-        const savedProgress = localStorage.getItem('manga_progress_' + mangaId);
-        let startCh = Object.keys(mangaData)[0];
-        let startPg = 0;
-
-        if (savedProgress) {
-        try {
+fetch(jsonUrl)
+  .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}\n${jsonUrl}`); return r.json(); })
+  .then(data => {
+    if (!data[mangaId]) { showError(`Projet "${mangaId}" introuvable dans manga-data.json.`); return; }
+    mangaData = data[mangaId];
+    
+    // --- TITRE AUTOMATIQUE (Sans avoir besoin de toucher au JSON) ---
+    if (mangaId !== 'default') {
+      // Sépare les mots par les tirets, met une majuscule à chacun, et les recolle avec un espace
+      const autoTitle = mangaId.split(/[-_]/).map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+      mangaTitleDisplay.textContent = autoTitle;
+      document.title = autoTitle + ' — Lecteur Quintalis';
+    }
+    
+    setupSelector();
+    
+    // Récupération de la sauvegarde locale
+    const savedProgress = localStorage.getItem('manga_progress_' + mangaId);
+    let startCh = Object.keys(mangaData)[0];
+    let startPg = 0;
+    
+    if (savedProgress) {
+      try {
         const parsed = JSON.parse(savedProgress);
-        // On vérifie que le chapitre sauvegardé existe toujours dans le JSON
         if (mangaData[parsed.chapter]) {
-        startCh = parsed.chapter;
-        startPg = parsed.page;
+          startCh = parsed.chapter;
+          startPg = parsed.page;
         }
-        } catch(e) { console.error("Erreur de lecture de la sauvegarde", e); }
-        }
-
-        // On lance le chapitre avec la page sauvegardée
-        loadChapter(startCh, false, startPg);
-        })
-        .catch(err => showError(`Fichier manga-data.json inaccessible.\n${err.message}`));
+      } catch(e) { console.error("Erreur de lecture de la sauvegarde", e); }
+    }
+    
+    loadChapter(startCh, false, startPg);
+  })
+  .catch(err => showError(`Fichier manga-data.json inaccessible.\n${err.message}`));
 
         function setupSelector() {
         chapterSelect.innerHTML = '';
@@ -786,7 +816,6 @@
         chapterSelect.onchange = e => loadChapter(e.target.value);
         }
 
-        // Ajout d'un paramètre optionnel pour forcer une page précise au chargement
         function loadChapter(chId, startAtEnd = false, specificPage = null) {
         chapterSelect.value = chId;
         breadcrumbCh.textContent = chId;
@@ -797,6 +826,9 @@
         } else {
         currentPage = startAtEnd ? currentPages.length - 1 : 0;
         }
+
+        // Par défaut, si on charge un chapitre par la fin, l'animation ira vers la gauche
+        animDirection = startAtEnd ? 'prev' : 'next';
 
         updateNavButtons();
 
@@ -817,9 +849,18 @@
         function updatePageView() {
         loader.style.display = 'block';
         mangaPageEl.style.opacity = '0';
+        mangaPageEl.style.animation = 'none'; // Réinitialisation
 
         mangaPageEl.onload = () => {
         mangaPageEl.style.opacity = '1';
+
+        // Application de l'animation en fonction du sens de lecture
+        if (animDirection === 'next') {
+        mangaPageEl.style.animation = 'slideNext 0.25s ease-out forwards';
+        } else {
+        mangaPageEl.style.animation = 'slidePrev 0.25s ease-out forwards';
+        }
+
         loader.style.display = 'none';
         };
         mangaPageEl.src = currentPages[currentPage];
@@ -833,6 +874,7 @@
         }
 
         function applyFit() {
+        if (!scrollMode) {
         if (fitMode === 'contain') {
         mangaPageEl.style.maxWidth = '100%';
         mangaPageEl.style.maxHeight = '100%';
@@ -849,6 +891,27 @@
         mangaPageEl.style.width = 'auto';
         mangaPageEl.style.height = '100%';
         }
+        } else {
+        const imgs = scrollContent.querySelectorAll('img');
+        imgs.forEach(img => {
+        if (fitMode === 'contain') {
+        img.style.maxWidth = '850px';
+        img.style.width = '100%';
+        img.style.height = 'auto';
+        img.style.maxHeight = 'none';
+        } else if (fitMode === 'width') {
+        img.style.maxWidth = '100%';
+        img.style.width = '100%';
+        img.style.height = 'auto';
+        img.style.maxHeight = 'none';
+        } else if (fitMode === 'height') {
+        img.style.maxWidth = '100%';
+        img.style.width = 'auto';
+        img.style.height = '100vh';
+        img.style.maxHeight = 'none';
+        }
+        });
+        }
         }
 
         function buildScrollMode() {
@@ -862,11 +925,9 @@
         img.alt = '';
         img.onload = img.onerror = () => {
         loaded++;
-        // Quand toutes les images sont chargées...
         if (loaded === currentPages.length) {
         loader.style.display = 'none';
 
-        // ... On défile jusqu'à l'image en cours (utile si on vient de recharger la page)
         const imgs = scrollContent.querySelectorAll('img');
         if (imgs[currentPage]) {
         imgs[currentPage].scrollIntoView({ behavior: 'auto' });
@@ -876,6 +937,7 @@
         scrollContent.appendChild(img);
         });
 
+        applyFit();
         updateUI();
 
         scrollView.onscroll = () => {
@@ -901,7 +963,6 @@
         const pct = total > 1 ? ((currentPage) / (total - 1)) * 100 : 100;
         progressFill.style.width = pct + '%';
 
-        // --- NOUVEAU : Sauvegarde locale de la progression ---
         if (mangaId) {
         localStorage.setItem('manga_progress_' + mangaId, JSON.stringify({
         chapter: chapterSelect.value,
@@ -943,6 +1004,7 @@
         }
 
         if (currentPage < currentPages.length - 1) {
+        animDirection = 'next'; // On enregistre qu'on avance
         currentPage++;
         updatePageView();
         } else {
@@ -962,6 +1024,7 @@
         }
 
         if (currentPage > 0) {
+        animDirection = 'prev'; // On enregistre qu'on recule
         currentPage--;
         updatePageView();
         } else {
@@ -1005,9 +1068,14 @@
         if (scrollMode) return;
         const rect = progressBg.getBoundingClientRect();
         const pct = (e.clientX - rect.left) / rect.width;
-        currentPage = Math.round(pct * (currentPages.length - 1));
-        currentPage = Math.max(0, Math.min(currentPages.length - 1, currentPage));
+        const targetPage = Math.round(pct * (currentPages.length - 1));
+
+        if (targetPage !== currentPage) {
+        // Calcul de la direction si on clique sur la barre de progression !
+        animDirection = targetPage > currentPage ? 'next' : 'prev';
+        currentPage = Math.max(0, Math.min(currentPages.length - 1, targetPage));
         updatePageView();
+        }
         });
 
         progressBg.addEventListener('mousemove', e => {
@@ -1048,13 +1116,10 @@
         document.getElementById('fit-'+f).addEventListener('click', () => {
         fitMode = f;
         ['contain','width','height'].forEach(x => document.getElementById('fit-'+x).classList.toggle('active', x === f));
-        if (!scrollMode) applyFit();
+        applyFit();
         });
         });
 
-        // ══════════════════════════════════════════
-        // PLEIN ÉCRAN CORRIGÉ (API Keyboard Lock)
-        // ══════════════════════════════════════════
         function isFS() {
         return !!(document.fullscreenElement || document.webkitFullscreenElement);
         }
@@ -1079,9 +1144,6 @@
         }
         document.getElementById('fullscreen-btn').addEventListener('click', toggleFS);
 
-        // ══════════════════════════════════════════
-        // INACTIVITÉ (Plein écran) ET TOLÉRANCE SOURIS
-        // ══════════════════════════════════════════
         let idleTimer;
         function resetIdle() {
         document.body.classList.remove('idle');
@@ -1131,13 +1193,15 @@
         const dx = e.changedTouches[0].clientX - touchStartX;
         const dy = e.changedTouches[0].clientY - touchStartY;
         if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
-        dx < 0 ? nextPage() : prevPage();
+        // Le swipe sur mobile détecte aussi la direction !
+        if (dx < 0) {
+        nextPage();
+        } else {
+        prevPage();
+        }
         }
         }, { passive: true });
 
-        // ══════════════════════════════════════════
-        // CLAVIER
-        // ══════════════════════════════════════════
         document.addEventListener('keydown', e => {
         if (e.target.tagName === 'SELECT') return;
 
