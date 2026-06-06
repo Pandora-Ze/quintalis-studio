@@ -98,3 +98,53 @@ Version 1.2 :
 	- Corrections de la voie de Miku
 
 		- Remplacement de "Both" par "Fûtarô & Miku" (oubli de traduction)
+
+
+
+Version 1.2 : 
+
+- Corrections : 
+
+	- Correction du tutoriel : 
+		
+		- Ajout du point dans une phrase de Raiha ou il était oublié (tu_01)
+
+	- Correction de l'introduction : 
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (op_02_01)
+
+		- Racourcicement de la ligne d'Itsuki pour l'ajustement auto de la police (gr_01_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (gr_01_02)
+
+		- Correction de la mise à la ligne auto, ou le guillemet était seul à la ligne du dessus (gr_01_02)
+
+		- Correction de la mise à la ligne auto, ou elle se faisait avant un tiret (gr_02_01)
+
+		- Correction de la mise à la ligne auto, ou le guillement était le seul à la ligne du dessus (gr_03_01)
+
+		- Correction de la mise à la ligne auto, ou elle se faisait avant un tiret (gr_03_01)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (gr_05_01)
+
+		- Suppression d'un saut de ligne inutile (gr_05_01)
+
+	- Correction de la voie d'Ichika :
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_01)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_01)
+
+		- Correction des retour à la ligne multiples inutiles (ca01_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_04)
+
+		- Remplacement de Fûtarô par Fû (ca01_04)
+
+		- Modification de "Drama" pour "Rom-Com" (ca01_04)
+
+		- Correction des retour à la ligne multiples inutiles (ca01_04) [/!\ Encore à corriger]
+
+		- Remplacement de Fûtarô par Fû (ca01_04)
+
+		- Modification de l'emplacement du saut de ligne pour une meilleure lecture (ca01_06)
