@@ -101,7 +101,7 @@ Version 1.2 :
 
 
 
-Version 1.2 : 
+Version 1.3 : 
 
 - Corrections : 
 
@@ -143,8 +143,24 @@ Version 1.2 :
 
 		- Modification de "Drama" pour "Rom-Com" (ca01_04)
 
-		- Correction des retour à la ligne multiples inutiles (ca01_04) [/!\ Encore à corriger]
+		- Correction des retour à la ligne multiples inutiles (ca01_04)
 
 		- Remplacement de Fûtarô par Fû (ca01_04)
 
 		- Modification de l'emplacement du saut de ligne pour une meilleure lecture (ca01_06)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_06)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_mv1_01)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_mv1_02)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x2 (ca01_mv1_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_mv1_03)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x1 (ca01_mv1_03)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca01_mv1_03)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv1_03)

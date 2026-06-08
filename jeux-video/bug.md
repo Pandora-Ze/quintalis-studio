@@ -78,6 +78,10 @@ Cette erreur est souvent présente quand vous installez une version crackée du 
 Si cette erreur vous arrive, rendez-vous sur la <a href="https://www.microsoft.com/fr-fr/download/details.aspx?id=35" target="_blank" rel="noopener noreferrer" style="color: #5297f0; text-decoration: underline;">page officielle de Microsoft</a> pour télécharger les librairies requises au bon fonctionnement du jeu.
 ===
 
+==- Le jeu affiche le texte "title menu not implement" au démarage
+Cette erreur survient quand vous n'utilisez pas la dernière version en date du jeu (Build 13840887).
+===
+
 ---
 
 ## Signaler un nouveau bug
