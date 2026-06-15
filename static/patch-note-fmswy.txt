@@ -164,3 +164,83 @@ Version 1.3 :
 		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca01_mv1_03)
 
 		- Correction de la façon de parler d'Itsuki (ca01_mv1_03)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_mv2_01)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv2_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv2_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv2_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv2_02)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_mv2_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_mv2_03)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_mv2_03)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_mv2_03)
+
+		- Remplacement d'un tiret par des points de suspension (ca01_mv2_03)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_mv2_03)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca01_08)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_08)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_08)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_09)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_09)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca01_09)
+
+		- Remplacement d'un tiret par des points de suspension (ca01_10)
+
+		- Remplacement d'un tiret par des points de suspension (ca01_10)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation et d'interrogation était seul à la ligne (ca01_11)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x1 (ca01_11)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_12)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_12)
+
+		- Suppression des parenthèses laissés par erreur pour un dialogue d'Ichika (ca01_12)
+
+		- Modification pour changer une hésitation d'Ichika pour paraître plus français (ca01_12)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_12)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_12)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_12)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_13)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_13)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_14)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_14)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_15)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca01_16)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_17)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_17)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_17)
+
+		- Ajout points de suspension pour une meilleure exprésivité (ca01_17)
+
+		- Remplacement d'un tiret par des points de suspension (ca01_17)
+
+		- Oublie de traduction de "Waiter" par "Serveur" (ca01_17)
