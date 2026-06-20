@@ -33,7 +33,7 @@ Voici la liste des problèmes actuellement étudiés par l'équipe sur la versio
 
 </div>
 
-- Aucune modification terminée pour le moment
+- Correction des dialogues de la voie d'Ichika
 
 <div style="text-align: center;">
 
@@ -41,7 +41,12 @@ Voici la liste des problèmes actuellement étudiés par l'équipe sur la versio
 
 </div>
 
-- Au niveau des choix, le texte est resté en anglais (même si la phrase d'origine est bien en français)
+- Correction des dialogues de la voie de Nino
+- Correction des dialogues de la voie de Miku
+- Correction des dialogues de la voie de Yotsuba
+- Correction des dialogues de la voie d'Itsuki
+- Correction des dialogues de la voie des Quintuplées
+- Allignements des textes en jeu
 
 
 <div style="text-align: center;">
@@ -51,8 +56,7 @@ Voici la liste des problèmes actuellement étudiés par l'équipe sur la versio
 
 </div>
 
-- Allignements des textes en jeu
-- Saut de lignes incorrects pour la ponctuation.
+- Aucun problème de signalé qui n'ait pas été traité
 
 ===
 

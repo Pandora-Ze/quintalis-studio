@@ -103,6 +103,20 @@ Version 1.2 :
 
 Version 1.3 : 
 
+- Nouveautés :
+
+	- Ajout de la mention "Traduction française par Quintalis STUDIO" sur l'écran d'accueil
+
+- Améliorations : 
+
+	- Traduction historique
+
+		- Traduction des évènements en jeu (choix, déplacements) dans l'historique des discussions
+
+	- Titres
+
+		- Refonte des titres afin de les centrer quand ils apparaissent
+
 - Corrections : 
 
 	- Correction du tutoriel : 
@@ -243,4 +257,198 @@ Version 1.3 :
 
 		- Remplacement d'un tiret par des points de suspension (ca01_17)
 
-		- Oublie de traduction de "Waiter" par "Serveur" (ca01_17)
+		- Oublie de traduction de "Waiter" par "Serveuse" (ca01_17)
+
+		- Remplacement d'un tiret par des points de suspension (ca01_17)
+
+		- Remplacement d'un tiret par des points de suspension (ca01_17)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_18)
+
+		- Ajout du point d'exclamation après une vague pour de la cohérence française (ca01_mv3_01)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_mv3_01)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv3_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_mv3_02)
+
+		- Correction de la façon de parler de Fûtarô (ca01_mv3_03)
+
+		- Correction de la façon de parler de Fûtarô (ca01_mv3_03)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x1 (ca01_mv3_03)
+
+		- Remplacement d'une vague par des points de suspension (ca01_mv3_03)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_mv4_01)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca01_mv4_01)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_mv4_01)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_mv4_01)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv4_01)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_mv4_01)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv4_01)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_mv4_01)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv4_01)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_mv4_01)
+
+		- Correction de la façon de parler de Nino pour paraître plus français (ca01_mv4_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_mv4_01)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca01_mv4_02)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_mv4_02)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_mv4_03)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x1 (ca01_mv4_03)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_mv4_03)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_mv4_03)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_mv4_03)
+
+		- Remplacement d'une vague par un point d'interrogation (ca01_mv4_03)
+
+		- Correction d'une expression non-française (ca01_19)
+
+		- Suppression d'une vague inutile (ca01_20)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca01_20)
+
+		- Correction de Fûtarô par toi (ca01_mv5_01)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca01_mv5_01)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x1 + adaption dialogue (ca01_mv5_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv5_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv5_02)
+
+		- Changement de noms au niveau d'une ligne de dialogue pour mieux correspondre à la scène (ca01_mv5_03)
+
+		- Modification d'une réplique de Fûtarô pour la rendre plus française (ca01_mv5_03)
+
+		- Modification d'un nom pour mieux correspondre à la phrase (ca01_mv6_01)
+
+		- Modification d'un nom pour mieux correspondre à la phrase (ca01_mv6_01)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x2 (ca01_mv6_01)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_mv6_01)
+
+		- Remplacement des guillemets pour être plus cohérent (ca01_mv6_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_mv6_02)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_mv6_02)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_mv6_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca01_mv6_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv6_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv6_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv6_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv6_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv6_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv6_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv6_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv6_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv6_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv6_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv6_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv6_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv6_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv6_02)
+
+		- Correction de la façon de parler d'Itsuki (ca01_mv6_02)
+
+		- Remplacement d'une vague par un point d'exclamation (ca01_22)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_22)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_22)
+
+		- Oubli d'une lettre dans "Non" (ca01_23)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_24)
+
+		- Mise en forme d'une phrase pour la rendre plus française (ca01_24)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_25)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_25)
+
+		- Mise en forme d'une phrase pour la rendre plus française (ca01_25)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_26)
+
+		- Traduction d'un mot générique non traduit (ca01_26)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_26)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_26)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x1 (ca01_26)
+
+		- Suppression des guillemets restés sur les dialogues (ca01_27)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca01_27)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca01_28)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca01_28)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ed01_01_01)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ed01_01_01)
+
+		- Ajout de "Mademoiselle" pour plus de respect (ed01_01_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ed01_01_02)
+
+		- Ajout de "Mademoiselle" pour plus de respect (ed01_01_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ed01_01_02)
+
+		- Traduction de "Cinq ans plus tard..." (ed01_02_01)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ed01_02_01)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ed01_02_01)
+
+		- Correction du mot "Aujourd'hui" à cause d'une faute de frappe (ed01_02_03)
+
+		- Correction faute d'ortographe (ed01_02_03)
+
+		- Remplacement de Yotsuba par Ichika (ed01_02_03)
+
+		- Ajout d'un apostrophe oublié (ed01_02_03)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ed01_02_03)
