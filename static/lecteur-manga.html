@@ -175,7 +175,17 @@
             justify-content: center;
         }
 
-        /* Transition douce pour la lecture page par page */
+        /* ══ TRANSITION ÉCLAIR ══ */
+        @keyframes fadeInPage {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
         #manga-page {
             max-width: 100%;
             max-height: 100%;
@@ -184,13 +194,8 @@
             user-select: none;
             -webkit-user-drag: none;
             pointer-events: none;
-            transition: opacity 0.25s ease-in-out;
             opacity: 1;
         }
-
-            #manga-page.fading {
-                opacity: 0;
-            }
 
         #scroll-view {
             display: none;
@@ -596,8 +601,11 @@
             transform: translateY(100%);
         }
 
-        .idle #settings-panel {
-            right: -280px !important;
+        .idle #settings-panel,
+        body.fullscreen-mode:not(.show-ui) #settings-panel {
+            right: -100vw !important;
+            opacity: 0;
+            pointer-events: none;
         }
 
         .idle #viewport {
@@ -860,6 +868,9 @@
         animDirection = startAtEnd ? 'prev' : 'next';
         updateNavButtons();
 
+        // NOUVEAU : Préchargement intégral de tout le chapitre en arrière-plan
+        preloadCurrentChapterWhole();
+
         if (scrollMode) {
         buildScrollMode();
         } else {
@@ -874,22 +885,32 @@
         document.getElementById('btn-next-ch').disabled = idx >= chapters.length - 1;
         }
 
-        // LOGIQUE DE FONDU CORRIGÉE ICI
+        function preloadCurrentChapterWhole() {
+        // Balance brutalement toutes les images du chapitre dans le cache du navigateur
+        currentPages.forEach(src => {
+        const img = new Image();
+        img.src = src;
+        });
+        }
+
+        // ══ FONCTION DE MISE À JOUR AVEC FONDU INSTANTANÉ ══
         function updatePageView() {
         loader.style.display = 'block';
-        mangaPageEl.classList.add('fading');
 
-        setTimeout(() => {
-        mangaPageEl.src = currentPages[currentPage];
+        // Réinitialise l'animation CSS pour pouvoir la rejouer
+        mangaPageEl.style.animation = 'none';
+        mangaPageEl.offsetHeight; // Force le reflow
 
         mangaPageEl.onload = () => {
-        mangaPageEl.classList.remove('fading');
+        // L'image est chargée, on lance l'animation instantanée
+        mangaPageEl.style.animation = 'fadeInPage 0.15s ease-out forwards';
         loader.style.display = 'none';
         };
 
+        mangaPageEl.src = currentPages[currentPage];
+
         updateUI();
-        preloadStrategy();
-        }, 250); // Le délai doit correspondre à la transition CSS (0.25s)
+        preloadStrategy(); // S'occupe de l'anticipation du chapitre suivant
         }
 
         function applyFit() {
@@ -995,16 +1016,7 @@
         }
 
         function preloadStrategy() {
-        if (!scrollMode) {
-        for (let i = 1; i <= 5; i++) {
-        const nextIdx = currentPage + i;
-        if (nextIdx < currentPages.length) {
-        const cacheImg = new Image();
-        cacheImg.src = currentPages[nextIdx];
-        }
-        }
-        }
-
+        // Le chapitre actuel est déjà intégralement préchargé. On gère juste l'anticipation du chapitre suivant.
         const chs = Object.keys(mangaData);
         const currentIdx = chs.indexOf(chapterSelect.value);
 
@@ -1018,7 +1030,6 @@
         nextChapterPreloaded = nextChId;
 
         const nextPages = Array.isArray(mangaData[nextChId]) ? mangaData[nextChId] : mangaData[nextChId].pages;
-        console.log(`[Buffer] Anticipation active : mise en cache des premières pages du Chapitre ${nextChId}...`);
 
         for (let i = 0; i < 5; i++) {
         if (nextPages[i]) {
@@ -1286,7 +1297,6 @@
         checkMouseMove(e);
         }, { passive: true });
 
-        // LOGIQUE PLEIN ÉCRAN CORRIGÉE
         document.addEventListener('fullscreenchange', () => {
         if (!isFS()) {
         document.body.classList.remove('idle', 'fullscreen-mode', 'show-ui');
@@ -1302,7 +1312,6 @@
         viewport.style.bottom = isFS() ? '0' : '';
         });
 
-        // Clic en bas de l'écran pour afficher l'UI en Plein Écran
         document.addEventListener('click', (e) => {
         if (isFS()) {
         const screenHeight = window.innerHeight;
@@ -1310,15 +1319,15 @@
         const bottombar = document.getElementById('bottombar');
         const topbar = document.getElementById('topbar');
         const settings = document.getElementById('settings-panel');
+        const zoneNext = document.getElementById('zone-next');
+        const zonePrev = document.getElementById('zone-prev');
 
-        // Si on clique DANS les barres qui sont déjà affichées, on ne les cache pas
         if (bottombar.contains(e.target) || topbar.contains(e.target) || settings.contains(e.target)) return;
 
-        // Si on clique dans le quart inférieur de l'écran
-        if (clickY > screenHeight * 0.75) {
-        document.body.classList.toggle('show-ui');
-        } else {
+        if (zoneNext.contains(e.target) || zonePrev.contains(e.target)) {
         document.body.classList.remove('show-ui');
+        } else {
+        document.body.classList.toggle('show-ui');
         }
         }
         });
