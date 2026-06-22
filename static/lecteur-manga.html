@@ -105,7 +105,7 @@
             }
 
         /* ══════════════════════════════════════════
-           ZONE LECTURE
+           ZONE LECTURE & DOUBLE PAGE
         ══════════════════════════════════════════ */
         #viewport {
             position: fixed;
@@ -173,9 +173,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            /* Scroll horizontal activé pour les doubles pages */
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: auto;
         }
 
-        /* ══ TRANSITION ÉCLAIR ══ */
+            /* Cache la barre de défilement pour faire plus propre */
+            #page-view::-webkit-scrollbar {
+                display: none;
+            }
+
+            #page-view.is-scrollable {
+                justify-content: flex-start; /* Empêche l'image d'être coupée à gauche en flexbox */
+            }
+
         @keyframes fadeInPage {
             0% {
                 opacity: 0;
@@ -196,6 +208,13 @@
             pointer-events: none;
             opacity: 1;
         }
+
+            /* Classe magique pour la double page mobile */
+            #manga-page.double-page-mobile {
+                max-width: none !important;
+                width: auto !important;
+                height: 100% !important;
+            }
 
         #scroll-view {
             display: none;
@@ -590,8 +609,7 @@
         /* ══════════════════════════════════════════
            MASQUAGE INACTIF (MODE CLASSIQUE)
         ══════════════════════════════════════════ */
-        .idle #topbar,
-        .idle #bottombar {
+        .idle #topbar, .idle #bottombar {
             transform: translateY(-100%);
             opacity: 0;
             pointer-events: none;
@@ -601,8 +619,7 @@
             transform: translateY(100%);
         }
 
-        .idle #settings-panel,
-        body.fullscreen-mode:not(.show-ui) #settings-panel {
+        .idle #settings-panel, body.fullscreen-mode:not(.show-ui) #settings-panel {
             right: -100vw !important;
             opacity: 0;
             pointer-events: none;
@@ -632,8 +649,7 @@
             pointer-events: none;
         }
 
-        body.fullscreen-mode.show-ui #topbar,
-        body.fullscreen-mode.show-ui #bottombar {
+        body.fullscreen-mode.show-ui #topbar, body.fullscreen-mode.show-ui #bottombar {
             transform: translateY(0) !important;
             opacity: 1 !important;
             pointer-events: auto !important;
@@ -647,6 +663,10 @@
                 max-width: 100vw;
                 box-sizing: border-box;
                 overflow-x: hidden;
+            }
+            /* On masque les zones de clic sur mobile pour permettre le Scroll Tactile */
+            #zone-prev, #zone-next {
+                display: none;
             }
         }
 
@@ -868,7 +888,7 @@
         animDirection = startAtEnd ? 'prev' : 'next';
         updateNavButtons();
 
-        // NOUVEAU : Préchargement intégral de tout le chapitre en arrière-plan
+        // Préchargement intégral de tout le chapitre en arrière-plan
         preloadCurrentChapterWhole();
 
         if (scrollMode) {
@@ -886,23 +906,36 @@
         }
 
         function preloadCurrentChapterWhole() {
-        // Balance brutalement toutes les images du chapitre dans le cache du navigateur
         currentPages.forEach(src => {
         const img = new Image();
         img.src = src;
         });
         }
 
-        // ══ FONCTION DE MISE À JOUR AVEC FONDU INSTANTANÉ ══
+        // ══ FONCTION DE MISE À JOUR (AVEC DÉTECTION DOUBLE PAGE) ══
         function updatePageView() {
         loader.style.display = 'block';
 
-        // Réinitialise l'animation CSS pour pouvoir la rejouer
         mangaPageEl.style.animation = 'none';
         mangaPageEl.offsetHeight; // Force le reflow
 
         mangaPageEl.onload = () => {
-        // L'image est chargée, on lance l'animation instantanée
+        // Détection de la double page pour mobile
+        const isLandscape = mangaPageEl.naturalWidth > mangaPageEl.naturalHeight;
+        const isMobile = window.innerWidth <= 768;
+
+        if (isLandscape && isMobile && fitMode === 'contain') {
+        mangaPageEl.classList.add('double-page-mobile');
+        pageView.classList.add('is-scrollable');
+
+        // Aligne tout à droite pour lire de droite à gauche (sens manga classique)
+        setTimeout(() => { pageView.scrollLeft = pageView.scrollWidth; }, 10);
+        } else {
+        mangaPageEl.classList.remove('double-page-mobile');
+        pageView.classList.remove('is-scrollable');
+        pageView.scrollLeft = 0;
+        }
+
         mangaPageEl.style.animation = 'fadeInPage 0.15s ease-out forwards';
         loader.style.display = 'none';
         };
@@ -910,7 +943,7 @@
         mangaPageEl.src = currentPages[currentPage];
 
         updateUI();
-        preloadStrategy(); // S'occupe de l'anticipation du chapitre suivant
+        preloadStrategy(); // Anticipation du chapitre suivant
         }
 
         function applyFit() {
@@ -931,6 +964,10 @@
         mangaPageEl.style.width = 'auto';
         mangaPageEl.style.height = '100%';
         }
+
+        // Forcer la vérification de la double page après un changement de mode
+        if(mangaPageEl.src) updatePageView();
+
         } else {
         const imgs = scrollContent.querySelectorAll('img');
         imgs.forEach(img => {
@@ -1016,10 +1053,8 @@
         }
 
         function preloadStrategy() {
-        // Le chapitre actuel est déjà intégralement préchargé. On gère juste l'anticipation du chapitre suivant.
         const chs = Object.keys(mangaData);
         const currentIdx = chs.indexOf(chapterSelect.value);
-
         if (currentIdx < 0 || currentIdx >= chs.length - 1) return;
 
         const nextChId = chs[currentIdx + 1];
@@ -1028,9 +1063,7 @@
         const triggerThreshold = currentPages.length - 5;
         if (currentPage >= triggerThreshold || currentPage >= currentPages.length * 0.8) {
         nextChapterPreloaded = nextChId;
-
         const nextPages = Array.isArray(mangaData[nextChId]) ? mangaData[nextChId] : mangaData[nextChId].pages;
-
         for (let i = 0; i < 5; i++) {
         if (nextPages[i]) {
         const cacheNextChImg = new Image();
@@ -1219,8 +1252,10 @@
         }
         });
 
+        /* ══ GESTION DES CLICS BUREAU ══ */
         document.getElementById('zone-prev').addEventListener('click', prevPage);
         document.getElementById('zone-next').addEventListener('click', nextPage);
+
         document.getElementById('btn-prev-ch').addEventListener('click', goToPrevChapter);
         document.getElementById('btn-next-ch').addEventListener('click', goToNextChapter);
 
@@ -1312,41 +1347,61 @@
         viewport.style.bottom = isFS() ? '0' : '';
         });
 
-        document.addEventListener('click', (e) => {
-        if (isFS()) {
-        const screenHeight = window.innerHeight;
-        const clickY = e.clientY;
+        /* ══ GESTION TACTILE AVANCÉE (SWIPE & TAP) ══ */
+        let touchStartX = 0, touchStartY = 0;
+        let isDraggingView = false;
+        let dragStartTime = 0;
+
+        pageView.addEventListener('touchstart', e => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isDraggingView = false;
+        dragStartTime = Date.now();
+        }, { passive: true });
+
+        pageView.addEventListener('touchmove', () => {
+        isDraggingView = true;
+        }, { passive: true });
+
+        pageView.addEventListener('touchend', e => {
+        if (scrollMode) return;
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        const dx = touchEndX - touchStartX;
+        const dy = touchEndY - touchStartY;
+        const absDx = Math.abs(dx);
+        const timeElapsed = Date.now() - dragStartTime;
+
+        // 1. Détection du Tap (Clic rapide sans glissement)
+        if (!isDraggingView || (absDx < 10 && timeElapsed < 300)) {
+        const width = window.innerWidth;
+
+        // Si on clique sur un élément de l'interface affichée, on annule
         const bottombar = document.getElementById('bottombar');
         const topbar = document.getElementById('topbar');
         const settings = document.getElementById('settings-panel');
-        const zoneNext = document.getElementById('zone-next');
-        const zonePrev = document.getElementById('zone-prev');
-
         if (bottombar.contains(e.target) || topbar.contains(e.target) || settings.contains(e.target)) return;
 
-        if (zoneNext.contains(e.target) || zonePrev.contains(e.target)) {
-        document.body.classList.remove('show-ui');
-        } else {
-        document.body.classList.toggle('show-ui');
-        }
-        }
-        });
-
-        let touchStartX = 0, touchStartY = 0;
-        viewport.addEventListener('touchstart', e => {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        }, { passive: true });
-
-        viewport.addEventListener('touchend', e => {
-        if (scrollMode) return;
-        const dx = e.changedTouches[0].clientX - touchStartX;
-        const dy = e.changedTouches[0].clientY - touchStartY;
-        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
-        if (dx < 0) {
+        // Zones de tap (Tachiyomi style)
+        if (touchEndX < width * 0.3) {
+        prevPage();
+        } else if (touchEndX > width * 0.7) {
         nextPage();
         } else {
-        prevPage();
+        if (isFS()) document.body.classList.toggle('show-ui');
+        }
+        return;
+        }
+
+        // 2. Détection du Swipe pour changer de page (Double Page)
+        if (absDx > 40 && absDx > Math.abs(dy)) {
+        const isAtLeftEdge = pageView.scrollLeft <= 10;
+        const isAtRightEdge = pageView.scrollLeft + pageView.clientWidth >= pageView.scrollWidth - 10;
+
+        if (dx < 0 && isAtRightEdge) {
+        nextPage(); // Swipe vers la gauche (au bord droit)
+        } else if (dx > 0 && isAtLeftEdge) {
+        prevPage(); // Swipe vers la droite (au bord gauche)
         }
         }
         }, { passive: true });
