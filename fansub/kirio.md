@@ -29,7 +29,7 @@ visibility: hidden
     <ul style="line-height: 1.8; margin-bottom: 30px; padding-left: 20px;">
       <li><strong>Studio :</strong> Satelight</li>
       <li><strong>Genres :</strong>  Josei, Comédie, Romance, School Life</li>
-      <li><strong>Épisodes :</strong> En cours</li>
+      <li><strong>Épisodes :</strong> 12</li>
       <li><strong>Date de sortie :</strong> 2 avril 2026</li>
     </ul>
     <h2 style="margin-top: 0; margin-bottom: 15px; font-size: 1.5rem; font-weight: 700;">Synopsis</h2>
