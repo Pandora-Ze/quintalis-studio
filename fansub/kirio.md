@@ -1,6 +1,6 @@
 ---
 title: "Kirio Fanclub"
-image: https://quintalis-studio.emcloudhost.fr/static/affiche-kirio.png
+image: /static/affiche-kirio.webp
 description: Retrouvez tous les épisodes de la quête d'Aimi et Nami pour conquérir Kirio.
 visibility: hidden
 ---
@@ -23,7 +23,7 @@ visibility: hidden
 ---
 
 <div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; margin-bottom: 40px; margin-top: 10px;">
-  <img src="https://quintalis-studio.emcloudhost.fr/static/affiche-kirio.png" alt="Affiche Kirio Fanclub" style="width: 240px; border-radius: 10px; box-shadow: 0 6px 12px rgba(0,0,0,0.3); flex-shrink: 0;">
+  <img src="/static/affiche-kirio.webp" alt="Affiche Kirio Fanclub" style="width: 240px; border-radius: 10px; box-shadow: 0 6px 12px rgba(0,0,0,0.3); flex-shrink: 0;">
   <div style="flex: 1; min-width: 300px;">
     <h2 style="margin-top: 0; margin-bottom: 15px; font-size: 1.5rem; font-weight: 700;">Informations</h2>
     <ul style="line-height: 1.8; margin-bottom: 30px; padding-left: 20px;">
