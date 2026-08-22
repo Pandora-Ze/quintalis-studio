@@ -19,21 +19,6 @@ Si **Quintalis STUDIO** peut aujourd'hui vous proposer du contenu de qualité da
 
 Voici les projets, les équipes et les outils que nous soutenons à 100 % et que nous vous recommandons les yeux fermés.
 
----
-
-## Emcloud - Notre Hébergeur Web
-
-!!! Hébergement 100% Français
-**Emcloud** est la plateforme cloud qui propulse et héberge le site officiel de Quintalis Studio.
-!!!
-
-Mettre en place un site de A à Z demande une infrastructure solide. L'équipe d'Emcloud a été d'une aide technique précieuse (et d'une grande patience !) pour nous aider à configurer nos déploiements et vous offrir une navigation fluide, sécurisée et sans interruption.
-
-Si vous cherchez un hébergeur réactif, avec des serveurs en France et un support ultra à l'écoute pour vos propres projets (serveurs VPS, bots Discord, ou sites web), c'est la porte à laquelle il faut frapper.
-
-[Visiter le site d'Emcloud](https://emcloudhost.fr/){.button .button-primary target="blank"}
-
----
 
 ## Otakube - L'Application Ultime pour les Passionnés
 

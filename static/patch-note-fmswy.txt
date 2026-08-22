@@ -512,4 +512,62 @@ Version 1.3 :
 
 		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca02_07)
 
-		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca02_07)
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca02_07)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca02_09)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x1 (ca02_10)
+
+		- Ajout de guillemets pour simuler l'action de lire un message (ca02_10)
+
+		- Traduction d'une ligne de dialogue causée par un oubli (ca02_11)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca02_11)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_12)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_12)
+
+		- Ajout d'un point pour créer des points de suspension (ca02_12)
+
+		- Traduction d'une ligne de dialogue causée par un oubli (ca02_12)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca02_mv1_01)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x1 (ca02_mv1_01)
+
+		- Modification des guillemets pour de la cohérence (ca02_mv1_01)
+
+		- Modification de la tournure de phrase de Miku (ca02_mv1_02)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x1 (ca02_mv1_02)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca02_mv1_03)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_mv2_01)
+
+		- Retour à la ligne pour une meilleure lisibilité et compréhension d'une expression (ca02_mv2_02)
+
+		- Modification d'un mot pour glorifier un acte et non le dénigrer (ca02_mv2_03)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x2 (ca02_mv2_03)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca02_mv2_03)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca02_mv2_03)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca02_14)
+
+		- Remplacement des points de suspension par trois petits points (ca02_14)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca02_14)
+
+		- Suppression d'un tiret en fin de mot (ca02_14)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca02_14)
+
+		- Remplacement des points de suspension par trois petits points (ca02_15)
+
+		- Remplacement d'un mot répété + ajout d'un point d'interrogation (ca02_15)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca02_15)
