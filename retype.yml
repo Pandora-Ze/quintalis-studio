@@ -1,4 +1,4 @@
-url: https://quintalis-studio-site.pandoraze2023.workers.dev/
+url: https://quintalis-studio.pages.dev
 
 branding:
   title: Quintalis STUDIO
@@ -6,7 +6,7 @@ branding:
   logo: static/logo-clair.png
   logoDark: static/logo.png
   logoWidth: 40
-  link: https://quintalis-studio-site.pandoraze2023.workers.dev/
+  link: https://quintalis-studio.pages.dev
 
 favicon: static/favicon.png
 

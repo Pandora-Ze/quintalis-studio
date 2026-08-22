@@ -53,11 +53,11 @@ Attention : plusieurs liens de téléchargements vous sont proposés, ainsi que 
 +++ Memories of a Quintessential Summer
 ![](static/soon.png)
 +++ Five Memories Spent With You
-[!button text="Télécharger le patch PC (local)" icon="custom-jeu" variant="success" color="#8b5cf6" size="l"](https://quintalis-studio.emcloudhost.fr/patchs_manuels/Patch_VF_v1.2.zip) [!badge variant="question" text="v1.2"]
+[!button text="Télécharger le patch PC (local)" icon="custom-jeu" variant="success" color="#8b5cf6" size="l"](https://pub-8f600307772d4689972725205b8052bb.r2.dev/Patch_VF_v1.2.zip) [!badge variant="question" text="v1.2"]
 
 [!button target="blank" text="Téléchargement alternatif PC (via MEGA)" icon="custom-mega" variant="success" color="#8b5cf6" size="l"](https://mega.nz/file/peslka6A#KSsYCY9pWuJbbrqieAj8LvIBFFFh_viusE5ztGyfAqY) [!badge variant="question" text="v1.2"]
 
-[!button text="Télécharger le patch Switch (local)" icon="custom-jeu" variant="danger" color="#8b5cf6" size="l"](https://quintalis-studio.emcloudhost.fr/patchs_manuels/Patch_VF_Switch_v1.0.zip) [!badge variant="question" text="v1.0"]
+[!button text="Télécharger le patch Switch (local)" icon="custom-jeu" variant="danger" color="#8b5cf6" size="l"](https://pub-8f600307772d4689972725205b8052bb.r2.dev/patch-switch-v1.0.zip) [!badge variant="question" text="v1.0"]
 
 [!button target="blank" text="Téléchargement alternatif Switch (via MEGA)" icon="custom-mega" variant="danger" color="#8b5cf6" size="l"](https://mega.nz/file/0eNilJAb#yF2qdzSDXTSGh2MjZPDnTbPHYHd-k-qFa2RbbUeiA0s) [!badge variant="question" text="v1.0"]
 
