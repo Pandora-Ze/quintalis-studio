@@ -1,32 +1,31 @@
 @echo off
 title Deploy Quintalis Studio
 echo ===========================================
-echo   DEPLOIEMENT AUTOMATIQUE QUINTALIS STUDIO
+echo    DEPLOIEMENT AUTOMATIQUE QUINTALIS STUDIO
 echo ===========================================
 echo.
 
-:: Étape 1 : Ajout des fichiers
+:: Etape 1 : Ajout force de toutes les modifications
 echo [+] Ajout des modifications...
-git add .
+git add -A
 
-:: Étape 2 : Saisie du message de commit
+:: Etape 2 : Saisie du message de commit
 echo.
 set /p msg="Entrez le nom de la modif (ex: Maj Chapitre 1) : "
-
-:: Si tu appuies sur Entree sans rien ecrire, il met un message par defaut
 if "%msg%"=="" set msg="Mise a jour sans nom"
 
+:: Etape 3 : Validation
 echo.
 echo [+] Validation des fichiers...
 git commit -m "%msg%"
 
-:: Étape 3 : Envoi vers GitHub
+:: Etape 4 : Envoi vers GitHub
 echo.
 echo [+] Envoi vers GitHub...
 git push origin main
 
 echo.
 echo ===========================================
-echo   ENVOI REUSSI ! Le site se met a jour...
+echo    TERMINE !
 echo ===========================================
 pause

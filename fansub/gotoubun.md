@@ -1,6 +1,6 @@
 ---
 title: "The Quintessential Quintuplets : Honeymoon"
-image: https://pandora-ze.github.io/quintalis-studio/static/affiche-gotoubun.png
+image: /static/affiche-gotoubun.png
 description: Retrouvez tous les épisodes du dernier OAV en date.
 visibility: hidden
 ---
@@ -24,7 +24,7 @@ visibility: hidden
 
 <div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; margin-bottom: 40px; margin-top: 10px;">
   
-  <img src="https://pandora-ze.github.io/quintalis-studio/static/affiche-gotoubun.png" alt="Affiche The Quintessential Quintuplets" style="width: 240px; border-radius: 10px; box-shadow: 0 6px 12px rgba(0,0,0,0.3); flex-shrink: 0;">
+  <img src="/static/affiche-gotoubun.png" alt="Affiche The Quintessential Quintuplets" style="width: 240px; border-radius: 10px; box-shadow: 0 6px 12px rgba(0,0,0,0.3); flex-shrink: 0;">
   
   <div style="flex: 1; min-width: 300px;">
     
