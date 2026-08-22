@@ -36,6 +36,8 @@ layout: page
 
 ::: center
 **Le portail officiel du groupe indépendant dédié à la traduction et au fansub.**
+
+Ceci est la page de test du site
 :::
 
 ---
