@@ -1,92 +1,120 @@
 @echo off
-title Quintalis Studio - Gestionnaire de Deploiement
+setlocal enabledelayedexpansion
+title Quintalis Studio - Gestionnaire de Branches
+
 :menu
 cls
-echo =======================================================
-echo           QUINTALIS STUDIO - DEPLOIEMENT
-echo =======================================================
-echo.
-echo   [1] PUBLIER EN DIRECT (Site officiel en public)
-echo   [2] TESTER SUR DEV    (Site preview prive / test)
-echo   [3] TESTER EN LOCAL   (Apercu instantane sur ton PC)
-echo   [4] Quitter
-echo.
-echo =======================================================
-set /p choix="Quel est ton choix [1, 2, 3 ou 4] ? : "
+for /f "tokens=*" %%a in ('git rev-parse --abbrev-ref HEAD 2^>nul') do set CURRENT_BRANCH=%%a
+if "%CURRENT_BRANCH%"=="" set CURRENT_BRANCH=Inconnue
 
-if "%choix%"=="1" goto prod
-if "%choix%"=="2" goto dev
-if "%choix%"=="3" goto local
-if "%choix%"=="4" goto fin
-
+echo =======================================================
+echo          QUINTALIS STUDIO - GESTION DU REPO
+echo =======================================================
+echo   Branche active actuelle : [%CURRENT_BRANCH%]
+echo =======================================================
 echo.
-echo Mauvais choix, recommence !
-timeout /t 2 >nul
+echo   [1] Basculer sur DEV  (Espace de travail / Tests)
+echo   [2] Basculer sur MAIN (Espace stable / Site officiel)
+echo.
+echo   [3] Envoyer les modifs en ligne (Sur la branche [%CURRENT_BRANCH%])
+echo   [4] Fusionner DEV dans MAIN (Publier tout le chantier)
+echo   [5] Tester en local (localhost:5000)
+echo   [6] Quitter
+echo.
+echo =======================================================
+set /p choix="Fais ton choix [1-6] : "
+
+if "%choix%"=="1" goto switch_dev
+if "%choix%"=="2" goto switch_main
+if "%choix%"=="3" goto push_current
+if "%choix%"=="4" goto merge_all
+if "%choix%"=="5" goto run_local
+if "%choix%"=="6" goto fin
 goto menu
 
-:prod
+:switch_dev
+cls
+echo [+] Sauvegarde automatique de la branche actuelle...
+git add -A
+git diff-index --quiet HEAD || git commit -m "[AUTO-SAVE] Avant bascule sur DEV"
+echo.
+echo [+] Bascule vers DEV...
+git checkout dev 2>nul || git checkout -b dev
+echo.
+echo =======================================================
+echo   Tu es maintenant sur DEV ! Tes fichiers de dev
+echo   sont charges sur ton disque dur.
+echo =======================================================
+pause
+goto menu
+
+:switch_main
+cls
+echo [+] Sauvegarde automatique de la branche actuelle...
+git add -A
+git diff-index --quiet HEAD || git commit -m "[AUTO-SAVE] Avant bascule sur MAIN"
+echo.
+echo [+] Bascule vers MAIN...
+git checkout main 2>nul || git checkout -b main
+git pull origin main 2>nul
+echo.
+echo =======================================================
+echo   Tu es maintenant sur MAIN ! Ton dossier est propre
+echo   et identique au site officiel.
+echo =======================================================
+pause
+goto menu
+
+:push_current
 cls
 echo =======================================================
-echo        MISE EN LIGNE DIRECTE (SITE OFFICIEL)
+echo   PUBLICATION DE LA BRANCHE ACTIVE : [%CURRENT_BRANCH%]
 echo =======================================================
 echo.
-echo [+] Sauvegarde de toutes les modifications...
 git add -A
-echo.
-set /p msg="Description de la mise a jour (ou appuie sur Entree) : "
-if "%msg%"=="" set msg="Mise a jour officielle"
-echo.
-echo [+] Creation du commit...
+set /p msg="Message de commit (ou Entree) : "
+if "%msg%"=="" set msg="Mise a jour sur %CURRENT_BRANCH%"
 git commit -m "%msg%"
-echo.
-echo [+] Envoi direct vers la branche MAIN...
-git branch -M main
-git push origin main --force
+git push origin %CURRENT_BRANCH%
 echo.
 echo =======================================================
-echo   SUCCES ! Le site officiel est a jour :
-echo   https://quintalis-studio.pages.dev
+if "%CURRENT_BRANCH%"=="main" (
+    echo   Site officiel mis a jour : https://quintalis-studio.pages.dev
+) else (
+    echo   Site de test mis a jour : https://dev.quintalis-studio.pages.dev
+)
 echo =======================================================
-echo.
 pause
 goto menu
 
-:dev
+:merge_all
 cls
 echo =======================================================
-echo          DEPLOIEMENT TEST (BRANCHE DEV)
+echo   FUSION COMPLETE : DEV -> MAIN
 echo =======================================================
 echo.
-echo [+] Sauvegarde de toutes les modifications...
+echo Attention : Cela va envoyer TOUT ton chantier DEV sur le site officiel !
+pause
+git checkout dev
 git add -A
-echo.
-set /p msg="Description du test (ou appuie sur Entree) : "
-if "%msg%"=="" set msg="Test de fonctionnalite"
-echo.
-echo [+] Creation du commit de test...
-git commit -m "[DEV] %msg%"
-echo.
-echo [+] Envoi vers la branche DEV...
-git branch -M dev
-git push origin dev --force
+git diff-index --quiet HEAD || git commit -m "Finalisation DEV avant merge"
+git checkout main
+git pull origin main 2>nul
+git merge dev -m "Publication officielle des nouveautes DEV"
+git push origin main
+git checkout dev
 echo.
 echo =======================================================
-echo   SUCCES ! Apercu de test en cours :
-echo   https://dev.quintalis-studio.pages.dev
+echo   SUCCES ! Tout est publie sur le site officiel.
+echo   Tu es revenu automatiquement sur DEV pour continuer.
 echo =======================================================
-echo.
 pause
 goto menu
 
-:local
+:run_local
 cls
-echo =======================================================
-echo            TEST EN LOCAL SUR TON PC
-echo =======================================================
-echo.
-echo Ton site va s'ouvrir sur : http://localhost:5000
-echo (Fais Ctrl + C dans cette fenetre pour arreter Retype)
-echo.
+echo Lancement du serveur Retype sur http://localhost:5000...
+echo (Fais Ctrl + C pour quitter)
 call npx retypeapp start
 goto menu
 
