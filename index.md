@@ -74,6 +74,7 @@ C'est le moment de retrouver les quintuplées en version française.
 | **Petals of Reincarnation** | Fansub | [!badge variant="success" text="Terminé"] | 100% |
 | **Marika's Love Meter** | Fansub | [!badge variant="danger" text="Abandonné"] |  |
 | **Kosmos Beta** | Scantrad | [!badge variant="info" text="En cours"] | 12% |
+| **Reincarnation no Kaben** | Scantrad | [!badge variant="warning" text="Phase d'analyse"] | 0% |
 :::
 
 ---
