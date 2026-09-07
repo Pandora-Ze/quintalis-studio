@@ -1,12 +1,10 @@
 @echo off
 setlocal enabledelayedexpansion
 title Quintalis Studio - Gestionnaire de Branches
-
 :menu
 cls
 for /f "tokens=*" %%a in ('git rev-parse --abbrev-ref HEAD 2^>nul') do set CURRENT_BRANCH=%%a
 if "%CURRENT_BRANCH%"=="" set CURRENT_BRANCH=Inconnue
-
 echo =======================================================
 echo          QUINTALIS STUDIO - GESTION DU REPO
 echo =======================================================
@@ -19,19 +17,19 @@ echo.
 echo   [3] Envoyer les modifs en ligne (Sur la branche [%CURRENT_BRANCH%])
 echo   [4] Fusionner DEV dans MAIN (Publier tout le chantier)
 echo   [5] Tester en local (localhost:5000)
+echo   [7] Repasser de DEV a MAIN (retour rapide)
 echo   [6] Quitter
 echo.
 echo =======================================================
-set /p choix="Fais ton choix [1-6] : "
-
+set /p choix="Fais ton choix [1-7, 6 pour quitter] : "
 if "%choix%"=="1" goto switch_dev
 if "%choix%"=="2" goto switch_main
 if "%choix%"=="3" goto push_current
 if "%choix%"=="4" goto merge_all
 if "%choix%"=="5" goto run_local
+if "%choix%"=="7" goto dev_to_main
 if "%choix%"=="6" goto fin
 goto menu
-
 :switch_dev
 cls
 echo [+] Sauvegarde automatique de la branche actuelle...
@@ -47,7 +45,6 @@ echo   sont charges sur ton disque dur.
 echo =======================================================
 pause
 goto menu
-
 :switch_main
 cls
 echo [+] Sauvegarde automatique de la branche actuelle...
@@ -64,7 +61,6 @@ echo   et identique au site officiel.
 echo =======================================================
 pause
 goto menu
-
 :push_current
 cls
 echo =======================================================
@@ -86,7 +82,6 @@ if "%CURRENT_BRANCH%"=="main" (
 echo =======================================================
 pause
 goto menu
-
 :merge_all
 cls
 echo =======================================================
@@ -110,13 +105,52 @@ echo   Tu es revenu automatiquement sur DEV pour continuer.
 echo =======================================================
 pause
 goto menu
-
 :run_local
 cls
+echo =======================================================
+echo   TEST EN LOCAL (repasse d'abord sur MAIN)
+echo =======================================================
+echo.
+echo [+] Sauvegarde automatique de la branche actuelle...
+git add -A
+git diff-index --quiet HEAD || git commit -m "[AUTO-SAVE] Avant bascule sur MAIN pour test local"
+echo.
+echo [+] Bascule vers MAIN...
+git checkout main 2>nul || git checkout -b main
+git pull origin main 2>nul
+echo.
+echo =======================================================
+echo   Tu es maintenant sur MAIN. Lancement du serveur...
+echo =======================================================
+echo.
 echo Lancement du serveur Retype sur http://localhost:5000...
 echo (Fais Ctrl + C pour quitter)
 call npx retypeapp start
 goto menu
-
+:dev_to_main
+cls
+echo =======================================================
+echo   RETOUR RAPIDE : DEV -^> MAIN
+echo =======================================================
+echo.
+if not "%CURRENT_BRANCH%"=="dev" (
+    echo [!] Tu n'es pas sur DEV actuellement ^(branche active : %CURRENT_BRANCH%^).
+    echo     Cette option est prevue pour revenir de DEV vers MAIN.
+    pause
+    goto menu
+)
+echo [+] Sauvegarde automatique de DEV...
+git add -A
+git diff-index --quiet HEAD || git commit -m "[AUTO-SAVE] Avant retour rapide DEV -> MAIN"
+echo.
+echo [+] Retour vers MAIN...
+git checkout main 2>nul || git checkout -b main
+git pull origin main 2>nul
+echo.
+echo =======================================================
+echo   Tu es revenu sur MAIN depuis DEV !
+echo =======================================================
+pause
+goto menu
 :fin
 exit
