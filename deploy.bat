@@ -1,56 +1,163 @@
-:prod
+@echo off
+setlocal enabledelayedexpansion
+title Quintalis Studio - Gestionnaire de Branches
+:menu
+cls
+for /f "tokens=*" %%a in ('git rev-parse --abbrev-ref HEAD 2^>nul') do set CURRENT_BRANCH=%%a
+if "%CURRENT_BRANCH%"=="" set CURRENT_BRANCH=Inconnue
+echo =======================================================
+echo          QUINTALIS STUDIO - GESTION DU REPO
+echo =======================================================
+echo   Branche active actuelle : [%CURRENT_BRANCH%]
+echo =======================================================
+echo.
+echo   [1] Basculer sur DEV  (Espace de travail / Tests)
+echo   [2] Basculer sur MAIN (Espace stable / Site officiel)
+echo   [7] Repasser de DEV a MAIN (retour rapide, sans publier)
+echo.
+echo   [3] Envoyer les modifs en ligne (Sur la branche [%CURRENT_BRANCH%])
+echo   [4] Fusionner DEV dans MAIN (Publier tout le chantier)
+echo   [5] Tester en local (localhost:5000)
+echo   [6] Quitter
+echo.
+echo =======================================================
+set /p choix="Fais ton choix [1-7] : "
+if "%choix%"=="1" goto switch_dev
+if "%choix%"=="2" goto switch_main
+if "%choix%"=="3" goto push_current
+if "%choix%"=="4" goto merge_all
+if "%choix%"=="5" goto run_local
+if "%choix%"=="7" goto dev_to_main
+if "%choix%"=="6" goto fin
+goto menu
+
+:switch_dev
+cls
+echo [+] Sauvegarde automatique de la branche actuelle...
+git add -A
+git diff-index --quiet HEAD || git commit -m "[AUTO-SAVE] Avant bascule sur DEV"
+echo.
+echo [+] Bascule vers DEV...
+git checkout dev 2>nul || git checkout -b dev
+echo.
+echo =======================================================
+echo   Tu es maintenant sur DEV ! Tes fichiers de dev
+echo   sont charges sur ton disque dur.
+echo =======================================================
+pause
+goto menu
+
+:switch_main
+cls
+echo [+] Sauvegarde automatique de la branche actuelle...
+git add -A
+git diff-index --quiet HEAD || git commit -m "[AUTO-SAVE] Avant bascule sur MAIN"
+echo.
+echo [+] Bascule vers MAIN...
+git checkout main 2>nul || git checkout -b main
+git pull origin main 2>nul
+echo.
+echo =======================================================
+echo   Tu es maintenant sur MAIN ! Ton dossier est propre
+echo   et identique au site officiel.
+echo =======================================================
+pause
+goto menu
+
+:push_current
 cls
 echo =======================================================
-echo   PASSAGE EN PRODUCTION (SITE OFFICIEL)
+echo   PUBLICATION DE LA BRANCHE ACTIVE : [%CURRENT_BRANCH%]
 echo =======================================================
 echo.
-echo Attention : Cela va mettre a jour le site officiel en ligne !
-pause
-echo.
-
-echo [+] Sauvegarde automatique des changements en cours...
 git add -A
-git commit -m "[AUTO] Derniers ajustements avant passage en prod" >nul 2>&1
+set /p msg="Message de commit (ou Entree) : "
+if "%msg%"=="" set msg="Mise a jour sur %CURRENT_BRANCH%"
+git commit -m "%msg%"
+git push origin %CURRENT_BRANCH%
+echo.
+echo =======================================================
+if "%CURRENT_BRANCH%"=="main" (
+    echo   Site officiel mis a jour : https://quintalis-studio.pages.dev
+) else (
+    echo   Site de test mis a jour : https://dev.quintalis-studio.pages.dev
+)
+echo =======================================================
+pause
+goto menu
 
-echo [+] Bascule sur la branche MAIN...
+:merge_all
+cls
+echo =======================================================
+echo   FUSION COMPLETE : DEV -^> MAIN
+echo =======================================================
+echo.
+echo Attention : Cela va envoyer TOUT ton chantier DEV sur le site officiel !
+pause
+git checkout dev
+git add -A
+git diff-index --quiet HEAD || git commit -m "Finalisation DEV avant merge"
 git checkout main
-if %errorlevel% neq 0 (
-    echo.
-    echo [ERREUR] Impossible de basculer sur main !
-    echo Verifie que tu n'as pas de conflit ou de fichier verrouille.
-    pause
-    goto menu
-)
-
-echo [+] Recuperation de la derniere version en ligne de MAIN...
-git pull origin main
-
-echo [+] Fusion des ajouts de la branche DEV...
-git merge dev --no-edit
-if %errorlevel% neq 0 (
-    echo.
-    echo [ERREUR] Conflit de fusion detecte entre dev et main !
-    pause
-    goto menu
-)
-
-echo.
-echo [+] Envoi de la version officielle sur GitHub...
+git pull origin main 2>nul
+git merge dev -m "Publication officielle des nouveautes DEV"
 git push origin main
-if %errorlevel% neq 0 (
-    echo.
-    echo [ERREUR] Le push vers origin main a echoue !
-    pause
-    goto menu
-)
-
-echo.
-echo [+] Retour sur la branche DEV...
 git checkout dev
 echo.
 echo =======================================================
-echo   SUCCES ! Le site officiel est a jour.
+echo   SUCCES ! Tout est publie sur le site officiel.
+echo   Tu es revenu automatiquement sur DEV pour continuer.
 echo =======================================================
-echo.
 pause
 goto menu
+
+:run_local
+cls
+echo =======================================================
+echo   TEST EN LOCAL (repasse d'abord sur MAIN)
+echo =======================================================
+echo.
+echo [+] Sauvegarde automatique de la branche actuelle...
+git add -A
+git diff-index --quiet HEAD || git commit -m "[AUTO-SAVE] Avant bascule sur MAIN pour test local"
+echo.
+echo [+] Bascule vers MAIN...
+git checkout main 2>nul || git checkout -b main
+git pull origin main 2>nul
+echo.
+echo =======================================================
+echo   Tu es maintenant sur MAIN. Lancement du serveur...
+echo =======================================================
+echo.
+echo Lancement du serveur Retype sur http://localhost:5000...
+echo (Fais Ctrl + C pour quitter)
+call npx retypeapp start
+goto menu
+
+:dev_to_main
+cls
+echo =======================================================
+echo   RETOUR RAPIDE : DEV -^> MAIN
+echo =======================================================
+echo.
+if not "%CURRENT_BRANCH%"=="dev" (
+    echo [!] Tu n'es pas sur DEV actuellement ^(branche active : %CURRENT_BRANCH%^).
+    echo     Cette option est prevue pour revenir de DEV vers MAIN.
+    pause
+    goto menu
+)
+echo [+] Sauvegarde automatique de DEV...
+git add -A
+git diff-index --quiet HEAD || git commit -m "[AUTO-SAVE] Avant retour rapide DEV -> MAIN"
+echo.
+echo [+] Retour vers MAIN ^(sans rien publier^)...
+git checkout main 2>nul || git checkout -b main
+git pull origin main 2>nul
+echo.
+echo =======================================================
+echo   Tu es revenu sur MAIN depuis DEV ! Rien n'a ete publie.
+echo =======================================================
+pause
+goto menu
+
+:fin
+exit
