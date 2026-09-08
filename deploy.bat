@@ -13,15 +13,15 @@ echo =======================================================
 echo.
 echo   [1] Basculer sur DEV  (Espace de travail / Tests)
 echo   [2] Basculer sur MAIN (Espace stable / Site officiel)
+echo   [7] Repasser de DEV a MAIN (retour rapide, sans publier)
 echo.
 echo   [3] Envoyer les modifs en ligne (Sur la branche [%CURRENT_BRANCH%])
 echo   [4] Fusionner DEV dans MAIN (Publier tout le chantier)
 echo   [5] Tester en local (localhost:5000)
-echo   [7] Repasser de DEV a MAIN (retour rapide)
 echo   [6] Quitter
 echo.
 echo =======================================================
-set /p choix="Fais ton choix [1-7, 6 pour quitter] : "
+set /p choix="Fais ton choix [1-7] : "
 if "%choix%"=="1" goto switch_dev
 if "%choix%"=="2" goto switch_main
 if "%choix%"=="3" goto push_current
@@ -30,6 +30,7 @@ if "%choix%"=="5" goto run_local
 if "%choix%"=="7" goto dev_to_main
 if "%choix%"=="6" goto fin
 goto menu
+
 :switch_dev
 cls
 echo [+] Sauvegarde automatique de la branche actuelle...
@@ -45,6 +46,7 @@ echo   sont charges sur ton disque dur.
 echo =======================================================
 pause
 goto menu
+
 :switch_main
 cls
 echo [+] Sauvegarde automatique de la branche actuelle...
@@ -61,6 +63,7 @@ echo   et identique au site officiel.
 echo =======================================================
 pause
 goto menu
+
 :push_current
 cls
 echo =======================================================
@@ -82,10 +85,11 @@ if "%CURRENT_BRANCH%"=="main" (
 echo =======================================================
 pause
 goto menu
+
 :merge_all
 cls
 echo =======================================================
-echo   FUSION COMPLETE : DEV -> MAIN
+echo   FUSION COMPLETE : DEV -^> MAIN
 echo =======================================================
 echo.
 echo Attention : Cela va envoyer TOUT ton chantier DEV sur le site officiel !
@@ -105,6 +109,7 @@ echo   Tu es revenu automatiquement sur DEV pour continuer.
 echo =======================================================
 pause
 goto menu
+
 :run_local
 cls
 echo =======================================================
@@ -127,6 +132,7 @@ echo Lancement du serveur Retype sur http://localhost:5000...
 echo (Fais Ctrl + C pour quitter)
 call npx retypeapp start
 goto menu
+
 :dev_to_main
 cls
 echo =======================================================
@@ -143,14 +149,15 @@ echo [+] Sauvegarde automatique de DEV...
 git add -A
 git diff-index --quiet HEAD || git commit -m "[AUTO-SAVE] Avant retour rapide DEV -> MAIN"
 echo.
-echo [+] Retour vers MAIN...
+echo [+] Retour vers MAIN ^(sans rien publier^)...
 git checkout main 2>nul || git checkout -b main
 git pull origin main 2>nul
 echo.
 echo =======================================================
-echo   Tu es revenu sur MAIN depuis DEV !
+echo   Tu es revenu sur MAIN depuis DEV ! Rien n'a ete publie.
 echo =======================================================
 pause
 goto menu
+
 :fin
 exit
