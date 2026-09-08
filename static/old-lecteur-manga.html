@@ -7,17 +7,18 @@
     <title>Lecteur Quintalis</title>
     <style>
         :root {
-            --bg: #090909;
-            --bg-bar: rgba(18, 18, 18, 0.88);
-            --bg3: #222222;
-            --border: rgba(255, 255, 255, 0.12);
-            --text: #f0f0f0;
-            --text2: #9e9e9e;
+            --bg: #0d0d0d;
+            --bg2: #181818;
+            --bg3: #222;
+            --border: #2e2e2e;
+            --text: #e8e8e8;
+            --text2: #999;
             --accent: #3498db;
-            --radius: 8px;
-            --topbar: 52px;
+            --accent2: #2176ae;
+            --radius: 6px;
+            --topbar: 50px;
             --bottombar: 56px;
-            --transition: 0.22s cubic-bezier(0.2, 0, 0, 1);
+            --transition: 0.18s ease;
         }
 
         *, *::before, *::after {
@@ -28,102 +29,103 @@
 
         html, body {
             height: 100%;
-            width: 100%;
             background: var(--bg);
             color: var(--text);
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             overflow: hidden;
-            user-select: none;
-            -webkit-user-select: none;
         }
 
+        /* ══════════════════════════════════════════
+           TOPBAR
+        ══════════════════════════════════════════ */
+        #topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--topbar);
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 14px;
+            z-index: 100;
+            transition: transform var(--transition), opacity var(--transition);
+        }
+
+            #topbar .manga-title {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text);
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                flex: 1;
+                min-width: 0;
+            }
+
+            #topbar .breadcrumb {
+                font-size: 12px;
+                color: var(--text2);
+                white-space: nowrap;
+                flex-shrink: 0;
+            }
+
+                #topbar .breadcrumb span {
+                    color: var(--accent);
+                }
+
+        .topbar-btn {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text2);
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
+        }
+
+            .topbar-btn:hover {
+                background: var(--bg3);
+                color: var(--text);
+                border-color: #444;
+            }
+
+            .topbar-btn.active {
+                background: var(--accent);
+                color: #fff;
+                border-color: var(--accent);
+            }
+
+        /* ══════════════════════════════════════════
+           ZONE LECTURE & DOUBLE PAGE
+        ══════════════════════════════════════════ */
         #viewport {
             position: fixed;
-            inset: 0;
-            background: #000000;
+            top: var(--topbar);
+            bottom: var(--bottombar);
+            left: 0;
+            right: 0;
+            background: #000;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            z-index: 10;
         }
-
-        #page-view {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow-x: hidden;
-            overflow-y: hidden;
-            position: relative;
-            scroll-behavior: auto;
-        }
-
-            /* Scrollbar discrète pour le mode Largeur */
-            #page-view::-webkit-scrollbar {
-                width: 6px;
-                height: 6px;
-            }
-
-            #page-view::-webkit-scrollbar-track {
-                background: transparent;
-            }
-
-            #page-view::-webkit-scrollbar-thumb {
-                background: rgba(255, 255, 255, 0.2);
-                border-radius: 99px;
-            }
-
-                #page-view::-webkit-scrollbar-thumb:hover {
-                    background: rgba(255, 255, 255, 0.4);
-                }
-
-            #page-view.zoomed {
-                overflow: auto !important;
-                cursor: grab;
-                align-items: flex-start !important;
-                justify-content: flex-start !important;
-            }
-
-                #page-view.zoomed:active {
-                    cursor: grabbing;
-                }
-
-        #manga-page {
-            display: block;
-            image-rendering: auto;
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            filter: contrast(105%) brightness(99%);
-            transition: transform 0.15s ease-out;
-            cursor: zoom-in;
-            pointer-events: auto;
-        }
-
-            #manga-page.is-zoomed {
-                max-width: none !important;
-                max-height: none !important;
-                width: 1400px !important;
-                height: auto !important;
-                cursor: zoom-out;
-                margin: 0 !important;
-                padding: 40px !important;
-            }
-
-            #manga-page.double-page-mobile {
-                max-width: none !important;
-                width: auto !important;
-                height: 100vh !important;
-                cursor: default;
-            }
 
         #zone-prev, #zone-next {
             position: absolute;
             top: 0;
             bottom: 0;
-            width: 25%;
-            z-index: 25;
+            width: 30%;
+            z-index: 10;
             cursor: pointer;
         }
 
@@ -139,33 +141,80 @@
                 position: absolute;
                 top: 50%;
                 transform: translateY(-50%);
-                background: rgba(0, 0, 0, 0.65);
-                border: 1px solid var(--border);
-                backdrop-filter: blur(8px);
-                color: #ffffff;
-                width: 44px;
-                height: 68px;
+                background: rgba(0,0,0,0.55);
+                border: 1px solid rgba(255,255,255,0.1);
+                color: #fff;
+                width: 40px;
+                height: 60px;
                 border-radius: var(--radius);
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 26px;
+                font-size: 20px;
                 opacity: 0;
                 transition: opacity var(--transition);
-                pointer-events: none;
             }
 
         #zone-prev .arrow {
-            left: 16px;
+            left: 10px;
         }
 
         #zone-next .arrow {
-            right: 16px;
+            right: 10px;
         }
 
         #zone-prev:hover .arrow, #zone-next:hover .arrow {
             opacity: 1;
         }
+
+        #page-view {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Scroll horizontal activé pour les doubles pages */
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-behavior: auto;
+        }
+
+            /* Cache la barre de défilement pour faire plus propre */
+            #page-view::-webkit-scrollbar {
+                display: none;
+            }
+
+            #page-view.is-scrollable {
+                justify-content: flex-start; /* Empêche l'image d'être coupée à gauche en flexbox */
+            }
+
+        @keyframes fadeInPage {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        #manga-page {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+            user-select: none;
+            -webkit-user-drag: none;
+            pointer-events: none;
+            opacity: 1;
+        }
+
+            /* Classe magique pour la double page mobile */
+            #manga-page.double-page-mobile {
+                max-width: none !important;
+                width: auto !important;
+                height: 100% !important;
+            }
 
         #scroll-view {
             display: none;
@@ -174,8 +223,6 @@
             overflow-y: auto;
             overflow-x: hidden;
             scroll-behavior: smooth;
-            padding-top: var(--topbar);
-            padding-bottom: var(--bottombar);
         }
 
             #scroll-view.active {
@@ -190,147 +237,97 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100%;
-            padding: 10px 0;
+            padding: 20px 0;
         }
 
             #scroll-content img {
                 width: 100%;
                 max-width: 850px;
-                height: auto;
                 display: block;
-                margin-bottom: 12px;
-                filter: contrast(105%) brightness(99%);
-                transform: translateZ(0);
+                user-select: none;
+                -webkit-user-drag: none;
+                margin-bottom: 20px;
             }
 
-        #topbar, #bottombar {
+        #loader {
+            position: absolute;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 3px solid #333;
+            border-top-color: var(--accent);
+            animation: spin 0.8s linear infinite;
+            z-index: 5;
+            pointer-events: none;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #error-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            color: #e74c3c;
+            text-align: center;
+            padding: 30px;
+            font-size: 14px;
+        }
+
+        #error-detail {
+            color: var(--text2);
+            font-size: 13px;
+            white-space: pre-line;
+        }
+
+        /* ══════════════════════════════════════════
+           BOTTOMBAR
+        ══════════════════════════════════════════ */
+        #bottombar {
             position: fixed;
+            bottom: 0;
             left: 0;
             right: 0;
-            background: var(--bg-bar);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
+            height: var(--bottombar);
+            background: var(--bg2);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 12px;
             z-index: 100;
             transition: transform var(--transition), opacity var(--transition);
         }
 
-        #topbar {
-            top: 0;
-            height: var(--topbar);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 0 16px;
-        }
-
-        #bottombar {
-            bottom: 0;
-            height: var(--bottombar);
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 0 16px;
-        }
-
-        body.idle #topbar {
-            transform: translateY(-100%);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        body.idle #bottombar {
-            transform: translateY(100%);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        body.idle #settings-panel {
-            right: -290px !important;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        body.idle {
-            cursor: none;
-        }
-
-        #topbar .manga-title {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            flex: 1;
-        }
-
-        #topbar .breadcrumb {
-            font-size: 12px;
-            color: var(--text2);
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-            #topbar .breadcrumb span {
-                color: var(--accent);
-                font-weight: 600;
-            }
-
-        .topbar-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            color: var(--text2);
-            width: 34px;
-            height: 34px;
-            border-radius: var(--radius);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-            flex-shrink: 0;
-            transition: all var(--transition);
-        }
-
-            .topbar-btn:hover {
-                background: var(--bg3);
-                color: var(--text);
-                border-color: rgba(255, 255, 255, 0.25);
-            }
-
-            .topbar-btn.active {
-                background: var(--accent);
-                color: #ffffff;
-                border-color: var(--accent);
-            }
-
         .nav-btn {
-            background: rgba(255, 255, 255, 0.06);
+            background: var(--bg3);
             border: 1px solid var(--border);
             color: var(--text);
             height: 36px;
-            padding: 0 14px;
+            padding: 0 12px;
             border-radius: var(--radius);
             cursor: pointer;
-            font-size: 15px;
+            font-size: 16px;
             display: flex;
             align-items: center;
             gap: 6px;
             white-space: nowrap;
             flex-shrink: 0;
-            transition: all var(--transition);
+            transition: background var(--transition), border-color var(--transition);
         }
 
             .nav-btn:hover {
-                background: rgba(255, 255, 255, 0.12);
-                border-color: rgba(255, 255, 255, 0.3);
+                background: #2c2c2c;
+                border-color: #444;
             }
 
             .nav-btn:disabled {
-                opacity: 0.3;
+                opacity: 0.35;
                 cursor: not-allowed;
             }
 
@@ -343,17 +340,19 @@
             width: 220px;
             height: 36px;
             padding: 0 12px;
-            background: rgba(25, 25, 25, 0.95);
+            background: rgba(25, 25, 25, 0.75);
             color: #ffffff;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
             font-family: inherit;
             font-size: 13px;
             font-weight: 500;
+            letter-spacing: 0.5px;
             cursor: pointer;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             appearance: none;
             -webkit-appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
@@ -361,33 +360,33 @@
             background-position: right 10px center;
             background-size: 14px;
             padding-right: 32px;
-            transition: border-color var(--transition);
         }
 
             #chapter-select:hover, #chapter-select:focus {
-                border-color: var(--accent);
+                border-color: var(--accent, #3498db);
+                background-color: rgba(30, 30, 30, 0.9);
                 outline: none;
+                box-shadow: 0 0 10px rgba(52, 152, 219, 0.2);
             }
 
             #chapter-select option {
-                background: #141414;
+                background: #1a1a1a;
                 color: #ffffff;
-                padding: 8px;
+                padding: 10px;
             }
 
         #progress-wrap {
             flex: 1;
             position: relative;
             min-width: 60px;
-            padding: 10px 0;
-            cursor: pointer;
         }
 
         #progress-bar-bg {
-            height: 5px;
-            background: rgba(255, 255, 255, 0.12);
+            height: 4px;
+            background: var(--bg3);
             border-radius: 99px;
             overflow: hidden;
+            cursor: pointer;
             position: relative;
         }
 
@@ -395,15 +394,15 @@
             height: 100%;
             background: var(--accent);
             border-radius: 99px;
-            transition: width 0.08s ease;
+            transition: width 0.15s ease;
             pointer-events: none;
         }
 
         #progress-tooltip {
             position: absolute;
-            bottom: 22px;
+            bottom: 14px;
             transform: translateX(-50%);
-            background: #1c1c1c;
+            background: var(--bg2);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 4px 8px;
@@ -412,7 +411,7 @@
             white-space: nowrap;
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.15s ease;
+            transition: opacity 0.15s;
             z-index: 200;
         }
 
@@ -421,29 +420,32 @@
             color: var(--text2);
             flex-shrink: 0;
             font-variant-numeric: tabular-nums;
-            min-width: 52px;
+            min-width: 48px;
             text-align: right;
         }
 
+        /* ══════════════════════════════════════════
+           PANNEAU PARAMÈTRES
+        ══════════════════════════════════════════ */
         #settings-panel {
             position: fixed;
-            top: calc(var(--topbar) + 10px);
+            top: var(--topbar);
             right: -280px;
             width: 260px;
-            background: var(--bg-bar);
-            backdrop-filter: blur(16px);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            z-index: 120;
+            bottom: var(--bottombar);
+            background: var(--bg2);
+            border-left: 1px solid var(--border);
+            z-index: 90;
             padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            transition: right var(--transition), opacity var(--transition);
+            gap: 18px;
+            overflow-y: auto;
+            transition: right 0.22s ease;
         }
 
             #settings-panel.open {
-                right: 14px;
+                right: 0;
             }
 
         .setting-group {
@@ -467,31 +469,34 @@
 
         .toggle-btn {
             flex: 1;
-            background: rgba(255, 255, 255, 0.06);
+            background: var(--bg3);
             border: 1px solid var(--border);
             color: var(--text2);
             height: 32px;
             border-radius: var(--radius);
             cursor: pointer;
             font-size: 12px;
-            transition: all var(--transition);
+            transition: background var(--transition), color var(--transition), border-color var(--transition);
         }
 
             .toggle-btn:hover {
-                border-color: rgba(255, 255, 255, 0.3);
+                border-color: #444;
                 color: var(--text);
             }
 
             .toggle-btn.active {
                 background: var(--accent);
-                color: #ffffff;
+                color: #fff;
                 border-color: var(--accent);
             }
 
+        /* ══════════════════════════════════════════
+           OVERLAY TRANSITION CHAPITRE
+        ══════════════════════════════════════════ */
         #transition-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0,0,0,0.88);
             z-index: 200;
             display: flex;
             flex-direction: column;
@@ -512,6 +517,7 @@
             font-size: 16px;
             font-weight: 600;
             text-align: center;
+            line-height: 1.5;
         }
 
         #transition-sub {
@@ -519,11 +525,14 @@
             color: var(--text2);
         }
 
+        /* ══════════════════════════════════════════
+           MODAL AIDE CLAVIER
+        ══════════════════════════════════════════ */
         #help-modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0,0,0,0.75);
             z-index: 300;
             align-items: center;
             justify-content: center;
@@ -534,11 +543,11 @@
             }
 
         #help-box {
-            background: #181818;
+            background: var(--bg2);
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 22px 24px;
-            width: min(420px, 92vw);
+            padding: 20px 24px;
+            width: min(400px, 90vw);
             max-height: 80vh;
             overflow-y: auto;
         }
@@ -553,7 +562,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 7px 0;
+            padding: 6px 0;
             border-bottom: 1px solid var(--border);
             font-size: 13px;
         }
@@ -562,8 +571,13 @@
                 border-bottom: none;
             }
 
+            .shortcut-row .keys {
+                display: flex;
+                gap: 4px;
+            }
+
         kbd {
-            background: #252525;
+            background: var(--bg3);
             border: 1px solid var(--border);
             border-radius: 4px;
             padding: 2px 7px;
@@ -572,11 +586,15 @@
             color: var(--text);
         }
 
+        .shortcut-row .desc {
+            color: var(--text2);
+        }
+
         #help-close {
-            margin-top: 16px;
+            margin-top: 14px;
             width: 100%;
-            height: 36px;
-            background: #282828;
+            height: 34px;
+            background: var(--bg3);
             border: 1px solid var(--border);
             color: var(--text);
             border-radius: var(--radius);
@@ -584,71 +602,69 @@
             font-size: 13px;
         }
 
-        #loader {
-            position: absolute;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top-color: var(--accent);
-            animation: spin 0.75s linear infinite;
-            z-index: 30;
+            #help-close:hover {
+                border-color: #444;
+            }
+
+        /* ══════════════════════════════════════════
+           MASQUAGE INACTIF (MODE CLASSIQUE)
+        ══════════════════════════════════════════ */
+        .idle #topbar, .idle #bottombar {
+            transform: translateY(-100%);
+            opacity: 0;
             pointer-events: none;
-            display: none;
         }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
+        .idle #bottombar {
+            transform: translateY(100%);
         }
 
-        #error-screen {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            color: #e74c3c;
-            text-align: center;
-            padding: 30px;
-            font-size: 14px;
-            z-index: 50;
+        .idle #settings-panel, body.fullscreen-mode:not(.show-ui) #settings-panel {
+            right: -100vw !important;
+            opacity: 0;
+            pointer-events: none;
         }
 
-        @keyframes fadeInPage {
-            0% {
-                opacity: 0;
-            }
-
-            100% {
-                opacity: 1;
-            }
+        .idle #viewport {
+            top: 0;
+            bottom: 0;
         }
 
-        /*
-           Suppression des hacks GPU (translateZ, backface-visibility et filter)
-           pour permettre au moteur Skia de Chrome/Edge d'appliquer son
-           rééchantillonnage Lanczos haute fidélité sans flou de texture.
-        */
-        #manga-page {
-            display: block;
-            image-rendering: auto;
-            cursor: zoom-in;
-            pointer-events: auto;
-            transition: none;
+        .idle, .idle * {
+            cursor: none !important;
         }
 
-            #manga-page.is-zoomed {
-                max-width: none !important;
-                max-height: none !important;
-                width: 1400px !important;
-                height: auto !important;
-                cursor: zoom-out;
-                margin: 0 !important;
-                padding: 40px !important;
-            }
+        /* ══════════════════════════════════════════
+           GESTION DU PLEIN ÉCRAN (UI CACHÉE)
+        ══════════════════════════════════════════ */
+        body.fullscreen-mode #topbar {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
 
+        body.fullscreen-mode #bottombar {
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        body.fullscreen-mode.show-ui #topbar, body.fullscreen-mode.show-ui #bottombar {
+            transform: translateY(0) !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+
+        /* ══════════════════════════════════════════
+           RESPONSIVE MOBILE
+        ══════════════════════════════════════════ */
         @media (max-width: 768px) {
+            #topbar, #bottombar, #settings-panel {
+                max-width: 100vw;
+                box-sizing: border-box;
+                overflow-x: hidden;
+            }
+            /* On masque les zones de clic sur mobile pour permettre le Scroll Tactile */
             #zone-prev, #zone-next {
                 display: none;
             }
@@ -659,18 +675,28 @@
                 display: none;
             }
 
+            #bottombar {
+                gap: 6px;
+                padding: 0 8px;
+            }
+
             .nav-btn span {
                 display: none;
             }
 
             #chapter-select {
-                max-width: 130px;
+                max-width: 120px;
                 font-size: 12px;
             }
 
             #settings-panel {
-                width: calc(100vw - 28px);
+                width: 100%;
+                right: -100%;
             }
+
+                #settings-panel.open {
+                    right: 0;
+                }
         }
     </style>
 </head>
@@ -679,8 +705,7 @@
     <header id="topbar">
         <div class="manga-title" id="manga-title-display">Manga</div>
         <div class="breadcrumb" id="chapter-breadcrumb">Ch. <span id="breadcrumb-ch">–</span></div>
-        <button class="topbar-btn" id="btn-scroll" title="Mode défilement continu (W)">↕</button>
-        <button class="topbar-btn" id="btn-zoom" title="Zoom 100% natif (Z)">🔍</button>
+        <button class="topbar-btn" id="btn-scroll" title="Mode défilement (W)">↕</button>
         <button class="topbar-btn" id="btn-settings" title="Paramètres (S)">⚙</button>
         <button class="topbar-btn" id="btn-help" title="Raccourcis clavier (?)">?</button>
         <button class="topbar-btn" id="fullscreen-btn" title="Plein écran (F)">⛶</button>
@@ -691,7 +716,7 @@
 
         <div id="page-view">
             <div id="zone-prev"><div class="arrow">‹</div></div>
-            <img id="manga-page" src="" alt="Page manga" title="Double-cliquez pour zoomer à 100%">
+            <img id="manga-page" src="" alt="Page manga">
             <div id="zone-next"><div class="arrow">›</div></div>
         </div>
 
@@ -705,8 +730,6 @@
             <p id="error-detail"></p>
         </div>
     </div>
-
-    <div id="zoom-toast">Zoom 100% activé</div>
 
     <footer id="bottombar">
         <button class="nav-btn" id="btn-prev-ch" title="Chapitre précédent">‹ <span>Préc.</span></button>
@@ -723,23 +746,24 @@
 
     <aside id="settings-panel">
         <div class="setting-group">
-            <div class="setting-label">Mode d'affichage</div>
+            <div class="setting-label">Mode de lecture</div>
             <div class="toggle-row">
-                <button class="toggle-btn active" id="mode-page">📄 Page seule</button>
+                <button class="toggle-btn active" id="mode-page">📄 Pages</button>
                 <button class="toggle-btn" id="mode-scroll">↕ Défilement</button>
             </div>
         </div>
         <div class="setting-group">
-            <div class="setting-label">Ajustement d'écran</div>
+            <div class="setting-label">Ajustement image</div>
             <div class="toggle-row">
-                <button class="toggle-btn" id="fit-contain">Adapter (100%)</button>
-                <button class="toggle-btn active" id="fit-width">Largeur (Scroll)</button>
+                <button class="toggle-btn active" id="fit-contain">Adapter</button>
+                <button class="toggle-btn" id="fit-width">Largeur</button>
+                <button class="toggle-btn" id="fit-height">Page entière</button>
             </div>
         </div>
     </aside>
 
     <div id="transition-overlay">
-        <div style="width:30px;height:30px;border-radius:50%;border:3px solid rgba(255,255,255,0.1);border-top-color:var(--accent);animation:spin 0.75s linear infinite"></div>
+        <div id="loader-tr" style="width:28px;height:28px;border-radius:50%;border:3px solid #333;border-top-color:var(--accent);animation:spin 0.8s linear infinite"></div>
         <div id="transition-text">Chapitre suivant…</div>
         <div id="transition-sub"></div>
     </div>
@@ -747,17 +771,17 @@
     <div id="help-modal">
         <div id="help-box">
             <h3>🎮 Raccourcis clavier</h3>
-            <div class="shortcut-row"><span>Page suivante</span><kbd>→</kbd> ou <kbd>D</kbd></div>
-            <div class="shortcut-row"><span>Page précédente</span><kbd>←</kbd> ou <kbd>A</kbd></div>
-            <div class="shortcut-row"><span>Défilement vertical</span><kbd>↑</kbd> ou <kbd>↓</kbd></div>
-            <div class="shortcut-row"><span>Saut de vue</span><kbd>Espace</kbd> ou <kbd>PgDn</kbd></div>
-            <div class="shortcut-row"><span>Zoom 100% natif</span><kbd>Z</kbd> ou Double-clic</div>
-            <div class="shortcut-row"><span>Mode Défilement</span><kbd>W</kbd></div>
-            <div class="shortcut-row"><span>Plein écran total</span><kbd>F</kbd></div>
-            <div class="shortcut-row"><span>Chapitre suivant</span><kbd>Ctrl</kbd> + <kbd>→</kbd></div>
-            <div class="shortcut-row"><span>Chapitre précédent</span><kbd>Ctrl</kbd> + <kbd>←</kbd></div>
-            <div class="shortcut-row"><span>Paramètres</span><kbd>S</kbd></div>
-            <div class="shortcut-row"><span>Fermer / Écran normal</span><kbd>Échap</kbd></div>
+            <div class="shortcut-row"><span class="desc">Page / Image suivante</span><span class="keys"><kbd>→</kbd> ou <kbd>D</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Page / Image précédente</span><span class="keys"><kbd>←</kbd> ou <kbd>A</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Défilement (Webtoon)</span><span class="keys"><kbd>↑</kbd> ou <kbd>↓</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Saut de page (Webtoon)</span><span class="keys"><kbd>Espace</kbd> ou <kbd>PgUp/Dn</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Chapitre suivant</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>→</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Chapitre précédent</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>←</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Plein écran</span><span class="keys"><kbd>F</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Mode défilement</span><span class="keys"><kbd>W</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Paramètres</span><span class="keys"><kbd>S</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Fermer menu / Quitter plein écran</span><span class="keys"><kbd>Échap</kbd></span></div>
+            <div class="shortcut-row"><span class="desc">Cette aide</span><span class="keys"><kbd>?</kbd></span></div>
             <button id="help-close">Fermer</button>
         </div>
     </div>
@@ -767,12 +791,11 @@
         let currentPages = [];
         let currentPage = 0;
         let scrollMode = false;
-        let fitMode = 'width'; // Par défaut en Largeur pour garantir la netteté avec scroll fluide
-        let isZoomed = false;
+        let fitMode = 'contain';
+        let animDirection = 'next';
         let isTransitioning = false;
         let nextChapterPreloaded = null;
         let isDraggingProgress = false;
-        let isScrubbingScroll = false;
 
         const mangaPageEl = document.getElementById('manga-page');
         const pageInfo = document.getElementById('page-info');
@@ -785,15 +808,14 @@
         const transitionSub = document.getElementById('transition-sub');
         const progressFill = document.getElementById('progress-bar-fill');
         const progressTooltip = document.getElementById('progress-tooltip');
-        const progressWrap = document.getElementById('progress-wrap');
+        const progressBg = document.getElementById('progress-bar-bg');
         const scrollView = document.getElementById('scroll-view');
         const scrollContent = document.getElementById('scroll-content');
         const pageView = document.getElementById('page-view');
+        const viewport = document.getElementById('viewport');
         const settingsPanel = document.getElementById('settings-panel');
         const breadcrumbCh = document.getElementById('breadcrumb-ch');
         const mangaTitleDisplay = document.getElementById('manga-title-display');
-        const zoomToast = document.getElementById('zoom-toast');
-        const viewport = document.getElementById('viewport');
 
         const urlParams = new URLSearchParams(window.location.search);
         const mangaId = urlParams.get('id') || 'default';
@@ -807,41 +829,22 @@
         errorDetail.innerText = msg;
         }
 
-        const fallbackData = {
-        "default": {
-        "1": {
-        "title": "Le Dernier Festival",
-        "pages": Array.from({ length: 28 }, (_, i) =>
-        `https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/ch-01/p${String(i + 1).padStart(2, '0')}.webp`
-        ).concat([
-        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/Scantrad.webp"
-        ])
-        }
-        },
-        "kosmos-beta": {
-        "1": {
-        "title": "Le Dernier Festival",
-        "pages": Array.from({ length: 28 }, (_, i) =>
-        `https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/ch-01/p${String(i + 1).padStart(2, '0')}.webp`
-        ).concat([
-        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/Scantrad.webp"
-        ])
-        }
-        }
-        };
+        const jsonUrl = new URL('manga-data.json', window.location.href).href;
+        fetch(jsonUrl)
+        .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}\n${jsonUrl}`); return r.json(); })
+        .then(data => {
+        if (!data[mangaId]) { showError(`Projet "${mangaId}" introuvable dans manga-data.json.`); return; }
+        mangaData = data[mangaId];
 
-        function initializeReader(data) {
-        const activeId = data[mangaId] ? mangaId : (data['kosmos-beta'] ? 'kosmos-beta' : Object.keys(data)[0]);
-        mangaData = data[activeId];
-
-        const nameKey = activeId !== 'default' ? activeId : (mangaId !== 'default' ? mangaId : 'Kosmos Beta');
-        const autoTitle = nameKey.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        if (mangaId !== 'default') {
+        const autoTitle = mangaId.split(/[-_]/).map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
         mangaTitleDisplay.textContent = autoTitle;
         document.title = autoTitle + ' — Lecteur Quintalis';
+        }
 
         setupSelector();
 
-        const savedProgress = localStorage.getItem('manga_progress_' + activeId);
+        const savedProgress = localStorage.getItem('manga_progress_' + mangaId);
         let startCh = Object.keys(mangaData)[0];
         let startPg = 0;
 
@@ -852,37 +855,12 @@
         startCh = parsed.chapter;
         startPg = parsed.page;
         }
-        } catch(e) { console.error(e); }
+        } catch(e) { console.error("Erreur de lecture de la sauvegarde", e); }
         }
 
         loadChapter(startCh, false, startPg);
-        }
-
-        const isBlobOrLocal = window.location.protocol === 'blob:' ||
-        window.location.protocol === 'file:' ||
-        window.location.protocol === 'about:' ||
-        window.location.href.startsWith('blob:');
-
-        if (isBlobOrLocal) {
-        initializeReader(fallbackData);
-        } else {
-        fetch('manga-data.json')
-        .then(r => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
         })
-        .then(data => {
-        if (!data[mangaId] && !data['default'] && !fallbackData[mangaId]) {
-        showError(`Projet "${mangaId}" introuvable dans manga-data.json.`);
-        return;
-        }
-        initializeReader(data);
-        })
-        .catch(err => {
-        console.warn("manga-data.json inaccessible, bascule sur les planches distantes :", err);
-        initializeReader(fallbackData);
-        });
-        }
+        .catch(err => showError(`Fichier manga-data.json inaccessible.\n${err.message}`));
 
         function setupSelector() {
         chapterSelect.innerHTML = '';
@@ -907,14 +885,15 @@
         currentPage = startAtEnd ? currentPages.length - 1 : 0;
         }
 
+        animDirection = startAtEnd ? 'prev' : 'next';
         updateNavButtons();
+
+        // Préchargement intégral de tout le chapitre en arrière-plan
         preloadCurrentChapterWhole();
 
         if (scrollMode) {
         buildScrollMode();
         } else {
-        exitZoom();
-        applyFit();
         updatePageView();
         }
         }
@@ -933,135 +912,86 @@
         });
         }
 
+        // ══ FONCTION DE MISE À JOUR (AVEC DÉTECTION DOUBLE PAGE) ══
         function updatePageView() {
         loader.style.display = 'block';
-        mangaPageEl.style.animation = 'none';
-        mangaPageEl.offsetHeight;
 
-        // Toujours remonter au début de la planche quand on tourne la page
-        pageView.scrollTop = 0;
+        mangaPageEl.style.animation = 'none';
+        mangaPageEl.offsetHeight; // Force le reflow
 
         mangaPageEl.onload = () => {
+        // Détection de la double page pour mobile
         const isLandscape = mangaPageEl.naturalWidth > mangaPageEl.naturalHeight;
         const isMobile = window.innerWidth <= 768;
 
         if (isLandscape && isMobile && fitMode === 'contain') {
         mangaPageEl.classList.add('double-page-mobile');
-        pageView.style.overflowX = 'auto';
+        pageView.classList.add('is-scrollable');
+
+        // Aligne tout à droite pour lire de droite à gauche (sens manga classique)
         setTimeout(() => { pageView.scrollLeft = pageView.scrollWidth; }, 10);
         } else {
         mangaPageEl.classList.remove('double-page-mobile');
-        pageView.style.overflowX = 'hidden';
+        pageView.classList.remove('is-scrollable');
         pageView.scrollLeft = 0;
         }
 
-        mangaPageEl.style.animation = 'fadeInPage 0.12s ease-out forwards';
+        mangaPageEl.style.animation = 'fadeInPage 0.15s ease-out forwards';
         loader.style.display = 'none';
         };
 
         mangaPageEl.src = currentPages[currentPage];
+
         updateUI();
-        preloadStrategy();
+        preloadStrategy(); // Anticipation du chapitre suivant
         }
 
         function applyFit() {
-        if (isZoomed) return;
-
         if (!scrollMode) {
-        if (fitMode === 'width') {
-        // Mode Largeur : défilement vertical déverrouillé, haut aligné
-        pageView.style.overflowY = 'auto';
-        pageView.style.alignItems = 'flex-start';
-        mangaPageEl.style.maxWidth = '850px';
+        if (fitMode === 'contain') {
+        mangaPageEl.style.maxWidth = '100%';
+        mangaPageEl.style.maxHeight = '100%';
+        mangaPageEl.style.width = 'auto';
+        mangaPageEl.style.height = 'auto';
+        } else if (fitMode === 'width') {
+        mangaPageEl.style.maxWidth = '100%';
         mangaPageEl.style.maxHeight = 'none';
         mangaPageEl.style.width = '100%';
         mangaPageEl.style.height = 'auto';
-        mangaPageEl.style.margin = '0 auto';
-        mangaPageEl.style.padding = '24px 0 70px 0';
-        } else {
-        // Mode Adapter : 100% de la hauteur disponible sans rognage
-        pageView.style.overflowY = 'hidden';
-        pageView.style.alignItems = 'center';
-        pageView.scrollTop = 0;
-        mangaPageEl.style.maxWidth = '100vw';
-        mangaPageEl.style.maxHeight = '100vh';
+        } else if (fitMode === 'height') {
+        mangaPageEl.style.maxWidth = 'none';
+        mangaPageEl.style.maxHeight = '100%';
         mangaPageEl.style.width = 'auto';
-        mangaPageEl.style.height = 'auto';
-        mangaPageEl.style.margin = 'auto';
-        mangaPageEl.style.padding = '0';
+        mangaPageEl.style.height = '100%';
         }
+
+        // Forcer la vérification de la double page après un changement de mode
+        if(mangaPageEl.src) updatePageView();
+
         } else {
         const imgs = scrollContent.querySelectorAll('img');
         imgs.forEach(img => {
-        img.style.maxWidth = fitMode === 'width' ? '100%' : '850px';
+        if (fitMode === 'contain') {
+        img.style.maxWidth = '850px';
+        img.style.width = '100%';
+        img.style.height = 'auto';
+        img.style.maxHeight = 'none';
+        } else if (fitMode === 'width') {
+        img.style.maxWidth = '100%';
+        img.style.width = '100%';
+        img.style.height = 'auto';
+        img.style.maxHeight = 'none';
+        } else if (fitMode === 'height') {
+        img.style.maxWidth = '100%';
+        img.style.width = 'auto';
+        img.style.height = '100vh';
+        img.style.maxHeight = 'none';
+        }
         });
         }
         }
 
-        function toggleZoom(e) {
-        if (scrollMode) return;
-        isZoomed = !isZoomed;
-
-        if (isZoomed) {
-        mangaPageEl.classList.add('is-zoomed');
-        pageView.classList.add('zoomed');
-        document.getElementById('btn-zoom').classList.add('active');
-
-        if (e && e.clientX) {
-        const clickX = e.clientX;
-        const clickY = e.clientY;
-        const pctX = clickX / window.innerWidth;
-        const pctY = clickY / window.innerHeight;
-
-        setTimeout(() => {
-        pageView.scrollLeft = (mangaPageEl.offsetWidth * pctX) - (window.innerWidth / 2);
-        pageView.scrollTop = (mangaPageEl.offsetHeight * pctY) - (window.innerHeight / 2);
-        }, 20);
-        }
-
-        showToast('Zoom 100% natif actif');
-        } else {
-        exitZoom();
-        }
-        }
-
-        function exitZoom() {
-        isZoomed = false;
-        mangaPageEl.classList.remove('is-zoomed');
-        pageView.classList.remove('zoomed');
-        document.getElementById('btn-zoom').classList.remove('active');
-        applyFit();
-        pageView.scrollLeft = 0;
-        pageView.scrollTop = 0;
-        }
-
-        function showToast(txt) {
-        zoomToast.textContent = txt;
-        zoomToast.style.opacity = '1';
-        setTimeout(() => { zoomToast.style.opacity = '0'; }, 2000);
-        }
-
-        mangaPageEl.addEventListener('dblclick', toggleZoom);
-        document.getElementById('btn-zoom').addEventListener('click', () => toggleZoom(null));
-
-        /* Pan tactile et souris pendant le zoom */
-        let isPanning = false, startPanX = 0, startPanY = 0, scrollStartX = 0, scrollStartY = 0;
-        pageView.addEventListener('mousedown', e => {
-        if (!isZoomed) return;
-        isPanning = true;
-        startPanX = e.clientX;
-        startPanY = e.clientY;
-        scrollStartX = pageView.scrollLeft;
-        scrollStartY = pageView.scrollTop;
-        });
-
-        document.addEventListener('mousemove', e => {
-        if (!isPanning || !isZoomed) return;
-        pageView.scrollLeft = scrollStartX - (e.clientX - startPanX);
-        pageView.scrollTop = scrollStartY - (e.clientY - startPanY);
-        });
-
-        document.addEventListener('mouseup', () => { isPanning = false; });
+        let isScrubbingScroll = false;
 
         function buildScrollMode() {
         scrollContent.innerHTML = '';
@@ -1070,16 +1000,19 @@
         nextChapterPreloaded = null;
 
         let loaded = 0;
-        currentPages.forEach((src, idx) => {
+        currentPages.forEach(src => {
         const img = document.createElement('img');
         img.src = src;
-        img.alt = `Page ${idx + 1}`;
+        img.alt = '';
         img.onload = img.onerror = () => {
         loaded++;
         if (loaded === currentPages.length) {
         loader.style.display = 'none';
+
         const imgs = scrollContent.querySelectorAll('img');
-        if (imgs[currentPage]) imgs[currentPage].scrollIntoView({ behavior: 'auto' });
+        if (imgs[currentPage]) {
+        imgs[currentPage].scrollIntoView({ behavior: 'auto' });
+        }
         }
         };
         scrollContent.appendChild(img);
@@ -1094,20 +1027,20 @@
         const imgs = scrollContent.querySelectorAll('img');
         const mid = scrollView.scrollTop + scrollView.clientHeight / 2;
         let best = 0, bestDist = Infinity;
-
         imgs.forEach((img, i) => {
         const imgMid = img.offsetTop + img.offsetHeight / 2;
         const d = Math.abs(mid - imgMid);
         if (d < bestDist) { bestDist = d; best = i; }
         });
-
         if (best !== currentPage) {
         currentPage = best;
         updateUI();
         preloadStrategy();
         }
 
-        const isAtBottom = scrollView.scrollHeight - scrollView.scrollTop <= scrollView.clientHeight + 10;
+        const scrollTolerance = 5;
+        const isAtBottom = scrollView.scrollHeight - scrollView.scrollTop <= scrollView.clientHeight + scrollTolerance;
+
         if (isAtBottom) {
         const chs = Object.keys(mangaData);
         const i = chs.indexOf(chapterSelect.value);
@@ -1128,13 +1061,13 @@
         if (nextChapterPreloaded === nextChId) return;
 
         const triggerThreshold = currentPages.length - 5;
-        if (currentPage >= triggerThreshold || currentPage >= currentPages.length * 0.75) {
+        if (currentPage >= triggerThreshold || currentPage >= currentPages.length * 0.8) {
         nextChapterPreloaded = nextChId;
         const nextPages = Array.isArray(mangaData[nextChId]) ? mangaData[nextChId] : mangaData[nextChId].pages;
         for (let i = 0; i < 5; i++) {
         if (nextPages[i]) {
-        const c = new Image();
-        c.src = nextPages[i];
+        const cacheNextChImg = new Image();
+        cacheNextChImg.src = nextPages[i];
         }
         }
         }
@@ -1144,7 +1077,7 @@
         const total = currentPages.length;
         const cur = currentPage + 1;
         pageInfo.textContent = cur + ' / ' + total;
-        const pct = total > 1 ? (currentPage / (total - 1)) * 100 : 100;
+        const pct = total > 1 ? ((currentPage) / (total - 1)) * 100 : 100;
         progressFill.style.width = pct + '%';
 
         if (mangaId) {
@@ -1160,10 +1093,9 @@
         document.getElementById('mode-page').classList.toggle('active', !on);
         document.getElementById('mode-scroll').classList.toggle('active', on);
         document.getElementById('btn-scroll').classList.toggle('active', on);
+
         document.getElementById('zone-prev').style.display = on ? 'none' : '';
         document.getElementById('zone-next').style.display = on ? 'none' : '';
-
-        exitZoom();
 
         if (on) {
         pageView.style.display = 'none';
@@ -1178,14 +1110,18 @@
         }
 
         function nextPage() {
-        if (isZoomed) { exitZoom(); return; }
         if (scrollMode) {
         const imgs = scrollContent.querySelectorAll('img');
-        if (currentPage < imgs.length - 1) imgs[currentPage + 1].scrollIntoView({ behavior: 'smooth' });
-        else goToNextChapter();
+        if (currentPage < imgs.length - 1) {
+        imgs[currentPage + 1].scrollIntoView({ behavior: 'smooth' });
+        } else {
+        goToNextChapter();
+        }
         return;
         }
+
         if (currentPage < currentPages.length - 1) {
+        animDirection = 'next';
         currentPage++;
         updatePageView();
         } else {
@@ -1194,14 +1130,18 @@
         }
 
         function prevPage() {
-        if (isZoomed) { exitZoom(); return; }
         if (scrollMode) {
         const imgs = scrollContent.querySelectorAll('img');
-        if (currentPage > 0) imgs[currentPage - 1].scrollIntoView({ behavior: 'smooth' });
-        else goToPrevChapter();
+        if (currentPage > 0) {
+        imgs[currentPage - 1].scrollIntoView({ behavior: 'smooth' });
+        } else {
+        goToPrevChapter();
+        }
         return;
         }
+
         if (currentPage > 0) {
+        animDirection = 'prev';
         currentPage--;
         updatePageView();
         } else {
@@ -1215,7 +1155,9 @@
         if (i < 0 || i >= chs.length - 1) return;
         const next = chs[i + 1];
         const title = mangaData[next].title || '';
-        showTransition('Chapitre suivant', 'Ch. ' + next + (title ? ' — ' + title : ''), () => loadChapter(next));
+        showTransition('Chapitre suivant', 'Ch. ' + next + (title ? ' — ' + title : ''), () => {
+        loadChapter(next);
+        });
         }
 
         function goToPrevChapter() {
@@ -1224,7 +1166,9 @@
         if (i <= 0) return;
         const prev = chs[i - 1];
         const title = mangaData[prev].title || '';
-        showTransition('Chapitre précédent', 'Ch. ' + prev + (title ? ' — ' + title : ''), () => loadChapter(prev, true));
+        showTransition('Chapitre précédent', 'Ch. ' + prev + (title ? ' — ' + title : ''), () => {
+        loadChapter(prev, true);
+        });
         }
 
         function showTransition(label, sub, callback) {
@@ -1234,19 +1178,21 @@
         setTimeout(() => {
         callback();
         transitionOverlay.classList.remove('show');
-        }, 1000);
+        }, 1400);
         }
 
         function updatePageFromProgress(clientX) {
-        const rect = progressWrap.getBoundingClientRect();
+        const rect = progressBg.getBoundingClientRect();
         let pct = (clientX - rect.left) / rect.width;
         pct = Math.max(0, Math.min(1, pct));
 
         const targetPage = Math.round(pct * (currentPages.length - 1));
+
         if (targetPage !== currentPage) {
+        animDirection = targetPage > currentPage ? 'next' : 'prev';
         currentPage = targetPage;
+
         if (!scrollMode) {
-        exitZoom();
         updatePageView();
         } else {
         const imgs = scrollContent.querySelectorAll('img');
@@ -1254,14 +1200,14 @@
         isScrubbingScroll = true;
         imgs[currentPage].scrollIntoView({ behavior: 'auto' });
         updateUI();
-        setTimeout(() => { isScrubbingScroll = false; }, 40);
+        setTimeout(() => { isScrubbingScroll = false; }, 50);
         }
         }
         }
         }
 
         function updateTooltipPosition(clientX) {
-        const rect = progressWrap.getBoundingClientRect();
+        const rect = progressBg.getBoundingClientRect();
         let pct = (clientX - rect.left) / rect.width;
         pct = Math.max(0, Math.min(1, pct));
 
@@ -1273,7 +1219,7 @@
         progressTooltip.style.opacity = '1';
         }
 
-        progressWrap.addEventListener('mousedown', e => {
+        progressBg.addEventListener('mousedown', e => {
         isDraggingProgress = true;
         updatePageFromProgress(e.clientX);
         updateTooltipPosition(e.clientX);
@@ -1284,8 +1230,8 @@
         updatePageFromProgress(e.clientX);
         updateTooltipPosition(e.clientX);
         } else {
-        const rect = progressWrap.getBoundingClientRect();
-        if (e.clientY >= rect.top - 15 && e.clientY <= rect.bottom + 15 && e.clientX >= rect.left && e.clientX <= rect.right) {
+        const rect = progressBg.getBoundingClientRect();
+        if (e.clientY >= rect.top - 10 && e.clientY <= rect.bottom + 10 && e.clientX >= rect.left && e.clientX <= rect.right) {
         updateTooltipPosition(e.clientX);
         } else {
         progressTooltip.style.opacity = '0';
@@ -1300,12 +1246,16 @@
         }
         });
 
-        progressWrap.addEventListener('mouseleave', () => {
-        if (!isDraggingProgress) progressTooltip.style.opacity = '0';
+        progressBg.addEventListener('mouseleave', () => {
+        if (!isDraggingProgress) {
+        progressTooltip.style.opacity = '0';
+        }
         });
 
+        /* ══ GESTION DES CLICS BUREAU ══ */
         document.getElementById('zone-prev').addEventListener('click', prevPage);
         document.getElementById('zone-next').addEventListener('click', nextPage);
+
         document.getElementById('btn-prev-ch').addEventListener('click', goToPrevChapter);
         document.getElementById('btn-next-ch').addEventListener('click', goToNextChapter);
 
@@ -1324,142 +1274,153 @@
         document.getElementById('mode-page').addEventListener('click', () => { if (scrollMode) setScrollMode(false); });
         document.getElementById('mode-scroll').addEventListener('click', () => { if (!scrollMode) setScrollMode(true); });
 
-        document.getElementById('fit-contain').addEventListener('click', () => {
-        fitMode = 'contain';
-        document.getElementById('fit-contain').classList.add('active');
-        document.getElementById('fit-width').classList.remove('active');
-        exitZoom();
+        ['contain','width','height'].forEach(f => {
+        document.getElementById('fit-'+f).addEventListener('click', () => {
+        fitMode = f;
+        ['contain','width','height'].forEach(x => document.getElementById('fit-'+x).classList.toggle('active', x === f));
         applyFit();
         });
-
-        document.getElementById('fit-width').addEventListener('click', () => {
-        fitMode = 'width';
-        document.getElementById('fit-width').classList.add('active');
-        document.getElementById('fit-contain').classList.remove('active');
-        exitZoom();
-        applyFit();
         });
 
         function isFS() {
-        return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+        return !!(document.fullscreenElement || document.webkitFullscreenElement);
         }
 
         function toggleFS() {
-        try {
         if (!isFS()) {
-        const req = document.documentElement.requestFullscreen ||
-        document.documentElement.webkitRequestFullscreen ||
-        document.documentElement.mozRequestFullScreen ||
-        document.documentElement.msRequestFullscreen;
-        if (req) {
-        const promise = req.call(document.documentElement);
-        if (promise && typeof promise.catch === 'function') {
-        promise.catch(err => {
-        console.warn("Plein écran restreint par la politique de sécurité de l'environnement :", err);
-        showToast("Plein écran non disponible dans cet aperçu");
-        });
+        const req = (document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen).call(document.documentElement);
+        if (navigator.keyboard && navigator.keyboard.lock) {
+        if (req && req.then) {
+        req.then(() => navigator.keyboard.lock(['Escape'])).catch(() => {});
+        } else {
+        setTimeout(() => navigator.keyboard.lock(['Escape']).catch(() => {}), 100);
+        }
         }
         } else {
-        showToast("Plein écran non supporté");
+        if (navigator.keyboard && navigator.keyboard.unlock) {
+        navigator.keyboard.unlock();
         }
-        } else {
-        const exit = document.exitFullscreen ||
-        document.webkitExitFullscreen ||
-        document.mozCancelFullScreen ||
-        document.msExitFullscreen;
-        if (exit) {
-        const promise = exit.call(document);
-        if (promise && typeof promise.catch === 'function') {
-        promise.catch(err => console.warn("Erreur sortie plein écran :", err));
-        }
-        }
-        }
-        } catch (err) {
-        console.warn("Erreur plein écran :", err);
-        showToast("Plein écran non supporté");
+        (document.exitFullscreen || document.webkitExitFullscreen).call(document);
         }
         }
         document.getElementById('fullscreen-btn').addEventListener('click', toggleFS);
 
-        let idleTimer = null;
-        let accumulatedDistance = 0;
-        let lastX = -1;
-        let lastY = -1;
-
-        function isModalOrMenuOpen() {
-        return settingsPanel.classList.contains('open') || document.getElementById('help-modal').classList.contains('open');
-        }
-
-        function showUI() {
+        let idleTimer;
+        function resetIdle() {
         document.body.classList.remove('idle');
         clearTimeout(idleTimer);
-        idleTimer = setTimeout(() => {
-        if (!isModalOrMenuOpen()) {
-        document.body.classList.add('idle');
-        }
-        }, 2600);
-        }
-
-        function hideUI() {
-        if (!isModalOrMenuOpen()) {
-        document.body.classList.add('idle');
-        clearTimeout(idleTimer);
+        if (isFS()) {
+        idleTimer = setTimeout(() => document.body.classList.add('idle'), 2500);
         }
         }
 
-        idleTimer = setTimeout(() => {
-        if (!isModalOrMenuOpen()) document.body.classList.add('idle');
-        }, 2500);
+        let lastMouseX = -1, lastMouseY = -1;
+        function checkMouseMove(e) {
+        if (lastMouseX === -1) { lastMouseX = e.clientX; lastMouseY = e.clientY; return; }
+        const dist = Math.abs(e.clientX - lastMouseX) + Math.abs(e.clientY - lastMouseY);
+        if (dist > 50) {
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+        resetIdle();
+        }
+        }
 
+        ['mousedown','touchstart','fullscreenchange','webkitfullscreenchange'].forEach(e => {
+        document.addEventListener(e, resetIdle, { passive: true });
+        });
         document.addEventListener('mousemove', e => {
-        const isNearBars = e.clientY <= 55 || e.clientY >= window.innerHeight - 60;
-
-        if (lastX !== -1 && lastY !== -1) {
-        const dx = e.clientX - lastX;
-        const dy = e.clientY - lastY;
-        accumulatedDistance += Math.hypot(dx, dy);
-        }
-        lastX = e.clientX;
-        lastY = e.clientY;
-
-        if (accumulatedDistance > 140 || isNearBars) {
-        showUI();
-        accumulatedDistance = 0;
-        }
+        checkMouseMove(e);
         }, { passive: true });
-
-        let mouseStopTimer;
-        document.addEventListener('mousemove', () => {
-        clearTimeout(mouseStopTimer);
-        mouseStopTimer = setTimeout(() => { accumulatedDistance = 0; }, 350);
-        }, { passive: true });
-
-        const uiContainers = [document.getElementById('topbar'), document.getElementById('bottombar'), settingsPanel, document.getElementById('help-modal')];
-        uiContainers.forEach(el => {
-        if (!el) return;
-        el.addEventListener('mousedown', e => {
-        showUI();
-        e.stopPropagation();
-        });
-        el.addEventListener('touchstart', e => {
-        showUI();
-        e.stopPropagation();
-        }, { passive: true });
-        });
-
-        viewport.addEventListener('mousedown', () => {
-        if (!document.body.classList.contains('idle') && !isModalOrMenuOpen()) {
-        hideUI();
-        }
-        });
 
         document.addEventListener('fullscreenchange', () => {
-        if (isFS()) hideUI();
-        else showUI();
+        if (!isFS()) {
+        document.body.classList.remove('idle', 'fullscreen-mode', 'show-ui');
+        if (navigator.keyboard && navigator.keyboard.unlock) navigator.keyboard.unlock();
+        document.getElementById('help-modal').classList.remove('open');
+        settingsPanel.classList.remove('open');
+        document.getElementById('btn-settings').classList.remove('active');
+        } else {
+        document.body.classList.add('fullscreen-mode');
+        document.body.classList.remove('show-ui');
+        }
+        viewport.style.top = isFS() ? '0' : '';
+        viewport.style.bottom = isFS() ? '0' : '';
         });
+
+        /* ══ GESTION TACTILE AVANCÉE (SWIPE & TAP) ══ */
+        let touchStartX = 0, touchStartY = 0;
+        let isDraggingView = false;
+        let dragStartTime = 0;
+
+        pageView.addEventListener('touchstart', e => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isDraggingView = false;
+        dragStartTime = Date.now();
+        }, { passive: true });
+
+        pageView.addEventListener('touchmove', () => {
+        isDraggingView = true;
+        }, { passive: true });
+
+        pageView.addEventListener('touchend', e => {
+        if (scrollMode) return;
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        const dx = touchEndX - touchStartX;
+        const dy = touchEndY - touchStartY;
+        const absDx = Math.abs(dx);
+        const timeElapsed = Date.now() - dragStartTime;
+
+        // 1. Détection du Tap (Clic rapide sans glissement)
+        if (!isDraggingView || (absDx < 10 && timeElapsed < 300)) {
+        const width = window.innerWidth;
+
+        // Si on clique sur un élément de l'interface affichée, on annule
+        const bottombar = document.getElementById('bottombar');
+        const topbar = document.getElementById('topbar');
+        const settings = document.getElementById('settings-panel');
+        if (bottombar.contains(e.target) || topbar.contains(e.target) || settings.contains(e.target)) return;
+
+        // Zones de tap (Tachiyomi style)
+        if (touchEndX < width * 0.3) {
+        prevPage();
+        } else if (touchEndX > width * 0.7) {
+        nextPage();
+        } else {
+        if (isFS()) document.body.classList.toggle('show-ui');
+        }
+        return;
+        }
+
+        // 2. Détection du Swipe pour changer de page (Double Page)
+        if (absDx > 40 && absDx > Math.abs(dy)) {
+        const isAtLeftEdge = pageView.scrollLeft <= 10;
+        const isAtRightEdge = pageView.scrollLeft + pageView.clientWidth >= pageView.scrollWidth - 10;
+
+        if (dx < 0 && isAtRightEdge) {
+        nextPage(); // Swipe vers la gauche (au bord droit)
+        } else if (dx > 0 && isAtLeftEdge) {
+        prevPage(); // Swipe vers la droite (au bord gauche)
+        }
+        }
+        }, { passive: true });
 
         document.addEventListener('keydown', e => {
         if (e.target.tagName === 'SELECT') return;
+
+        const navKeys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ', 'ArrowLeft', 'ArrowRight', 'a', 'A', 'd', 'D'];
+        if (!navKeys.includes(e.key)) {
+        resetIdle();
+        }
+
+        if (scrollMode) {
+        const scrollAmt = window.innerHeight * 0.7;
+        if (e.key === 'ArrowDown') { e.preventDefault(); scrollView.scrollBy({ top: 60, behavior: 'smooth' }); }
+        if (e.key === 'ArrowUp') { e.preventDefault(); scrollView.scrollBy({ top: -60, behavior: 'smooth' }); }
+        if (e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); scrollView.scrollBy({ top: scrollAmt, behavior: 'smooth' }); }
+        if (e.key === 'PageUp') { e.preventDefault(); scrollView.scrollBy({ top: -scrollAmt, behavior: 'smooth' }); }
+        }
 
         if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
         if (e.ctrlKey || e.metaKey) goToNextChapter();
@@ -1470,46 +1431,32 @@
         else prevPage();
         }
 
-        // Défilement vertical au clavier
-        const targetScrollEl = scrollMode ? scrollView : (fitMode === 'width' ? pageView : null);
-        if (targetScrollEl) {
-        const scrollAmt = window.innerHeight * 0.75;
-        if (e.key === 'ArrowDown') { e.preventDefault(); targetScrollEl.scrollBy({ top: 80, behavior: 'smooth' }); }
-        if (e.key === 'ArrowUp') { e.preventDefault(); targetScrollEl.scrollBy({ top: -80, behavior: 'smooth' }); }
-        if (e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); targetScrollEl.scrollBy({ top: scrollAmt, behavior: 'smooth' }); }
-        if (e.key === 'PageUp') { e.preventDefault(); targetScrollEl.scrollBy({ top: -scrollAmt, behavior: 'smooth' }); }
-        }
-
-        if (e.key === 'z' || e.key === 'Z') toggleZoom(null);
         if (e.key === 'f' || e.key === 'F') toggleFS();
         if (e.key === 'w' || e.key === 'W') setScrollMode(!scrollMode);
-
         if (e.key === 's' || e.key === 'S') {
-        showUI();
         settingsPanel.classList.toggle('open');
         document.getElementById('btn-settings').classList.toggle('active', settingsPanel.classList.contains('open'));
         }
         if (e.key === '?') {
-        showUI();
         document.getElementById('help-modal').classList.add('open');
         }
 
         if (e.key === 'Escape') {
-        if (isZoomed) {
-        exitZoom();
-        return;
-        }
         const helpModal = document.getElementById('help-modal');
-        if (helpModal.classList.contains('open') || settingsPanel.classList.contains('open')) {
+        const isHelpOpen = helpModal.classList.contains('open');
+        const isSettingsOpen = settingsPanel.classList.contains('open');
+
+        if (isHelpOpen || isSettingsOpen) {
+        e.preventDefault();
         helpModal.classList.remove('open');
         settingsPanel.classList.remove('open');
         document.getElementById('btn-settings').classList.remove('active');
-        hideUI();
         } else if (isFS()) {
         toggleFS();
         }
         }
         });
+
     </script>
 </body>
 </html>

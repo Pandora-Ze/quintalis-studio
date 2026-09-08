@@ -1,7 +1,7 @@
 ---
 label: TRADUCTION
 title: "The Quintessential Quintuplets : Kosmos Beta"
-image: https://pandora-ze.github.io/quintalis-studio/static/cover-kosmos-beta.png
+image: /static/affiche-kosmos-beta.webp
 description: "Découvrez la version française de Kosmos Beta, l'histoire alternative culte centrée sur Nino Nakano. Une traduction signée Quintalis STUDIO."
 visibility: hidden
 ---
@@ -25,7 +25,7 @@ visibility: hidden
 
 <div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start; margin-bottom: 40px; margin-top: 10px;">
   
-  <img src="https://pandora-ze.github.io/quintalis-studio/static/cover-kosmos-beta.png" alt="Nino Nakano - Kosmos Beta" style="width: 240px; border-radius: 10px; box-shadow: 0 6px 12px rgba(155, 89, 182, 0.4); flex-shrink: 0;">
+  <img src="/static/affiche-kosmos-beta.webp" alt="Nino Nakano - Kosmos Beta" style="width: 240px; border-radius: 10px; box-shadow: 0 6px 12px rgba(155, 89, 182, 0.4); flex-shrink: 0;">
   
   <div style="flex: 1; min-width: 300px;">
     
