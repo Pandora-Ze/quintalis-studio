@@ -17,7 +17,7 @@
             --radius: 8px;
             --topbar: 52px;
             --bottombar: 56px;
-            --transition: 0.22s cubic-bezier(0.2, 0, 0, 1);
+            --transition: 0.22s cubic-bezier(0.2, 0, 1, 1);
         }
 
         *, *::before, *::after {
@@ -38,7 +38,7 @@
         }
 
         /* ══════════════════════════════════════════
-           ZONE D'AFFICHAGE (VIEWPORT)
+           ZONE D'AFFICHAGE DU LECTEUR
         ══════════════════════════════════════════ */
         #viewport {
             position: fixed;
@@ -57,10 +57,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow-x: hidden;
-            overflow-y: hidden;
+            overflow: hidden;
             position: relative;
-            scroll-behavior: auto;
         }
 
             #page-view::-webkit-scrollbar {
@@ -77,10 +75,6 @@
                 border-radius: 99px;
             }
 
-                #page-view::-webkit-scrollbar-thumb:hover {
-                    background: rgba(255, 255, 255, 0.4);
-                }
-
             #page-view.zoomed {
                 overflow: auto !important;
                 cursor: grab;
@@ -92,49 +86,22 @@
                     cursor: grabbing;
                 }
 
-            /* Mode double page : ordre naturel (page gauche à gauche, page droite à droite) */
-            #page-view.double-spread {
-                flex-direction: row !important;
-                justify-content: center !important;
-                align-items: center !important;
+        /* Rendu Canvas Haute Fidélité : élimine le flou des écrans Windows Hi-DPI */
+        #manga-canvas {
+            display: block;
+            margin: auto;
+            cursor: zoom-in;
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.7);
+            transition: opacity 0.12s ease;
+        }
+
+            #manga-canvas.is-zoomed {
+                cursor: zoom-out;
+                margin: 0 !important;
+                padding: 20px !important;
             }
 
-                #page-view.double-spread #manga-page-left {
-                    display: block;
-                }
-
-        /* Rendu optimisé haute fidélité sans filtre GPU parasite */
-        #manga-page, #manga-page-left {
-            display: block;
-            image-rendering: auto;
-            cursor: zoom-in;
-            pointer-events: auto;
-            transition: none;
-        }
-
-        #manga-page-left {
-            display: none;
-            margin-right: 4px;
-        }
-
-        #manga-page.is-zoomed {
-            max-width: none !important;
-            max-height: none !important;
-            width: 1400px !important;
-            height: auto !important;
-            cursor: zoom-out;
-            margin: 0 !important;
-            padding: 40px !important;
-        }
-
-        #manga-page.double-page-mobile {
-            max-width: none !important;
-            width: auto !important;
-            height: 100vh !important;
-            cursor: default;
-        }
-
-        /* Zones de clic latérales */
+        /* Zones de clic invisibles droite / gauche */
         #zone-prev, #zone-next {
             position: absolute;
             top: 0;
@@ -185,7 +152,7 @@
         }
 
         /* ══════════════════════════════════════════
-           MODE DÉFILEMENT CONTINU (SCROLL)
+           MODE DÉFILEMENT CONTINU (WEBTOON / SCROLL)
         ══════════════════════════════════════════ */
         #scroll-view {
             display: none;
@@ -220,11 +187,10 @@
                 height: auto;
                 display: block;
                 margin-bottom: 12px;
-                transform: translateZ(0);
             }
 
         /* ══════════════════════════════════════════
-           INTERFACES FLOTTANTES (TOPBAR & BOTTOMBAR)
+           BARRES FLOTTANTES & COMMANDES
         ══════════════════════════════════════════ */
         #topbar, #bottombar {
             position: fixed;
@@ -270,7 +236,7 @@
         }
 
         body.idle #settings-panel {
-            right: -290px !important;
+            right: -310px !important;
             opacity: 0;
             pointer-events: none;
         }
@@ -448,13 +414,13 @@
         }
 
         /* ══════════════════════════════════════════
-           PANNEAU DES PARAMÈTRES
+           PANNEAU DES PARAMÈTRES (S)
         ══════════════════════════════════════════ */
         #settings-panel {
             position: fixed;
             top: calc(var(--topbar) + 10px);
-            right: -280px;
-            width: 260px;
+            right: -310px;
+            width: 280px;
             background: var(--bg-bar);
             backdrop-filter: blur(16px);
             border: 1px solid var(--border);
@@ -495,10 +461,13 @@
             background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--border);
             color: var(--text2);
-            height: 32px;
+            height: 34px;
             border-radius: var(--radius);
             cursor: pointer;
             font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: all var(--transition);
         }
 
@@ -511,6 +480,7 @@
                 background: var(--accent);
                 color: #ffffff;
                 border-color: var(--accent);
+                font-weight: 600;
             }
 
         #transition-overlay {
@@ -544,9 +514,6 @@
             color: var(--text2);
         }
 
-        /* ══════════════════════════════════════════
-           MODALE D'AIDE
-        ══════════════════════════════════════════ */
         #help-modal {
             display: none;
             position: fixed;
@@ -643,16 +610,6 @@
             z-index: 50;
         }
 
-        @keyframes fadeInPage {
-            0% {
-                opacity: 0;
-            }
-
-            100% {
-                opacity: 1;
-            }
-        }
-
         @media (max-width: 768px) {
             #zone-prev, #zone-next {
                 display: none;
@@ -696,8 +653,7 @@
 
         <div id="page-view">
             <div id="zone-prev"><div class="arrow">‹</div></div>
-            <img id="manga-page-left" src="" alt="Page gauche" style="display:none;">
-            <img id="manga-page" src="" alt="Page manga" title="Double-cliquez pour zoomer à 100%">
+            <canvas id="manga-canvas" title="Double-cliquez pour zoomer à 100%"></canvas>
             <div id="zone-next"><div class="arrow">›</div></div>
         </div>
 
@@ -730,15 +686,21 @@
             <div class="setting-label">Mode d'affichage</div>
             <div class="toggle-row">
                 <button class="toggle-btn active" id="mode-page">📄 Page seule</button>
-                <button class="toggle-btn" id="mode-double">📖 Double page</button>
                 <button class="toggle-btn" id="mode-scroll">↕ Défilement</button>
             </div>
         </div>
         <div class="setting-group">
             <div class="setting-label">Ajustement d'écran</div>
             <div class="toggle-row">
-                <button class="toggle-btn" id="fit-width">Largeur (Scroll)</button>
                 <button class="toggle-btn active" id="fit-contain">Adapter (100%)</button>
+                <button class="toggle-btn" id="fit-width">Largeur</button>
+            </div>
+        </div>
+        <div class="setting-group">
+            <div class="setting-label">Rendu d'encrage</div>
+            <div class="toggle-row">
+                <button class="toggle-btn active" id="render-hd">✨ Piqué HD</button>
+                <button class="toggle-btn" id="render-raw">Naturel</button>
             </div>
         </div>
     </aside>
@@ -755,14 +717,13 @@
             <div class="shortcut-row"><span>Page suivante</span><kbd>→</kbd> ou <kbd>D</kbd></div>
             <div class="shortcut-row"><span>Page précédente</span><kbd>←</kbd> ou <kbd>A</kbd></div>
             <div class="shortcut-row"><span>Défilement vertical</span><kbd>↑</kbd> ou <kbd>↓</kbd></div>
-            <div class="shortcut-row"><span>Saut de vue</span><kbd>Espace</kbd> ou <kbd>PgDn</kbd></div>
             <div class="shortcut-row"><span>Zoom 100% natif</span><kbd>Z</kbd> ou Double-clic</div>
             <div class="shortcut-row"><span>Mode Défilement</span><kbd>W</kbd></div>
             <div class="shortcut-row"><span>Plein écran total</span><kbd>F</kbd></div>
             <div class="shortcut-row"><span>Chapitre suivant</span><kbd>Ctrl</kbd> + <kbd>→</kbd></div>
             <div class="shortcut-row"><span>Chapitre précédent</span><kbd>Ctrl</kbd> + <kbd>←</kbd></div>
             <div class="shortcut-row"><span>Paramètres</span><kbd>S</kbd></div>
-            <div class="shortcut-row"><span>Fermer / Écran normal</span><kbd>Échap</kbd></div>
+            <div class="shortcut-row"><span>Fermer / Sortir</span><kbd>Échap</kbd></div>
             <button id="help-close">Fermer</button>
         </div>
     </div>
@@ -772,16 +733,17 @@
         let currentPages = [];
         let currentPage = 0;
         let scrollMode = false;
-        let isDoublePage = false;
         let fitMode = 'contain';
+        let renderMode = 'hd'; // 'hd' = contraste des noirs rehaussé, 'raw' = brut
         let isZoomed = false;
         let isTransitioning = false;
         let nextChapterPreloaded = null;
         let isDraggingProgress = false;
         let isScrubbingScroll = false;
+        let currentLoadedImg = null;
 
-        const mangaPageEl = document.getElementById('manga-page');
-        const mangaPageLeftEl = document.getElementById('manga-page-left');
+        const mangaCanvas = document.getElementById('manga-canvas');
+        const ctx = mangaCanvas.getContext('2d', { alpha: false });
         const pageInfo = document.getElementById('page-info');
         const chapterSelect = document.getElementById('chapter-select');
         const loader = document.getElementById('loader');
@@ -808,7 +770,7 @@
 
         function showError(msg) {
         loader.style.display = 'none';
-        mangaPageEl.style.display = 'none';
+        mangaCanvas.style.display = 'none';
         errorScreen.style.display = 'flex';
         errorDetail.innerText = msg;
         }
@@ -885,7 +847,7 @@
         initializeReader(data);
         })
         .catch(err => {
-        console.warn("manga-data.json inaccessible, bascule sur les planches distantes :", err);
+        console.warn("manga-data.json inaccessible, repli sur fallback :", err);
         initializeReader(fallbackData);
         });
         }
@@ -920,7 +882,6 @@
         buildScrollMode();
         } else {
         exitZoom();
-        applyFit();
         updatePageView();
         }
         }
@@ -939,105 +900,125 @@
         });
         }
 
+        /* Moteur de rendu Canvas haute densité : garantit une netteté absolue */
+        function renderCurrentPageCanvas() {
+        if (!currentLoadedImg || scrollMode) return;
+
+        const natW = currentLoadedImg.naturalWidth;
+        const natH = currentLoadedImg.naturalHeight;
+        if (!natW || !natH) return;
+
+        // Ratio d'affichage physique réel de l'écran (gère le 125% et 150% de Windows)
+        const dpr = Math.max(1, window.devicePixelRatio || 1);
+
+        if (isZoomed) {
+        // Mode zoom 100% natif : affiche les pixels 1:1 de l'image
+        const zoomCssWidth = Math.min(1400, natW);
+        const zoomCssHeight = zoomCssWidth * (natH / natW);
+
+        mangaCanvas.width = Math.round(zoomCssWidth * dpr);
+        mangaCanvas.height = Math.round(zoomCssHeight * dpr);
+        mangaCanvas.style.width = zoomCssWidth + 'px';
+        mangaCanvas.style.height = zoomCssHeight + 'px';
+
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
+        if (renderMode === 'hd') {
+        ctx.filter = 'contrast(110%) brightness(98%)';
+        } else {
+        ctx.filter = 'none';
+        }
+        ctx.drawImage(currentLoadedImg, 0, 0, zoomCssWidth, zoomCssHeight);
+        ctx.restore();
+        return;
+        }
+
+        // Mode standard : calcul de l'espace disponible
+        const availW = pageView.clientWidth;
+        const availH = pageView.clientHeight;
+
+        let cssW, cssH;
+
+        if (fitMode === 'width') {
+        pageView.style.overflowY = 'auto';
+        pageView.style.alignItems = 'flex-start';
+        cssW = Math.min(availW, 850);
+        cssH = cssW * (natH / natW);
+        mangaCanvas.style.margin = '20px auto 60px auto';
+        } else {
+        // Mode contain : 100% de la planche dans l'écran
+        pageView.style.overflowY = 'hidden';
+        pageView.style.alignItems = 'center';
+        mangaCanvas.style.margin = 'auto';
+
+        const scale = Math.min(availW / natW, availH / natH);
+        cssW = Math.round(natW * scale);
+        cssH = Math.round(natH * scale);
+        }
+
+        // Le tampon Canvas prend le nombre réel de sous-pixels physiques
+        mangaCanvas.width = Math.round(cssW * dpr);
+        mangaCanvas.height = Math.round(cssH * dpr);
+        mangaCanvas.style.width = cssW + 'px';
+        mangaCanvas.style.height = cssH + 'px';
+
+        ctx.save();
+        ctx.scale(dpr, dpr);
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high'; // Échantillonnage Lanczos ultra précis
+
+        // Accentuation du piqué des encres sans moiré
+        if (renderMode === 'hd') {
+        ctx.filter = 'contrast(112%) brightness(97%)';
+        } else {
+        ctx.filter = 'none';
+        }
+
+        ctx.drawImage(currentLoadedImg, 0, 0, cssW, cssH);
+        ctx.restore();
+        }
+
         function updatePageView() {
         loader.style.display = 'block';
-        mangaPageEl.style.animation = 'none';
-        mangaPageEl.offsetHeight;
-
         pageView.scrollTop = 0;
 
-        const isDesktop = window.innerWidth > 900;
-        const useDouble = isDoublePage && isDesktop && !scrollMode && (currentPage < currentPages.length - 1);
-
-        if (useDouble) {
-        pageView.classList.add('double-spread');
-        mangaPageLeftEl.style.display = 'block';
-        mangaPageLeftEl.src = currentPages[currentPage + 1];
-        } else {
-        pageView.classList.remove('double-spread');
-        mangaPageLeftEl.style.display = 'none';
-        mangaPageLeftEl.src = '';
-        }
-
-        mangaPageEl.onload = () => {
-        const isLandscape = mangaPageEl.naturalWidth > mangaPageEl.naturalHeight;
-        const isMobile = window.innerWidth <= 768;
-
-        if (isLandscape && isMobile && fitMode === 'contain') {
-        mangaPageEl.classList.add('double-page-mobile');
-        pageView.style.overflowX = 'auto';
-        setTimeout(() => { pageView.scrollLeft = pageView.scrollWidth; }, 10);
-        } else {
-        mangaPageEl.classList.remove('double-page-mobile');
-        pageView.style.overflowX = 'hidden';
-        pageView.scrollLeft = 0;
-        }
-
-        mangaPageEl.style.animation = 'fadeInPage 0.12s ease-out forwards';
+        const img = new Image();
+        img.onload = () => {
+        currentLoadedImg = img;
+        renderCurrentPageCanvas();
         loader.style.display = 'none';
         };
+        img.onerror = () => {
+        loader.style.display = 'none';
+        };
+        img.src = currentPages[currentPage];
 
-        mangaPageEl.src = currentPages[currentPage];
         updateUI();
         preloadStrategy();
         }
 
-        function applyFit() {
-        if (isZoomed) return;
-
-        const targets = [mangaPageEl, mangaPageLeftEl];
-
-        if (!scrollMode) {
-        if (fitMode === 'width') {
-        pageView.style.overflowY = 'auto';
-        pageView.style.alignItems = 'flex-start';
-        targets.forEach(img => {
-        img.style.maxWidth = isDoublePage ? '50%' : '850px';
-        img.style.maxHeight = 'none';
-        img.style.width = isDoublePage ? '50%' : '100%';
-        img.style.height = 'auto';
-        img.style.margin = '0 auto';
-        img.style.padding = '24px 0 70px 0';
+        window.addEventListener('resize', () => {
+        if (!scrollMode) renderCurrentPageCanvas();
         });
-        } else {
-        pageView.style.overflowY = 'hidden';
-        pageView.style.alignItems = 'center';
-        pageView.scrollTop = 0;
-        targets.forEach(img => {
-        img.style.maxWidth = isDoublePage ? '49vw' : '100vw';
-        img.style.maxHeight = '100vh';
-        img.style.width = 'auto';
-        img.style.height = 'auto';
-        img.style.margin = 'auto';
-        img.style.padding = '0';
-        });
-        }
-        } else {
-        const imgs = scrollContent.querySelectorAll('img');
-        imgs.forEach(img => {
-        img.style.maxWidth = fitMode === 'width' ? '100%' : '850px';
-        });
-        }
-        }
 
         function toggleZoom(e) {
         if (scrollMode) return;
         isZoomed = !isZoomed;
 
         if (isZoomed) {
-        mangaPageEl.classList.add('is-zoomed');
+        mangaCanvas.classList.add('is-zoomed');
         pageView.classList.add('zoomed');
         document.getElementById('btn-zoom').classList.add('active');
+        renderCurrentPageCanvas();
 
         if (e && e.clientX) {
-        const clickX = e.clientX;
-        const clickY = e.clientY;
-        const pctX = clickX / window.innerWidth;
-        const pctY = clickY / window.innerHeight;
-
+        const pctX = e.clientX / window.innerWidth;
+        const pctY = e.clientY / window.innerHeight;
         setTimeout(() => {
-        pageView.scrollLeft = (mangaPageEl.offsetWidth * pctX) - (window.innerWidth / 2);
-        pageView.scrollTop = (mangaPageEl.offsetHeight * pctY) - (window.innerHeight / 2);
+        pageView.scrollLeft = (mangaCanvas.offsetWidth * pctX) - (window.innerWidth / 2);
+        pageView.scrollTop = (mangaCanvas.offsetHeight * pctY) - (window.innerHeight / 2);
         }, 20);
         }
         } else {
@@ -1047,18 +1028,18 @@
 
         function exitZoom() {
         isZoomed = false;
-        mangaPageEl.classList.remove('is-zoomed');
+        mangaCanvas.classList.remove('is-zoomed');
         pageView.classList.remove('zoomed');
         document.getElementById('btn-zoom').classList.remove('active');
-        applyFit();
+        renderCurrentPageCanvas();
         pageView.scrollLeft = 0;
         pageView.scrollTop = 0;
         }
 
-        mangaPageEl.addEventListener('dblclick', toggleZoom);
+        mangaCanvas.addEventListener('dblclick', toggleZoom);
         document.getElementById('btn-zoom').addEventListener('click', () => toggleZoom(null));
 
-        /* Pan tactile et souris pendant le zoom */
+        /* Déplacement à la souris en mode zoom */
         let isPanning = false, startPanX = 0, startPanY = 0, scrollStartX = 0, scrollStartY = 0;
         pageView.addEventListener('mousedown', e => {
         if (!isZoomed) return;
@@ -1099,7 +1080,6 @@
         scrollContent.appendChild(img);
         });
 
-        applyFit();
         updateUI();
 
         scrollView.onscroll = () => {
@@ -1186,7 +1166,6 @@
         } else {
         scrollView.style.display = 'none';
         pageView.style.display = 'flex';
-        applyFit();
         updatePageView();
         }
         }
@@ -1199,11 +1178,7 @@
         else goToNextChapter();
         return;
         }
-        const step = (isDoublePage && window.innerWidth > 900) ? 2 : 1;
-        if (currentPage + step < currentPages.length) {
-        currentPage += step;
-        updatePageView();
-        } else if (currentPage < currentPages.length - 1) {
+        if (currentPage < currentPages.length - 1) {
         currentPage++;
         updatePageView();
         } else {
@@ -1219,12 +1194,8 @@
         else goToPrevChapter();
         return;
         }
-        const step = (isDoublePage && window.innerWidth > 900) ? 2 : 1;
-        if (currentPage - step >= 0) {
-        currentPage -= step;
-        updatePageView();
-        } else if (currentPage > 0) {
-        currentPage = 0;
+        if (currentPage > 0) {
+        currentPage--;
         updatePageView();
         } else {
         goToPrevChapter();
@@ -1328,28 +1299,10 @@
         document.getElementById('btn-next-ch').addEventListener('click', goToNextChapter);
 
         document.getElementById('mode-page').addEventListener('click', () => {
-        isDoublePage = false;
-        document.getElementById('mode-page').classList.add('active');
-        document.getElementById('mode-double').classList.remove('active');
-        document.getElementById('mode-scroll').classList.remove('active');
         if (scrollMode) setScrollMode(false);
-        else { applyFit(); updatePageView(); }
-        });
-
-        document.getElementById('mode-double').addEventListener('click', () => {
-        isDoublePage = true;
-        document.getElementById('mode-double').classList.add('active');
-        document.getElementById('mode-page').classList.remove('active');
-        document.getElementById('mode-scroll').classList.remove('active');
-        if (scrollMode) setScrollMode(false);
-        else { applyFit(); updatePageView(); }
         });
 
         document.getElementById('mode-scroll').addEventListener('click', () => {
-        isDoublePage = false;
-        document.getElementById('mode-scroll').classList.add('active');
-        document.getElementById('mode-page').classList.remove('active');
-        document.getElementById('mode-double').classList.remove('active');
         if (!scrollMode) setScrollMode(true);
         });
 
@@ -1358,7 +1311,7 @@
         document.getElementById('fit-contain').classList.add('active');
         document.getElementById('fit-width').classList.remove('active');
         exitZoom();
-        applyFit();
+        renderCurrentPageCanvas();
         });
 
         document.getElementById('fit-width').addEventListener('click', () => {
@@ -1366,7 +1319,21 @@
         document.getElementById('fit-width').classList.add('active');
         document.getElementById('fit-contain').classList.remove('active');
         exitZoom();
-        applyFit();
+        renderCurrentPageCanvas();
+        });
+
+        document.getElementById('render-hd').addEventListener('click', () => {
+        renderMode = 'hd';
+        document.getElementById('render-hd').classList.add('active');
+        document.getElementById('render-raw').classList.remove('active');
+        renderCurrentPageCanvas();
+        });
+
+        document.getElementById('render-raw').addEventListener('click', () => {
+        renderMode = 'raw';
+        document.getElementById('render-raw').classList.add('active');
+        document.getElementById('render-hd').classList.remove('active');
+        renderCurrentPageCanvas();
         });
 
         function isFS() {
@@ -1383,7 +1350,7 @@
         if (req) {
         const promise = req.call(document.documentElement);
         if (promise && typeof promise.catch === 'function') {
-        promise.catch(err => console.warn("Plein écran non disponible dans cet aperçu :", err));
+        promise.catch(err => console.warn("Plein écran non disponible :", err));
         }
         }
         } else {
@@ -1451,12 +1418,6 @@
         }
         }, { passive: true });
 
-        let mouseStopTimer;
-        document.addEventListener('mousemove', () => {
-        clearTimeout(mouseStopTimer);
-        mouseStopTimer = setTimeout(() => { accumulatedDistance = 0; }, 350);
-        }, { passive: true });
-
         const uiContainers = [document.getElementById('topbar'), document.getElementById('bottombar'), settingsPanel, document.getElementById('help-modal')];
         uiContainers.forEach(el => {
         if (!el) return;
@@ -1474,11 +1435,6 @@
         if (!document.body.classList.contains('idle') && !isModalOrMenuOpen()) {
         hideUI();
         }
-        });
-
-        document.addEventListener('fullscreenchange', () => {
-        if (isFS()) hideUI();
-        else showUI();
         });
 
         document.getElementById('btn-scroll').addEventListener('click', () => setScrollMode(!scrollMode));
