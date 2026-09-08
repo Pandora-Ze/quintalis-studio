@@ -37,6 +37,9 @@
             -webkit-user-select: none;
         }
 
+        /* ══════════════════════════════════════════
+           ZONE D'AFFICHAGE (VIEWPORT)
+        ══════════════════════════════════════════ */
         #viewport {
             position: fixed;
             inset: 0;
@@ -60,7 +63,6 @@
             scroll-behavior: auto;
         }
 
-            /* Scrollbar discrète pour le mode Largeur */
             #page-view::-webkit-scrollbar {
                 width: 6px;
                 height: 6px;
@@ -90,18 +92,23 @@
                     cursor: grabbing;
                 }
 
-        /*
-           Rendu optimisé Haute Définition :
-           Le micro-contraste (118%) compense l'adoucissement bilinéaire du navigateur
-           en forçant les traits d'encre réduits à rester d'un noir profond,
-           sans aucun filtre de seuil (pas de moiré).
-        */
+            /* Mode double page : ordre naturel (page gauche à gauche, page droite à droite) */
+            #page-view.double-spread {
+                flex-direction: row !important;
+                justify-content: center !important;
+                align-items: center !important;
+            }
+
+                #page-view.double-spread #manga-page-left {
+                    display: block;
+                }
+
+        /* Rendu optimisé haute fidélité sans filtre GPU parasite */
         #manga-page, #manga-page-left {
             display: block;
             image-rendering: auto;
             cursor: zoom-in;
             pointer-events: auto;
-            filter: contrast(118%) brightness(98%);
             transition: none;
         }
 
@@ -109,16 +116,6 @@
             display: none;
             margin-right: 4px;
         }
-
-        #page-view.double-spread {
-            flex-direction: row-reverse !important;
-            justify-content: center !important;
-            align-items: center !important;
-        }
-
-            #page-view.double-spread #manga-page-left {
-                display: block;
-            }
 
         #manga-page.is-zoomed {
             max-width: none !important;
@@ -128,7 +125,6 @@
             cursor: zoom-out;
             margin: 0 !important;
             padding: 40px !important;
-            filter: none;
         }
 
         #manga-page.double-page-mobile {
@@ -138,6 +134,7 @@
             cursor: default;
         }
 
+        /* Zones de clic latérales */
         #zone-prev, #zone-next {
             position: absolute;
             top: 0;
@@ -187,6 +184,9 @@
             opacity: 1;
         }
 
+        /* ══════════════════════════════════════════
+           MODE DÉFILEMENT CONTINU (SCROLL)
+        ══════════════════════════════════════════ */
         #scroll-view {
             display: none;
             width: 100%;
@@ -220,10 +220,12 @@
                 height: auto;
                 display: block;
                 margin-bottom: 12px;
-                filter: contrast(105%) brightness(99%);
                 transform: translateZ(0);
             }
 
+        /* ══════════════════════════════════════════
+           INTERFACES FLOTTANTES (TOPBAR & BOTTOMBAR)
+        ══════════════════════════════════════════ */
         #topbar, #bottombar {
             position: fixed;
             left: 0;
@@ -445,6 +447,9 @@
             text-align: right;
         }
 
+        /* ══════════════════════════════════════════
+           PANNEAU DES PARAMÈTRES
+        ══════════════════════════════════════════ */
         #settings-panel {
             position: fixed;
             top: calc(var(--topbar) + 10px);
@@ -539,6 +544,9 @@
             color: var(--text2);
         }
 
+        /* ══════════════════════════════════════════
+           MODALE D'AIDE
+        ══════════════════════════════════════════ */
         #help-modal {
             display: none;
             position: fixed;
@@ -645,29 +653,6 @@
             }
         }
 
-        /*
-           Suppression des hacks GPU (translateZ, backface-visibility et filter)
-           pour permettre au moteur Skia de Chrome/Edge d'appliquer son
-           rééchantillonnage Lanczos haute fidélité sans flou de texture.
-        */
-        #manga-page {
-            display: block;
-            image-rendering: auto;
-            cursor: zoom-in;
-            pointer-events: auto;
-            transition: none;
-        }
-
-            #manga-page.is-zoomed {
-                max-width: none !important;
-                max-height: none !important;
-                width: 1400px !important;
-                height: auto !important;
-                cursor: zoom-out;
-                margin: 0 !important;
-                padding: 40px !important;
-            }
-
         @media (max-width: 768px) {
             #zone-prev, #zone-next {
                 display: none;
@@ -727,8 +712,6 @@
         </div>
     </div>
 
-    <div id="zoom-toast">Zoom 100% activé</div>
-
     <footer id="bottombar">
         <button class="nav-btn" id="btn-prev-ch" title="Chapitre précédent">‹ <span>Préc.</span></button>
         <select id="chapter-select"></select>
@@ -754,8 +737,8 @@
         <div class="setting-group">
             <div class="setting-label">Ajustement d'écran</div>
             <div class="toggle-row">
-                <button class="toggle-btn active" id="fit-contain">Adapter (100%)</button>
                 <button class="toggle-btn" id="fit-width">Largeur (Scroll)</button>
+                <button class="toggle-btn active" id="fit-contain">Adapter (100%)</button>
             </div>
         </div>
     </aside>
@@ -816,7 +799,6 @@
         const settingsPanel = document.getElementById('settings-panel');
         const breadcrumbCh = document.getElementById('breadcrumb-ch');
         const mangaTitleDisplay = document.getElementById('manga-title-display');
-        const zoomToast = document.getElementById('zoom-toast');
         const viewport = document.getElementById('viewport');
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -1058,8 +1040,6 @@
         pageView.scrollTop = (mangaPageEl.offsetHeight * pctY) - (window.innerHeight / 2);
         }, 20);
         }
-
-        showToast('Zoom 100% natif actif');
         } else {
         exitZoom();
         }
@@ -1073,12 +1053,6 @@
         applyFit();
         pageView.scrollLeft = 0;
         pageView.scrollTop = 0;
-        }
-
-        function showToast(txt) {
-        zoomToast.textContent = txt;
-        zoomToast.style.opacity = '1';
-        setTimeout(() => { zoomToast.style.opacity = '0'; }, 2000);
         }
 
         mangaPageEl.addEventListener('dblclick', toggleZoom);
@@ -1346,6 +1320,13 @@
         isDraggingProgress = false;
         if (scrollMode) preloadStrategy();
         }
+        });
+
+        document.getElementById('zone-prev').addEventListener('click', prevPage);
+        document.getElementById('zone-next').addEventListener('click', nextPage);
+        document.getElementById('btn-prev-ch').addEventListener('click', goToPrevChapter);
+        document.getElementById('btn-next-ch').addEventListener('click', goToNextChapter);
+
         document.getElementById('mode-page').addEventListener('click', () => {
         isDoublePage = false;
         document.getElementById('mode-page').classList.add('active');
@@ -1402,13 +1383,8 @@
         if (req) {
         const promise = req.call(document.documentElement);
         if (promise && typeof promise.catch === 'function') {
-        promise.catch(err => {
-        console.warn("Plein écran restreint par la politique de sécurité de l'environnement :", err);
-        showToast("Plein écran non disponible dans cet aperçu");
-        });
+        promise.catch(err => console.warn("Plein écran non disponible dans cet aperçu :", err));
         }
-        } else {
-        showToast("Plein écran non supporté");
         }
         } else {
         const exit = document.exitFullscreen ||
@@ -1418,13 +1394,12 @@
         if (exit) {
         const promise = exit.call(document);
         if (promise && typeof promise.catch === 'function') {
-        promise.catch(err => console.warn("Erreur sortie plein écran :", err));
+        promise.catch(err => console.warn("Sortie plein écran :", err));
         }
         }
         }
         } catch (err) {
         console.warn("Erreur plein écran :", err);
-        showToast("Plein écran non supporté");
         }
         }
         document.getElementById('fullscreen-btn').addEventListener('click', toggleFS);
@@ -1506,6 +1481,23 @@
         else showUI();
         });
 
+        document.getElementById('btn-scroll').addEventListener('click', () => setScrollMode(!scrollMode));
+        document.getElementById('btn-settings').addEventListener('click', () => {
+        showUI();
+        settingsPanel.classList.toggle('open');
+        document.getElementById('btn-settings').classList.toggle('active', settingsPanel.classList.contains('open'));
+        });
+        document.getElementById('btn-help').addEventListener('click', () => {
+        showUI();
+        document.getElementById('help-modal').classList.add('open');
+        });
+        document.getElementById('help-close').addEventListener('click', () => {
+        document.getElementById('help-modal').classList.remove('open');
+        });
+        document.getElementById('help-modal').addEventListener('click', e => {
+        if (e.target === document.getElementById('help-modal')) document.getElementById('help-modal').classList.remove('open');
+        });
+
         document.addEventListener('keydown', e => {
         if (e.target.tagName === 'SELECT') return;
 
@@ -1518,7 +1510,6 @@
         else prevPage();
         }
 
-        // Défilement vertical au clavier
         const targetScrollEl = scrollMode ? scrollView : (fitMode === 'width' ? pageView : null);
         if (targetScrollEl) {
         const scrollAmt = window.innerHeight * 0.75;
