@@ -4,12 +4,16 @@ icon: eye
 
 <style>
   @media (max-width: 768px) {
-    /* Verrouillage strict de la largeur de la page pour stopper le glissement */
     html, body {
       max-width: 100% !important;
       overflow-x: hidden !important;
       width: 100vw !important;
     }
+  }
+
+  /* Recadrage ciblé sur la couverture de Kosmos Beta */
+  a[href*="kosmos-beta"] img {
+    object-position: 50% 15% !important;
   }
 </style>
 
