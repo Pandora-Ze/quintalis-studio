@@ -792,6 +792,7 @@
         const breadcrumbCh = document.getElementById('breadcrumb-ch');
         const mangaTitleDisplay = document.getElementById('manga-title-display');
         const zoomToast = document.getElementById('zoom-toast');
+        const viewport = document.getElementById('viewport');
 
         const urlParams = new URLSearchParams(window.location.search);
         const mangaId = urlParams.get('id') || 'default';
@@ -805,22 +806,42 @@
         errorDetail.innerText = msg;
         }
 
-        const jsonUrl = new URL('manga-data.json', window.location.href).href;
-        fetch(jsonUrl)
-        .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}\n${jsonUrl}`); return r.json(); })
-        .then(data => {
-        if (!data[mangaId]) { showError(`Projet "${mangaId}" introuvable dans manga-data.json.`); return; }
-        mangaData = data[mangaId];
+        // Données de secours intégrées (utilisées automatiquement en prévisualisation ou en cas d'absence de serveur local)
+        const fallbackData = {
+        "default": {
+        "1": {
+        "title": "Le Dernier Festival",
+        "pages": Array.from({ length: 28 }, (_, i) =>
+        `https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/ch-01/p${String(i + 1).padStart(2, '0')}.webp`
+        ).concat([
+        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/ch-01/scantrad.webp"
+        ])
+        }
+        },
+        "kosmos-beta": {
+        "1": {
+        "title": "Le Dernier Festival",
+        "pages": Array.from({ length: 28 }, (_, i) =>
+        `https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/ch-01/p${String(i + 1).padStart(2, '0')}.webp`
+        ).concat([
+        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/ch-01/scantrad.webp"
+        ])
+        }
+        }
+        };
 
-        if (mangaId !== 'default') {
-        const autoTitle = mangaId.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        function initializeReader(data) {
+        const activeId = data[mangaId] ? mangaId : (data['kosmos-beta'] ? 'kosmos-beta' : Object.keys(data)[0]);
+        mangaData = data[activeId];
+
+        const nameKey = activeId !== 'default' ? activeId : (mangaId !== 'default' ? mangaId : 'Kosmos Beta');
+        const autoTitle = nameKey.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         mangaTitleDisplay.textContent = autoTitle;
         document.title = autoTitle + ' — Lecteur Quintalis';
-        }
 
         setupSelector();
 
-        const savedProgress = localStorage.getItem('manga_progress_' + mangaId);
+        const savedProgress = localStorage.getItem('manga_progress_' + activeId);
         let startCh = Object.keys(mangaData)[0];
         let startPg = 0;
 
@@ -835,8 +856,35 @@
         }
 
         loadChapter(startCh, false, startPg);
+        }
+
+        const isBlobOrLocal = window.location.protocol === 'blob:' ||
+        window.location.protocol === 'file:' ||
+        window.location.protocol === 'about:' ||
+        window.location.href.startsWith('blob:');
+
+        if (isBlobOrLocal) {
+        // Dans l'éditeur ou les bacs à sable d'aperçu (blob:), charger directement les planches hébergées
+        initializeReader(fallbackData);
+        } else {
+        // En production web standard (Cloudflare Pages, etc.)
+        fetch('manga-data.json')
+        .then(r => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
         })
-        .catch(err => showError(`Fichier manga-data.json inaccessible.\n${err.message}`));
+        .then(data => {
+        if (!data[mangaId] && !data['default'] && !fallbackData[mangaId]) {
+        showError(`Projet "${mangaId}" introuvable dans manga-data.json.`);
+        return;
+        }
+        initializeReader(data);
+        })
+        .catch(err => {
+        console.warn("manga-data.json inaccessible, bascule sur les planches distantes :", err);
+        initializeReader(fallbackData);
+        });
+        }
 
         function setupSelector() {
         chapterSelect.innerHTML = '';
@@ -1305,35 +1353,98 @@
         }
         document.getElementById('fullscreen-btn').addEventListener('click', toggleFS);
 
-        /* Détection d'inactivité pour masquer l'interface */
-        let idleTimer;
-        function resetIdle() {
+        /* ══════════════════════════════════════════
+        GESTION INTELLIGENTE DE L'INTERFACE DISCRÈTE
+        ══════════════════════════════════════════ */
+        let idleTimer = null;
+        let accumulatedDistance = 0;
+        let lastX = -1;
+        let lastY = -1;
+
+        function isModalOrMenuOpen() {
+        return settingsPanel.classList.contains('open') || document.getElementById('help-modal').classList.contains('open');
+        }
+
+        function showUI() {
         document.body.classList.remove('idle');
         clearTimeout(idleTimer);
         idleTimer = setTimeout(() => {
-        if (!settingsPanel.classList.contains('open') && !document.getElementById('help-modal').classList.contains('open')) {
+        if (!isModalOrMenuOpen()) {
         document.body.classList.add('idle');
         }
-        }, 3000);
+        }, 2600);
         }
 
-        ['mousedown','touchstart','fullscreenchange','webkitfullscreenchange'].forEach(e => {
-        document.addEventListener(e, resetIdle, { passive: true });
-        });
+        function hideUI() {
+        if (!isModalOrMenuOpen()) {
+        document.body.classList.add('idle');
+        clearTimeout(idleTimer);
+        }
+        }
 
+        // Masquage initial automatique après chargement
+        idleTimer = setTimeout(() => {
+        if (!isModalOrMenuOpen()) document.body.classList.add('idle');
+        }, 2500);
+
+        /* Détection de mouvement de souris : seuil élevé pour ignorer les petits tremblements */
         document.addEventListener('mousemove', e => {
-        // Rallume l'interface immédiatement si la souris approche des bords
-        if (e.clientY < 70 || e.clientY > window.innerHeight - 70) {
-        document.body.classList.remove('idle');
+        const isNearBars = e.clientY <= 55 || e.clientY >= window.innerHeight - 60;
+
+        if (lastX !== -1 && lastY !== -1) {
+        const dx = e.clientX - lastX;
+        const dy = e.clientY - lastY;
+        accumulatedDistance += Math.hypot(dx, dy);
         }
-        resetIdle();
+        lastX = e.clientX;
+        lastY = e.clientY;
+
+        // Seuil de 150px de déplacement requis ou approche directe des bords supérieur/inférieur
+        if (accumulatedDistance > 150 || isNearBars) {
+        showUI();
+        accumulatedDistance = 0;
+        }
         }, { passive: true });
 
-        /* Raccourcis Clavier */
+        // Réinitialisation de la distance accumulée si la souris s'arrête
+        let mouseStopTimer;
+        document.addEventListener('mousemove', () => {
+        clearTimeout(mouseStopTimer);
+        mouseStopTimer = setTimeout(() => { accumulatedDistance = 0; }, 350);
+        }, { passive: true });
+
+        /* Clics : seuls les éléments d'interface réactivent ou maintiennent l'UI */
+        const uiContainers = [document.getElementById('topbar'), document.getElementById('bottombar'), settingsPanel, document.getElementById('help-modal')];
+        uiContainers.forEach(el => {
+        if (!el) return;
+        el.addEventListener('mousedown', e => {
+        showUI();
+        e.stopPropagation();
+        });
+        el.addEventListener('touchstart', e => {
+        showUI();
+        e.stopPropagation();
+        }, { passive: true });
+        });
+
+        // Clic sur les zones de lecture (tourner la page, fond, image) : conserve l'état masqué
+        viewport.addEventListener('mousedown', e => {
+        // Empêche la propagation si l'utilisateur clique sur la page
+        if (!document.body.classList.contains('idle') && !isModalOrMenuOpen()) {
+        hideUI();
+        }
+        });
+
+        document.addEventListener('fullscreenchange', () => {
+        if (isFS()) hideUI();
+        else showUI();
+        });
+
+        /* Raccourcis Clavier : navigation silencieuse sans réveiller l'interface */
         document.addEventListener('keydown', e => {
         if (e.target.tagName === 'SELECT') return;
-        resetIdle();
 
+        // Défilement ou changement de page sans afficher les barres
         if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
         if (e.ctrlKey || e.metaKey) goToNextChapter();
         else nextPage();
@@ -1343,14 +1454,28 @@
         else prevPage();
         }
 
+        if (scrollMode) {
+        const scrollAmt = window.innerHeight * 0.75;
+        if (e.key === 'ArrowDown') { e.preventDefault(); scrollView.scrollBy({ top: 60, behavior: 'smooth' }); }
+        if (e.key === 'ArrowUp') { e.preventDefault(); scrollView.scrollBy({ top: -60, behavior: 'smooth' }); }
+        if (e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); scrollView.scrollBy({ top: scrollAmt, behavior: 'smooth' }); }
+        if (e.key === 'PageUp') { e.preventDefault(); scrollView.scrollBy({ top: -scrollAmt, behavior: 'smooth' }); }
+        }
+
         if (e.key === 'z' || e.key === 'Z') toggleZoom(null);
         if (e.key === 'f' || e.key === 'F') toggleFS();
         if (e.key === 'w' || e.key === 'W') setScrollMode(!scrollMode);
+
+        // Touches ouvrant un menu : réveillent l'interface
         if (e.key === 's' || e.key === 'S') {
+        showUI();
         settingsPanel.classList.toggle('open');
         document.getElementById('btn-settings').classList.toggle('active', settingsPanel.classList.contains('open'));
         }
-        if (e.key === '?') document.getElementById('help-modal').classList.add('open');
+        if (e.key === '?') {
+        showUI();
+        document.getElementById('help-modal').classList.add('open');
+        }
 
         if (e.key === 'Escape') {
         if (isZoomed) {
@@ -1362,6 +1487,7 @@
         helpModal.classList.remove('open');
         settingsPanel.classList.remove('open');
         document.getElementById('btn-settings').classList.remove('active');
+        hideUI();
         } else if (isFS()) {
         toggleFS();
         }
