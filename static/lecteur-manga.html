@@ -90,33 +90,53 @@
                     cursor: grabbing;
                 }
 
-        #manga-page {
+        /*
+           Rendu optimisé Haute Définition :
+           Le micro-contraste (118%) compense l'adoucissement bilinéaire du navigateur
+           en forçant les traits d'encre réduits à rester d'un noir profond,
+           sans aucun filtre de seuil (pas de moiré).
+        */
+        #manga-page, #manga-page-left {
             display: block;
             image-rendering: auto;
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            filter: contrast(105%) brightness(99%);
-            transition: transform 0.15s ease-out;
             cursor: zoom-in;
             pointer-events: auto;
+            filter: contrast(118%) brightness(98%);
+            transition: none;
         }
 
-            #manga-page.is-zoomed {
-                max-width: none !important;
-                max-height: none !important;
-                width: 1400px !important;
-                height: auto !important;
-                cursor: zoom-out;
-                margin: 0 !important;
-                padding: 40px !important;
+        #manga-page-left {
+            display: none;
+            margin-right: 4px;
+        }
+
+        #page-view.double-spread {
+            flex-direction: row-reverse !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+
+            #page-view.double-spread #manga-page-left {
+                display: block;
             }
 
-            #manga-page.double-page-mobile {
-                max-width: none !important;
-                width: auto !important;
-                height: 100vh !important;
-                cursor: default;
-            }
+        #manga-page.is-zoomed {
+            max-width: none !important;
+            max-height: none !important;
+            width: 1400px !important;
+            height: auto !important;
+            cursor: zoom-out;
+            margin: 0 !important;
+            padding: 40px !important;
+            filter: none;
+        }
+
+        #manga-page.double-page-mobile {
+            max-width: none !important;
+            width: auto !important;
+            height: 100vh !important;
+            cursor: default;
+        }
 
         #zone-prev, #zone-next {
             position: absolute;
@@ -691,6 +711,7 @@
 
         <div id="page-view">
             <div id="zone-prev"><div class="arrow">‹</div></div>
+            <img id="manga-page-left" src="" alt="Page gauche" style="display:none;">
             <img id="manga-page" src="" alt="Page manga" title="Double-cliquez pour zoomer à 100%">
             <div id="zone-next"><div class="arrow">›</div></div>
         </div>
@@ -726,14 +747,15 @@
             <div class="setting-label">Mode d'affichage</div>
             <div class="toggle-row">
                 <button class="toggle-btn active" id="mode-page">📄 Page seule</button>
+                <button class="toggle-btn" id="mode-double">📖 Double page</button>
                 <button class="toggle-btn" id="mode-scroll">↕ Défilement</button>
             </div>
         </div>
         <div class="setting-group">
             <div class="setting-label">Ajustement d'écran</div>
             <div class="toggle-row">
-                <button class="toggle-btn" id="fit-contain">Adapter (100%)</button>
-                <button class="toggle-btn active" id="fit-width">Largeur (Scroll)</button>
+                <button class="toggle-btn active" id="fit-contain">Adapter (100%)</button>
+                <button class="toggle-btn" id="fit-width">Largeur (Scroll)</button>
             </div>
         </div>
     </aside>
@@ -767,7 +789,8 @@
         let currentPages = [];
         let currentPage = 0;
         let scrollMode = false;
-        let fitMode = 'width'; // Par défaut en Largeur pour garantir la netteté avec scroll fluide
+        let isDoublePage = false;
+        let fitMode = 'contain';
         let isZoomed = false;
         let isTransitioning = false;
         let nextChapterPreloaded = null;
@@ -775,6 +798,7 @@
         let isScrubbingScroll = false;
 
         const mangaPageEl = document.getElementById('manga-page');
+        const mangaPageLeftEl = document.getElementById('manga-page-left');
         const pageInfo = document.getElementById('page-info');
         const chapterSelect = document.getElementById('chapter-select');
         const loader = document.getElementById('loader');
@@ -938,8 +962,20 @@
         mangaPageEl.style.animation = 'none';
         mangaPageEl.offsetHeight;
 
-        // Toujours remonter au début de la planche quand on tourne la page
         pageView.scrollTop = 0;
+
+        const isDesktop = window.innerWidth > 900;
+        const useDouble = isDoublePage && isDesktop && !scrollMode && (currentPage < currentPages.length - 1);
+
+        if (useDouble) {
+        pageView.classList.add('double-spread');
+        mangaPageLeftEl.style.display = 'block';
+        mangaPageLeftEl.src = currentPages[currentPage + 1];
+        } else {
+        pageView.classList.remove('double-spread');
+        mangaPageLeftEl.style.display = 'none';
+        mangaPageLeftEl.src = '';
+        }
 
         mangaPageEl.onload = () => {
         const isLandscape = mangaPageEl.naturalWidth > mangaPageEl.naturalHeight;
@@ -967,28 +1003,32 @@
         function applyFit() {
         if (isZoomed) return;
 
+        const targets = [mangaPageEl, mangaPageLeftEl];
+
         if (!scrollMode) {
         if (fitMode === 'width') {
-        // Mode Largeur : défilement vertical déverrouillé, haut aligné
         pageView.style.overflowY = 'auto';
         pageView.style.alignItems = 'flex-start';
-        mangaPageEl.style.maxWidth = '850px';
-        mangaPageEl.style.maxHeight = 'none';
-        mangaPageEl.style.width = '100%';
-        mangaPageEl.style.height = 'auto';
-        mangaPageEl.style.margin = '0 auto';
-        mangaPageEl.style.padding = '24px 0 70px 0';
+        targets.forEach(img => {
+        img.style.maxWidth = isDoublePage ? '50%' : '850px';
+        img.style.maxHeight = 'none';
+        img.style.width = isDoublePage ? '50%' : '100%';
+        img.style.height = 'auto';
+        img.style.margin = '0 auto';
+        img.style.padding = '24px 0 70px 0';
+        });
         } else {
-        // Mode Adapter : 100% de la hauteur disponible sans rognage
         pageView.style.overflowY = 'hidden';
         pageView.style.alignItems = 'center';
         pageView.scrollTop = 0;
-        mangaPageEl.style.maxWidth = '100vw';
-        mangaPageEl.style.maxHeight = '100vh';
-        mangaPageEl.style.width = 'auto';
-        mangaPageEl.style.height = 'auto';
-        mangaPageEl.style.margin = 'auto';
-        mangaPageEl.style.padding = '0';
+        targets.forEach(img => {
+        img.style.maxWidth = isDoublePage ? '49vw' : '100vw';
+        img.style.maxHeight = '100vh';
+        img.style.width = 'auto';
+        img.style.height = 'auto';
+        img.style.margin = 'auto';
+        img.style.padding = '0';
+        });
         }
         } else {
         const imgs = scrollContent.querySelectorAll('img');
@@ -1185,7 +1225,11 @@
         else goToNextChapter();
         return;
         }
-        if (currentPage < currentPages.length - 1) {
+        const step = (isDoublePage && window.innerWidth > 900) ? 2 : 1;
+        if (currentPage + step < currentPages.length) {
+        currentPage += step;
+        updatePageView();
+        } else if (currentPage < currentPages.length - 1) {
         currentPage++;
         updatePageView();
         } else {
@@ -1201,8 +1245,12 @@
         else goToPrevChapter();
         return;
         }
-        if (currentPage > 0) {
-        currentPage--;
+        const step = (isDoublePage && window.innerWidth > 900) ? 2 : 1;
+        if (currentPage - step >= 0) {
+        currentPage -= step;
+        updatePageView();
+        } else if (currentPage > 0) {
+        currentPage = 0;
         updatePageView();
         } else {
         goToPrevChapter();
@@ -1298,31 +1346,31 @@
         isDraggingProgress = false;
         if (scrollMode) preloadStrategy();
         }
+        document.getElementById('mode-page').addEventListener('click', () => {
+        isDoublePage = false;
+        document.getElementById('mode-page').classList.add('active');
+        document.getElementById('mode-double').classList.remove('active');
+        document.getElementById('mode-scroll').classList.remove('active');
+        if (scrollMode) setScrollMode(false);
+        else { applyFit(); updatePageView(); }
         });
 
-        progressWrap.addEventListener('mouseleave', () => {
-        if (!isDraggingProgress) progressTooltip.style.opacity = '0';
+        document.getElementById('mode-double').addEventListener('click', () => {
+        isDoublePage = true;
+        document.getElementById('mode-double').classList.add('active');
+        document.getElementById('mode-page').classList.remove('active');
+        document.getElementById('mode-scroll').classList.remove('active');
+        if (scrollMode) setScrollMode(false);
+        else { applyFit(); updatePageView(); }
         });
 
-        document.getElementById('zone-prev').addEventListener('click', prevPage);
-        document.getElementById('zone-next').addEventListener('click', nextPage);
-        document.getElementById('btn-prev-ch').addEventListener('click', goToPrevChapter);
-        document.getElementById('btn-next-ch').addEventListener('click', goToNextChapter);
-
-        document.getElementById('btn-settings').addEventListener('click', () => {
-        settingsPanel.classList.toggle('open');
-        document.getElementById('btn-settings').classList.toggle('active', settingsPanel.classList.contains('open'));
+        document.getElementById('mode-scroll').addEventListener('click', () => {
+        isDoublePage = false;
+        document.getElementById('mode-scroll').classList.add('active');
+        document.getElementById('mode-page').classList.remove('active');
+        document.getElementById('mode-double').classList.remove('active');
+        if (!scrollMode) setScrollMode(true);
         });
-
-        document.getElementById('btn-scroll').addEventListener('click', () => setScrollMode(!scrollMode));
-        document.getElementById('btn-help').addEventListener('click', () => { document.getElementById('help-modal').classList.add('open'); });
-        document.getElementById('help-close').addEventListener('click', () => { document.getElementById('help-modal').classList.remove('open'); });
-        document.getElementById('help-modal').addEventListener('click', e => {
-        if (e.target === document.getElementById('help-modal')) document.getElementById('help-modal').classList.remove('open');
-        });
-
-        document.getElementById('mode-page').addEventListener('click', () => { if (scrollMode) setScrollMode(false); });
-        document.getElementById('mode-scroll').addEventListener('click', () => { if (!scrollMode) setScrollMode(true); });
 
         document.getElementById('fit-contain').addEventListener('click', () => {
         fitMode = 'contain';
