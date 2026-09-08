@@ -775,11 +775,14 @@
 
     <script>
         let mangaData = null;
+        let currentChapters = {};
+        let chapterKeys = [];
+        let currentChapterId = null;
         let currentPages = [];
         let currentPage = 0;
         let scrollMode = false;
         let fitMode = 'contain';
-        let sharpnessMode = localStorage.getItem('manga_sharpness') || 'hd'; // 'off', 'light', 'hd', 'ultra'
+        let sharpnessMode = localStorage.getItem('manga_sharpness') || 'hd';
         let isZoomed = false;
         let isTransitioning = false;
         let nextChapterPreloaded = null;
@@ -829,6 +832,13 @@
         ).concat([
         "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/Scantrad.webp"
         ])
+        },
+        "2": {
+        "title": "Chapitre 2 (Démo)",
+        "pages": [
+        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/ch-01/p01.webp",
+        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/Scantrad.webp"
+        ]
         }
         },
         "kosmos-beta": {
@@ -839,34 +849,84 @@
         ).concat([
         "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/Scantrad.webp"
         ])
+        },
+        "2": {
+        "title": "Chapitre 2 (Démo)",
+        "pages": [
+        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/ch-01/p01.webp",
+        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/Scantrad.webp"
+        ]
         }
         }
         };
+
+        function extractChapters(entry) {
+        if (!entry) return {};
+        if (entry.chapters && typeof entry.chapters === 'object' && !Array.isArray(entry.chapters)) {
+        return entry.chapters;
+        }
+        const metaKeys = new Set(['title', 'author', 'cover', 'banner', 'description', 'id', 'status', 'synopsis']);
+        const chs = {};
+        Object.keys(entry).forEach(k => {
+        if (!metaKeys.has(k.toLowerCase()) && (typeof entry[k] === 'object' || Array.isArray(entry[k]))) {
+        chs[k] = entry[k];
+        }
+        });
+        return chs;
+        }
+
+        function sortChapterKeys(keys) {
+        return keys.slice().sort((a, b) => {
+        const numA = parseFloat(a.replace(/[^\d.]/g, ''));
+        const numB = parseFloat(b.replace(/[^\d.]/g, ''));
+        if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+        return a.localeCompare(b, undefined, { numeric: true });
+        });
+        }
 
         function initializeReader(data) {
         const activeId = data[mangaId] ? mangaId : (data['kosmos-beta'] ? 'kosmos-beta' : Object.keys(data)[0]);
         mangaData = data[activeId];
 
         const nameKey = activeId !== 'default' ? activeId : (mangaId !== 'default' ? mangaId : 'Kosmos Beta');
-        const autoTitle = nameKey.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        const autoTitle = (mangaData && mangaData.title) ? mangaData.title : nameKey.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         mangaTitleDisplay.textContent = autoTitle;
         document.title = autoTitle + ' — Lecteur Quintalis';
+
+        currentChapters = extractChapters(mangaData);
+        chapterKeys = sortChapterKeys(Object.keys(currentChapters));
+
+        if (chapterKeys.length === 0) {
+        showError(`Aucun chapitre trouvé pour le projet "${activeId}".`);
+        return;
+        }
 
         setupSelector();
         applySharpnessMode(sharpnessMode);
 
-        const savedProgress = localStorage.getItem('manga_progress_' + activeId);
-        let startCh = Object.keys(mangaData)[0];
+        // Priorité au paramètre URL (?ch=2 ou ?chapter=2), sinon sauvegarde locale
+        const urlCh = urlParams.get('ch') || urlParams.get('chapter');
+        let startCh = null;
         let startPg = 0;
 
+        if (urlCh && currentChapters[urlCh]) {
+        startCh = urlCh;
+        } else {
+        const savedProgress = localStorage.getItem('manga_progress_' + activeId);
         if (savedProgress) {
         try {
         const parsed = JSON.parse(savedProgress);
-        if (mangaData[parsed.chapter]) {
+        if (parsed.chapter && currentChapters[parsed.chapter]) {
         startCh = parsed.chapter;
-        startPg = parsed.page;
+        startPg = parsed.page || 0;
         }
         } catch(e) { console.error(e); }
+        }
+        }
+
+        if (!startCh || !currentChapters[startCh]) {
+        startCh = chapterKeys[0];
+        startPg = 0;
         }
 
         loadChapter(startCh, false, startPg);
@@ -877,33 +937,52 @@
         window.location.protocol === 'about:' ||
         window.location.href.startsWith('blob:');
 
+        async function loadDataSource() {
         if (isBlobOrLocal) {
         initializeReader(fallbackData);
-        } else {
-        fetch('manga-data.json')
-        .then(r => {
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        return r.json();
-        })
-        .then(data => {
-        if (!data[mangaId] && !data['default'] && !fallbackData[mangaId]) {
+        return;
+        }
+
+        const candidateUrls = [
+        'manga-data.json',
+        '/manga-data.json',
+        '../manga-data.json',
+        'static/manga-data.json',
+        '/static/manga-data.json'
+        ];
+
+        let loadedData = null;
+        for (const u of candidateUrls) {
+        try {
+        const r = await fetch(u);
+        if (r.ok) {
+        loadedData = await r.json();
+        break;
+        }
+        } catch(e) {}
+        }
+
+        if (loadedData) {
+        if (!loadedData[mangaId] && !loadedData['default'] && !fallbackData[mangaId]) {
         showError(`Projet "${mangaId}" introuvable dans manga-data.json.`);
         return;
         }
-        initializeReader(data);
-        })
-        .catch(err => {
-        console.warn("manga-data.json inaccessible, repli sur fallback :", err);
+        initializeReader(loadedData);
+        } else {
+        console.warn("manga-data.json inaccessible, repli sur fallbackData.");
         initializeReader(fallbackData);
-        });
         }
+        }
+
+        loadDataSource();
 
         function setupSelector() {
         chapterSelect.innerHTML = '';
-        Object.keys(mangaData).forEach(ch => {
+        chapterKeys.forEach(ch => {
         const opt = document.createElement('option');
         opt.value = ch;
-        const t = mangaData[ch].title ? ' : ' + mangaData[ch].title : '';
+        const chData = currentChapters[ch];
+        const t = (chData && chData.title) ? ' : ' + chData.title : '';
         opt.textContent = 'Ch. ' + ch + t;
         chapterSelect.appendChild(opt);
         });
@@ -911,15 +990,35 @@
         }
 
         function loadChapter(chId, startAtEnd = false, specificPage = null) {
-        chapterSelect.value = chId;
-        breadcrumbCh.textContent = chId;
-        currentPages = Array.isArray(mangaData[chId]) ? mangaData[chId] : mangaData[chId].pages;
+        const targetCh = String(chId);
+        if (!currentChapters[targetCh]) {
+        console.warn(`Chapitre ${targetCh} introuvable.`);
+        return;
+        }
+
+        currentChapterId = targetCh;
+        chapterSelect.value = currentChapterId;
+        breadcrumbCh.textContent = currentChapterId;
+
+        const chEntry = currentChapters[currentChapterId];
+        currentPages = Array.isArray(chEntry) ? chEntry : (chEntry.pages || []);
+
+        if (!currentPages || currentPages.length === 0) {
+        showError(`Le chapitre ${currentChapterId} ne contient aucune page.`);
+        return;
+        }
 
         if (specificPage !== null && specificPage >= 0 && specificPage < currentPages.length) {
         currentPage = specificPage;
         } else {
         currentPage = startAtEnd ? currentPages.length - 1 : 0;
         }
+
+        try {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('ch', currentChapterId);
+        window.history.replaceState({}, '', currentUrl.toString());
+        } catch(e) {}
 
         updateNavButtons();
         preloadCurrentChapterWhole();
@@ -933,10 +1032,11 @@
         }
 
         function updateNavButtons() {
-        const chapters = Object.keys(mangaData);
-        const idx = chapters.indexOf(chapterSelect.value);
-        document.getElementById('btn-prev-ch').disabled = idx <= 0;
-        document.getElementById('btn-next-ch').disabled = idx >= chapters.length - 1;
+        const idx = chapterKeys.indexOf(currentChapterId);
+        const prevBtn = document.getElementById('btn-prev-ch');
+        const nextBtn = document.getElementById('btn-next-ch');
+        if (prevBtn) prevBtn.disabled = idx <= 0;
+        if (nextBtn) nextBtn.disabled = idx < 0 || idx >= chapterKeys.length - 1;
         }
 
         function preloadCurrentChapterWhole() {
@@ -950,14 +1050,12 @@
         sharpnessMode = mode;
         localStorage.setItem('manga_sharpness', mode);
 
-        // Mise à jour des classes CSS sur le canvas et le conteneur scroll
         mangaCanvas.classList.remove('sharp-off', 'sharp-light', 'sharp-hd', 'sharp-ultra');
         mangaCanvas.classList.add('sharp-' + mode);
 
         scrollContent.classList.remove('sharp-off', 'sharp-light', 'sharp-hd', 'sharp-ultra');
         scrollContent.classList.add('sharp-' + mode);
 
-        // Synchronisation de l'interface des réglages
         ['off', 'light', 'hd', 'ultra'].forEach(m => {
         const btn = document.getElementById('sharp-' + m);
         if (btn) btn.classList.toggle('active', m === mode);
@@ -971,11 +1069,9 @@
         const natH = currentLoadedImg.naturalHeight;
         if (!natW || !natH) return;
 
-        // Ratio d'affichage physique réel de l'écran (gère le 125% et 150% de Windows)
         const dpr = Math.max(1, window.devicePixelRatio || 1);
 
         if (isZoomed) {
-        // Mode zoom 100% natif : affiche les pixels 1:1 de l'image
         const zoomCssWidth = Math.min(1400, natW);
         const zoomCssHeight = zoomCssWidth * (natH / natW);
 
@@ -993,7 +1089,6 @@
         return;
         }
 
-        // Mode standard : calcul de l'espace disponible
         const availW = pageView.clientWidth;
         const availH = pageView.clientHeight;
 
@@ -1006,7 +1101,6 @@
         cssH = cssW * (natH / natW);
         mangaCanvas.style.margin = '20px auto 60px auto';
         } else {
-        // Mode contain : 100% de la planche dans l'écran
         pageView.style.overflowY = 'hidden';
         pageView.style.alignItems = 'center';
         mangaCanvas.style.margin = 'auto';
@@ -1016,7 +1110,6 @@
         cssH = Math.round(natH * scale);
         }
 
-        // Le tampon Canvas prend le nombre réel de sous-pixels physiques
         mangaCanvas.width = Math.round(cssW * dpr);
         mangaCanvas.height = Math.round(cssH * dpr);
         mangaCanvas.style.width = cssW + 'px';
@@ -1025,7 +1118,7 @@
         ctx.save();
         ctx.scale(dpr, dpr);
         ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high'; // Échantillonnage de haute fidélité
+        ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(currentLoadedImg, 0, 0, cssW, cssH);
         ctx.restore();
         }
@@ -1089,7 +1182,6 @@
         mangaCanvas.addEventListener('dblclick', toggleZoom);
         document.getElementById('btn-zoom').addEventListener('click', () => toggleZoom(null));
 
-        /* Déplacement à la souris en mode zoom */
         let isPanning = false, startPanX = 0, startPanY = 0, scrollStartX = 0, scrollStartY = 0;
         pageView.addEventListener('mousedown', e => {
         if (!isZoomed) return;
@@ -1153,9 +1245,8 @@
 
         const isAtBottom = scrollView.scrollHeight - scrollView.scrollTop <= scrollView.clientHeight + 10;
         if (isAtBottom) {
-        const chs = Object.keys(mangaData);
-        const i = chs.indexOf(chapterSelect.value);
-        if (i >= 0 && i < chs.length - 1) {
+        const idx = chapterKeys.indexOf(currentChapterId);
+        if (idx >= 0 && idx < chapterKeys.length - 1) {
         isTransitioning = true;
         goToNextChapter();
         }
@@ -1164,17 +1255,17 @@
         }
 
         function preloadStrategy() {
-        const chs = Object.keys(mangaData);
-        const currentIdx = chs.indexOf(chapterSelect.value);
-        if (currentIdx < 0 || currentIdx >= chs.length - 1) return;
+        const idx = chapterKeys.indexOf(currentChapterId);
+        if (idx < 0 || idx >= chapterKeys.length - 1) return;
 
-        const nextChId = chs[currentIdx + 1];
+        const nextChId = chapterKeys[idx + 1];
         if (nextChapterPreloaded === nextChId) return;
 
         const triggerThreshold = currentPages.length - 5;
         if (currentPage >= triggerThreshold || currentPage >= currentPages.length * 0.75) {
         nextChapterPreloaded = nextChId;
-        const nextPages = Array.isArray(mangaData[nextChId]) ? mangaData[nextChId] : mangaData[nextChId].pages;
+        const nextEntry = currentChapters[nextChId];
+        const nextPages = Array.isArray(nextEntry) ? nextEntry : (nextEntry?.pages || []);
         for (let i = 0; i < 5; i++) {
         if (nextPages[i]) {
         const c = new Image();
@@ -1191,9 +1282,9 @@
         const pct = total > 1 ? (currentPage / (total - 1)) * 100 : 100;
         progressFill.style.width = pct + '%';
 
-        if (mangaId) {
+        if (mangaId && currentChapterId) {
         localStorage.setItem('manga_progress_' + mangaId, JSON.stringify({
-        chapter: chapterSelect.value,
+        chapter: currentChapterId,
         page: currentPage
         }));
         }
@@ -1253,21 +1344,21 @@
         }
 
         function goToNextChapter() {
-        const chs = Object.keys(mangaData);
-        const i = chs.indexOf(chapterSelect.value);
-        if (i < 0 || i >= chs.length - 1) return;
-        const next = chs[i + 1];
-        const title = mangaData[next].title || '';
-        showTransition('Chapitre suivant', 'Ch. ' + next + (title ? ' — ' + title : ''), () => loadChapter(next));
+        const idx = chapterKeys.indexOf(currentChapterId);
+        if (idx < 0 || idx >= chapterKeys.length - 1) return;
+        const nextCh = chapterKeys[idx + 1];
+        const chData = currentChapters[nextCh];
+        const t = (chData && chData.title) ? ' — ' + chData.title : '';
+        showTransition('Chapitre suivant', 'Ch. ' + nextCh + t, () => loadChapter(nextCh));
         }
 
         function goToPrevChapter() {
-        const chs = Object.keys(mangaData);
-        const i = chs.indexOf(chapterSelect.value);
-        if (i <= 0) return;
-        const prev = chs[i - 1];
-        const title = mangaData[prev].title || '';
-        showTransition('Chapitre précédent', 'Ch. ' + prev + (title ? ' — ' + title : ''), () => loadChapter(prev, true));
+        const idx = chapterKeys.indexOf(currentChapterId);
+        if (idx <= 0) return;
+        const prevCh = chapterKeys[idx - 1];
+        const chData = currentChapters[prevCh];
+        const t = (chData && chData.title) ? ' — ' + chData.title : '';
+        showTransition('Chapitre précédent', 'Ch. ' + prevCh + t, () => loadChapter(prevCh, true));
         }
 
         function showTransition(label, sub, callback) {
@@ -1275,9 +1366,14 @@
         transitionSub.textContent = sub;
         transitionOverlay.classList.add('show');
         setTimeout(() => {
+        try {
         callback();
+        } catch (err) {
+        console.error("Erreur transition chapitre:", err);
+        } finally {
         transitionOverlay.classList.remove('show');
-        }, 1000);
+        }
+        }, 600);
         }
 
         function updatePageFromProgress(clientX) {
@@ -1372,7 +1468,6 @@
         renderCurrentPageCanvas();
         });
 
-        // Sélecteurs de netteté matricielle GPU
         document.getElementById('sharp-off').addEventListener('click', () => applySharpnessMode('off'));
         document.getElementById('sharp-light').addEventListener('click', () => applySharpnessMode('light'));
         document.getElementById('sharp-hd').addEventListener('click', () => applySharpnessMode('hd'));
@@ -1465,11 +1560,15 @@
         if (!el) return;
         el.addEventListener('mousedown', e => {
         showUI();
+        if (e.target.tagName !== 'SELECT' && e.target.tagName !== 'OPTION') {
         e.stopPropagation();
+        }
         });
         el.addEventListener('touchstart', e => {
         showUI();
+        if (e.target.tagName !== 'SELECT' && e.target.tagName !== 'OPTION') {
         e.stopPropagation();
+        }
         }, { passive: true });
         });
 
