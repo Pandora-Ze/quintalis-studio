@@ -37,9 +37,6 @@
             -webkit-user-select: none;
         }
 
-        /* ══════════════════════════════════════════
-           ZONE D'AFFICHAGE DU LECTEUR
-        ══════════════════════════════════════════ */
         #viewport {
             position: fixed;
             inset: 0;
@@ -86,22 +83,38 @@
                     cursor: grabbing;
                 }
 
-        /* Rendu Canvas Haute Fidélité : élimine le flou des écrans Windows Hi-DPI */
+        /* Rendu Canvas Haute Fidélité avec matrices d'accentuation matérielle GPU */
         #manga-canvas {
             display: block;
             margin: auto;
             cursor: zoom-in;
-            box-shadow: 0 0 35px rgba(0, 0, 0, 0.7);
-            transition: opacity 0.12s ease;
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.75);
+            transition: filter 0.15s ease, opacity 0.12s ease;
         }
+
+            #manga-canvas.sharp-off {
+                filter: none;
+            }
+
+            #manga-canvas.sharp-light {
+                filter: url(#sharpen-light);
+            }
+
+            #manga-canvas.sharp-hd {
+                filter: url(#sharpen-hd);
+            }
+
+            #manga-canvas.sharp-ultra {
+                filter: url(#sharpen-ultra);
+            }
 
             #manga-canvas.is-zoomed {
                 cursor: zoom-out;
                 margin: 0 !important;
                 padding: 20px !important;
+                filter: none !important; /* Zoom 1:1 déjà net à 100% natif */
             }
 
-        /* Zones de clic invisibles droite / gauche */
         #zone-prev, #zone-next {
             position: absolute;
             top: 0;
@@ -151,9 +164,6 @@
             opacity: 1;
         }
 
-        /* ══════════════════════════════════════════
-           MODE DÉFILEMENT CONTINU (WEBTOON / SCROLL)
-        ══════════════════════════════════════════ */
         #scroll-view {
             display: none;
             width: 100%;
@@ -189,9 +199,18 @@
                 margin-bottom: 12px;
             }
 
-        /* ══════════════════════════════════════════
-           BARRES FLOTTANTES & COMMANDES
-        ══════════════════════════════════════════ */
+            #scroll-content.sharp-light img {
+                filter: url(#sharpen-light);
+            }
+
+            #scroll-content.sharp-hd img {
+                filter: url(#sharpen-hd);
+            }
+
+            #scroll-content.sharp-ultra img {
+                filter: url(#sharpen-ultra);
+            }
+
         #topbar, #bottombar {
             position: fixed;
             left: 0;
@@ -236,7 +255,7 @@
         }
 
         body.idle #settings-panel {
-            right: -310px !important;
+            right: -320px !important;
             opacity: 0;
             pointer-events: none;
         }
@@ -413,20 +432,17 @@
             text-align: right;
         }
 
-        /* ══════════════════════════════════════════
-           PANNEAU DES PARAMÈTRES (S)
-        ══════════════════════════════════════════ */
         #settings-panel {
             position: fixed;
             top: calc(var(--topbar) + 10px);
-            right: -310px;
-            width: 280px;
+            right: -320px;
+            width: 300px;
             background: var(--bg-bar);
             backdrop-filter: blur(16px);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             z-index: 120;
-            padding: 16px;
+            padding: 18px;
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -464,7 +480,7 @@
             height: 34px;
             border-radius: var(--radius);
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11.5px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -638,6 +654,33 @@
 </head>
 <body>
 
+    <!-- Moteur d'accentuation matérielle (GPU) zéro latence : rehausse le piqué du lettrage sans rééchantillonnage lourd -->
+    <svg style="position:absolute; width:0; height:0; pointer-events:none;" aria-hidden="true">
+        <defs>
+            <!-- Piqué Subtil : redessine les bords sans amplifier le bruit -->
+            <filter id="sharpen-light" x="0%" y="0%" width="100%" height="100%">
+                <feConvolveMatrix order="3" preserveAlpha="true"
+                                  kernelMatrix="0 -0.18 0
+                                 -0.18 1.72 -0.18
+                                  0 -0.18 0" />
+            </filter>
+            <!-- Piqué Manga HD : standard optimal pour le lettrage de scantrad -->
+            <filter id="sharpen-hd" x="0%" y="0%" width="100%" height="100%">
+                <feConvolveMatrix order="3" preserveAlpha="true"
+                                  kernelMatrix="0 -0.28 0
+                                 -0.28 2.12 -0.28
+                                  0 -0.28 0" />
+            </filter>
+            <!-- Piqué Tranchant : pour les petits textes ou écrans très denses -->
+            <filter id="sharpen-ultra" x="0%" y="0%" width="100%" height="100%">
+                <feConvolveMatrix order="3" preserveAlpha="true"
+                                  kernelMatrix="-0.04 -0.32 -0.04
+                                  -0.32 2.44 -0.32
+                                  -0.04 -0.32 -0.04" />
+            </filter>
+        </defs>
+    </svg>
+
     <header id="topbar">
         <div class="manga-title" id="manga-title-display">Manga</div>
         <div class="breadcrumb" id="chapter-breadcrumb">Ch. <span id="breadcrumb-ch">–</span></div>
@@ -653,12 +696,12 @@
 
         <div id="page-view">
             <div id="zone-prev"><div class="arrow">‹</div></div>
-            <canvas id="manga-canvas" title="Double-cliquez pour zoomer à 100%"></canvas>
+            <canvas id="manga-canvas" class="sharp-hd" title="Double-cliquez pour zoomer à 100%"></canvas>
             <div id="zone-next"><div class="arrow">›</div></div>
         </div>
 
         <div id="scroll-view">
-            <div id="scroll-content"></div>
+            <div id="scroll-content" class="sharp-hd"></div>
         </div>
 
         <div id="error-screen">
@@ -697,10 +740,12 @@
             </div>
         </div>
         <div class="setting-group">
-            <div class="setting-label">Rendu d'encrage</div>
+            <div class="setting-label">Traitement de Netteté (GPU)</div>
             <div class="toggle-row">
-                <button class="toggle-btn active" id="render-hd">✨ Piqué HD</button>
-                <button class="toggle-btn" id="render-raw">Naturel</button>
+                <button class="toggle-btn" id="sharp-off">Brut</button>
+                <button class="toggle-btn" id="sharp-light">Doux</button>
+                <button class="toggle-btn active" id="sharp-hd">✨ HD</button>
+                <button class="toggle-btn" id="sharp-ultra">⚡ Fort</button>
             </div>
         </div>
     </aside>
@@ -734,7 +779,7 @@
         let currentPage = 0;
         let scrollMode = false;
         let fitMode = 'contain';
-        let renderMode = 'hd'; // 'hd' = contraste des noirs rehaussé, 'raw' = brut
+        let sharpnessMode = localStorage.getItem('manga_sharpness') || 'hd'; // 'off', 'light', 'hd', 'ultra'
         let isZoomed = false;
         let isTransitioning = false;
         let nextChapterPreloaded = null;
@@ -808,6 +853,7 @@
         document.title = autoTitle + ' — Lecteur Quintalis';
 
         setupSelector();
+        applySharpnessMode(sharpnessMode);
 
         const savedProgress = localStorage.getItem('manga_progress_' + activeId);
         let startCh = Object.keys(mangaData)[0];
@@ -900,7 +946,24 @@
         });
         }
 
-        /* Moteur de rendu Canvas haute densité : garantit une netteté absolue */
+        function applySharpnessMode(mode) {
+        sharpnessMode = mode;
+        localStorage.setItem('manga_sharpness', mode);
+
+        // Mise à jour des classes CSS sur le canvas et le conteneur scroll
+        mangaCanvas.classList.remove('sharp-off', 'sharp-light', 'sharp-hd', 'sharp-ultra');
+        mangaCanvas.classList.add('sharp-' + mode);
+
+        scrollContent.classList.remove('sharp-off', 'sharp-light', 'sharp-hd', 'sharp-ultra');
+        scrollContent.classList.add('sharp-' + mode);
+
+        // Synchronisation de l'interface des réglages
+        ['off', 'light', 'hd', 'ultra'].forEach(m => {
+        const btn = document.getElementById('sharp-' + m);
+        if (btn) btn.classList.toggle('active', m === mode);
+        });
+        }
+
         function renderCurrentPageCanvas() {
         if (!currentLoadedImg || scrollMode) return;
 
@@ -925,11 +988,6 @@
         ctx.scale(dpr, dpr);
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
-        if (renderMode === 'hd') {
-        ctx.filter = 'contrast(110%) brightness(98%)';
-        } else {
-        ctx.filter = 'none';
-        }
         ctx.drawImage(currentLoadedImg, 0, 0, zoomCssWidth, zoomCssHeight);
         ctx.restore();
         return;
@@ -967,15 +1025,7 @@
         ctx.save();
         ctx.scale(dpr, dpr);
         ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high'; // Échantillonnage Lanczos ultra précis
-
-        // Accentuation du piqué des encres sans moiré
-        if (renderMode === 'hd') {
-        ctx.filter = 'contrast(112%) brightness(97%)';
-        } else {
-        ctx.filter = 'none';
-        }
-
+        ctx.imageSmoothingQuality = 'high'; // Échantillonnage de haute fidélité
         ctx.drawImage(currentLoadedImg, 0, 0, cssW, cssH);
         ctx.restore();
         }
@@ -1322,19 +1372,11 @@
         renderCurrentPageCanvas();
         });
 
-        document.getElementById('render-hd').addEventListener('click', () => {
-        renderMode = 'hd';
-        document.getElementById('render-hd').classList.add('active');
-        document.getElementById('render-raw').classList.remove('active');
-        renderCurrentPageCanvas();
-        });
-
-        document.getElementById('render-raw').addEventListener('click', () => {
-        renderMode = 'raw';
-        document.getElementById('render-raw').classList.add('active');
-        document.getElementById('render-hd').classList.remove('active');
-        renderCurrentPageCanvas();
-        });
+        // Sélecteurs de netteté matricielle GPU
+        document.getElementById('sharp-off').addEventListener('click', () => applySharpnessMode('off'));
+        document.getElementById('sharp-light').addEventListener('click', () => applySharpnessMode('light'));
+        document.getElementById('sharp-hd').addEventListener('click', () => applySharpnessMode('hd'));
+        document.getElementById('sharp-ultra').addEventListener('click', () => applySharpnessMode('ultra'));
 
         function isFS() {
         return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
