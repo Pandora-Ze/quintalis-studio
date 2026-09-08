@@ -7,18 +7,17 @@
     <title>Lecteur Quintalis</title>
     <style>
         :root {
-            --bg: #0d0d0d;
-            --bg2: #181818;
+            --bg: #0a0a0a;
+            --bg-bar: rgba(18, 18, 18, 0.88);
             --bg3: #222222;
-            --border: #2e2e2e;
-            --text: #e8e8e8;
-            --text2: #999999;
+            --border: rgba(255, 255, 255, 0.12);
+            --text: #f0f0f0;
+            --text2: #9e9e9e;
             --accent: #3498db;
-            --accent2: #2176ae;
-            --radius: 6px;
-            --topbar: 50px;
+            --radius: 8px;
+            --topbar: 52px;
             --bottombar: 56px;
-            --transition: 0.18s ease;
+            --transition: 0.22s cubic-bezier(0.2, 0, 0, 1);
         }
 
         *, *::before, *::after {
@@ -29,6 +28,7 @@
 
         html, body {
             height: 100%;
+            width: 100%;
             background: var(--bg);
             color: var(--text);
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
@@ -38,97 +38,79 @@
         }
 
         /* ══════════════════════════════════════════
-           BARRE SUPÉRIEURE (TOPBAR)
-        ══════════════════════════════════════════ */
-        #topbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: var(--topbar);
-            background: var(--bg2);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 0 14px;
-            z-index: 100;
-            transition: transform var(--transition), opacity var(--transition);
-        }
-
-            #topbar .manga-title {
-                font-size: 13px;
-                font-weight: 600;
-                color: var(--text);
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                flex: 1;
-                min-width: 0;
-            }
-
-            #topbar .breadcrumb {
-                font-size: 12px;
-                color: var(--text2);
-                white-space: nowrap;
-                flex-shrink: 0;
-            }
-
-                #topbar .breadcrumb span {
-                    color: var(--accent);
-                    font-weight: 600;
-                }
-
-        .topbar-btn {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--text2);
-            width: 32px;
-            height: 32px;
-            border-radius: var(--radius);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 15px;
-            flex-shrink: 0;
-            transition: background var(--transition), color var(--transition), border-color var(--transition);
-        }
-
-            .topbar-btn:hover {
-                background: var(--bg3);
-                color: var(--text);
-                border-color: #444;
-            }
-
-            .topbar-btn.active {
-                background: var(--accent);
-                color: #fff;
-                border-color: var(--accent);
-            }
-
-        /* ══════════════════════════════════════════
-           ZONE PRINCIPALE & PAGES
+           ESPACE DE LECTURE (100% PLEIN ÉCRAN RÉEL)
         ══════════════════════════════════════════ */
         #viewport {
             position: fixed;
-            top: var(--topbar);
-            bottom: var(--bottombar);
-            left: 0;
-            right: 0;
-            background: #000;
+            inset: 0;
+            background: #000000;
             display: flex;
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            z-index: 10;
         }
 
+        #page-view {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+            #page-view.zoomed {
+                overflow: auto;
+                cursor: grab;
+            }
+
+                #page-view.zoomed:active {
+                    cursor: grabbing;
+                }
+
+        /*
+           Image calibrée pour occuper 100% de la hauteur disponible.
+           Le filtre de contraste compense le lissage bilinéaire du navigateur.
+        */
+        #manga-page {
+            max-width: 100vw;
+            max-height: 100vh;
+            width: auto;
+            height: 100vh;
+            object-fit: contain;
+            display: block;
+            margin: auto;
+            image-rendering: auto;
+            filter: contrast(106%) brightness(99%);
+            transition: transform 0.18s ease-out;
+            cursor: zoom-in;
+            pointer-events: auto;
+        }
+
+            #manga-page.is-zoomed {
+                max-width: none !important;
+                max-height: none !important;
+                width: 1400px !important;
+                height: auto !important;
+                cursor: zoom-out;
+            }
+
+            #manga-page.double-page-mobile {
+                max-width: none !important;
+                width: auto !important;
+                height: 100vh !important;
+                cursor: default;
+            }
+
+        /* Zones de clic invisibles (navigation latérale) */
         #zone-prev, #zone-next {
             position: absolute;
             top: 0;
             bottom: 0;
             width: 25%;
-            z-index: 10;
+            z-index: 25;
             cursor: pointer;
         }
 
@@ -145,92 +127,32 @@
                 top: 50%;
                 transform: translateY(-50%);
                 background: rgba(0, 0, 0, 0.65);
-                border: 1px solid rgba(255, 255, 255, 0.12);
-                color: #fff;
-                width: 42px;
-                height: 64px;
+                border: 1px solid var(--border);
+                backdrop-filter: blur(8px);
+                color: #ffffff;
+                width: 44px;
+                height: 68px;
                 border-radius: var(--radius);
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                font-size: 24px;
+                font-size: 26px;
                 opacity: 0;
                 transition: opacity var(--transition);
                 pointer-events: none;
             }
 
         #zone-prev .arrow {
-            left: 14px;
+            left: 16px;
         }
 
         #zone-next .arrow {
-            right: 14px;
+            right: 16px;
         }
 
         #zone-prev:hover .arrow, #zone-next:hover .arrow {
             opacity: 1;
         }
-
-        #page-view {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            overflow-x: auto;
-            overflow-y: auto;
-            scroll-behavior: auto;
-        }
-
-            /* Barre de défilement discrète */
-            #page-view::-webkit-scrollbar {
-                width: 6px;
-            }
-
-            #page-view::-webkit-scrollbar-track {
-                background: rgba(0, 0, 0, 0.2);
-            }
-
-            #page-view::-webkit-scrollbar-thumb {
-                background: var(--border);
-                border-radius: 4px;
-            }
-
-                #page-view::-webkit-scrollbar-thumb:hover {
-                    background: #444;
-                }
-
-            #page-view.is-scrollable {
-                justify-content: flex-start;
-            }
-
-        @keyframes fadeInPage {
-            0% {
-                opacity: 0;
-            }
-
-            100% {
-                opacity: 1;
-            }
-        }
-
-        #manga-page {
-            display: block;
-            pointer-events: none;
-            opacity: 1;
-            image-rendering: auto;
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            margin: auto;
-            padding: 10px 0;
-        }
-
-            #manga-page.double-page-mobile {
-                max-width: none !important;
-                width: auto !important;
-                height: 100% !important;
-                margin: 0 !important;
-                padding: 0 !important;
-            }
 
         /* ══════════════════════════════════════════
            MODE DÉFILEMENT VERTICAL (WEBTOON)
@@ -242,6 +164,8 @@
             overflow-y: auto;
             overflow-x: hidden;
             scroll-behavior: smooth;
+            padding-top: var(--topbar);
+            padding-bottom: var(--bottombar);
         }
 
             #scroll-view.active {
@@ -256,8 +180,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 16px 0;
             min-height: 100%;
+            padding: 10px 0;
         }
 
             #scroll-content img {
@@ -266,76 +190,124 @@
                 height: auto;
                 display: block;
                 margin-bottom: 12px;
-                image-rendering: auto;
-                transform: translateZ(0);
+                filter: contrast(106%) brightness(99%);
             }
 
         /* ══════════════════════════════════════════
-           INDICATEURS & ERREURS
+           BARRES FLOTTANTES INTELLIGENTES (OVERLAY)
         ══════════════════════════════════════════ */
-        #loader {
-            position: absolute;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 3px solid rgba(255, 255, 255, 0.1);
-            border-top-color: var(--accent);
-            animation: spin 0.75s linear infinite;
-            z-index: 5;
-            pointer-events: none;
-            display: none;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        #error-screen {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            color: #e74c3c;
-            text-align: center;
-            padding: 30px;
-            font-size: 14px;
-        }
-
-        #error-detail {
-            color: var(--text2);
-            font-size: 13px;
-            white-space: pre-line;
-            max-width: 500px;
-            line-height: 1.4;
-        }
-
-        /* ══════════════════════════════════════════
-           BARRE INFÉRIEURE (BOTTOMBAR)
-        ══════════════════════════════════════════ */
-        #bottombar {
+        #topbar, #bottombar {
             position: fixed;
-            bottom: 0;
             left: 0;
             right: 0;
-            height: var(--bottombar);
-            background: var(--bg2);
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0 12px;
+            background: var(--bg-bar);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             z-index: 100;
             transition: transform var(--transition), opacity var(--transition);
         }
 
+        #topbar {
+            top: 0;
+            height: var(--topbar);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 16px;
+        }
+
+        #bottombar {
+            bottom: 0;
+            height: var(--bottombar);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 16px;
+        }
+
+        /* Masquage automatique au repos */
+        body.idle #topbar {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        body.idle #bottombar {
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        body.idle #settings-panel {
+            right: -290px !important;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        body.idle {
+            cursor: none;
+        }
+
+        /* Éléments de la Topbar */
+        #topbar .manga-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+        }
+
+        #topbar .breadcrumb {
+            font-size: 12px;
+            color: var(--text2);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+            #topbar .breadcrumb span {
+                color: var(--accent);
+                font-weight: 600;
+            }
+
+        .topbar-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border);
+            color: var(--text2);
+            width: 34px;
+            height: 34px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            flex-shrink: 0;
+            transition: all var(--transition);
+        }
+
+            .topbar-btn:hover {
+                background: var(--bg3);
+                color: var(--text);
+                border-color: rgba(255, 255, 255, 0.25);
+            }
+
+            .topbar-btn.active {
+                background: var(--accent);
+                color: #ffffff;
+                border-color: var(--accent);
+            }
+
+        /* Éléments de la Bottombar */
         .nav-btn {
-            background: var(--bg3);
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--border);
             color: var(--text);
             height: 36px;
-            padding: 0 12px;
+            padding: 0 14px;
             border-radius: var(--radius);
             cursor: pointer;
             font-size: 15px;
@@ -344,16 +316,16 @@
             gap: 6px;
             white-space: nowrap;
             flex-shrink: 0;
-            transition: background var(--transition), border-color var(--transition);
+            transition: all var(--transition);
         }
 
             .nav-btn:hover {
-                background: #2b2b2b;
-                border-color: #444;
+                background: rgba(255, 255, 255, 0.12);
+                border-color: rgba(255, 255, 255, 0.3);
             }
 
             .nav-btn:disabled {
-                opacity: 0.35;
+                opacity: 0.3;
                 cursor: not-allowed;
             }
 
@@ -366,9 +338,9 @@
             width: 220px;
             height: 36px;
             padding: 0 12px;
-            background: rgba(25, 25, 25, 0.85);
+            background: rgba(25, 25, 25, 0.95);
             color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            border: 1px solid var(--border);
             border-radius: var(--radius);
             font-family: inherit;
             font-size: 13px;
@@ -377,7 +349,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            transition: border-color var(--transition), box-shadow var(--transition);
             appearance: none;
             -webkit-appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
@@ -385,16 +356,16 @@
             background-position: right 10px center;
             background-size: 14px;
             padding-right: 32px;
+            transition: border-color var(--transition);
         }
 
             #chapter-select:hover, #chapter-select:focus {
                 border-color: var(--accent);
                 outline: none;
-                box-shadow: 0 0 8px rgba(52, 152, 219, 0.25);
             }
 
             #chapter-select option {
-                background: #1a1a1a;
+                background: #141414;
                 color: #ffffff;
                 padding: 8px;
             }
@@ -403,13 +374,13 @@
             flex: 1;
             position: relative;
             min-width: 60px;
-            padding: 8px 0;
+            padding: 10px 0;
             cursor: pointer;
         }
 
         #progress-bar-bg {
             height: 5px;
-            background: var(--bg3);
+            background: rgba(255, 255, 255, 0.12);
             border-radius: 99px;
             overflow: hidden;
             position: relative;
@@ -419,7 +390,7 @@
             height: 100%;
             background: var(--accent);
             border-radius: 99px;
-            transition: width 0.1s ease;
+            transition: width 0.08s ease;
             pointer-events: none;
         }
 
@@ -427,7 +398,7 @@
             position: absolute;
             bottom: 22px;
             transform: translateX(-50%);
-            background: var(--bg2);
+            background: #1c1c1c;
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 4px 8px;
@@ -450,27 +421,27 @@
         }
 
         /* ══════════════════════════════════════════
-           PANNEAU PARAMÈTRES
+           PANNEAU PARAMÈTRES & MODALES
         ══════════════════════════════════════════ */
         #settings-panel {
             position: fixed;
-            top: var(--topbar);
+            top: calc(var(--topbar) + 10px);
             right: -280px;
             width: 260px;
-            bottom: var(--bottombar);
-            background: var(--bg2);
-            border-left: 1px solid var(--border);
-            z-index: 90;
+            background: var(--bg-bar);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            z-index: 120;
             padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 18px;
-            overflow-y: auto;
-            transition: right 0.22s ease;
+            gap: 16px;
+            transition: right var(--transition), opacity var(--transition);
         }
 
             #settings-panel.open {
-                right: 0;
+                right: 14px;
             }
 
         .setting-group {
@@ -494,34 +465,31 @@
 
         .toggle-btn {
             flex: 1;
-            background: var(--bg3);
+            background: rgba(255, 255, 255, 0.06);
             border: 1px solid var(--border);
             color: var(--text2);
             height: 32px;
             border-radius: var(--radius);
             cursor: pointer;
             font-size: 12px;
-            transition: background var(--transition), color var(--transition), border-color var(--transition);
+            transition: all var(--transition);
         }
 
             .toggle-btn:hover {
-                border-color: #444;
+                border-color: rgba(255, 255, 255, 0.3);
                 color: var(--text);
             }
 
             .toggle-btn.active {
                 background: var(--accent);
-                color: #fff;
+                color: #ffffff;
                 border-color: var(--accent);
             }
 
-        /* ══════════════════════════════════════════
-           TRANSITION OVERLAY & MODAL
-        ══════════════════════════════════════════ */
         #transition-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.88);
+            background: rgba(0, 0, 0, 0.9);
             z-index: 200;
             display: flex;
             flex-direction: column;
@@ -553,7 +521,7 @@
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.8);
             z-index: 300;
             align-items: center;
             justify-content: center;
@@ -564,11 +532,11 @@
             }
 
         #help-box {
-            background: var(--bg2);
+            background: #181818;
             border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px 24px;
-            width: min(420px, 90vw);
+            border-radius: 10px;
+            padding: 22px 24px;
+            width: min(420px, 92vw);
             max-height: 80vh;
             overflow-y: auto;
         }
@@ -592,13 +560,8 @@
                 border-bottom: none;
             }
 
-            .shortcut-row .keys {
-                display: flex;
-                gap: 4px;
-            }
-
         kbd {
-            background: var(--bg3);
+            background: #252525;
             border: 1px solid var(--border);
             border-radius: 4px;
             padding: 2px 7px;
@@ -607,15 +570,11 @@
             color: var(--text);
         }
 
-        .shortcut-row .desc {
-            color: var(--text2);
-        }
-
         #help-close {
             margin-top: 16px;
             width: 100%;
             height: 36px;
-            background: var(--bg3);
+            background: #282828;
             border: 1px solid var(--border);
             color: var(--text);
             border-radius: var(--radius);
@@ -623,65 +582,66 @@
             font-size: 13px;
         }
 
-            #help-close:hover {
-                border-color: #444;
+        #loader {
+            position: absolute;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--accent);
+            animation: spin 0.75s linear infinite;
+            z-index: 30;
+            pointer-events: none;
+            display: none;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #error-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            color: #e74c3c;
+            text-align: center;
+            padding: 30px;
+            font-size: 14px;
+            z-index: 50;
+        }
+
+        @keyframes fadeInPage {
+            0% {
+                opacity: 0;
             }
 
-        /* ══════════════════════════════════════════
-           MASQUAGE INACTIF & PLEIN ÉCRAN
-        ══════════════════════════════════════════ */
-        .idle #topbar, .idle #bottombar {
-            transform: translateY(-100%);
-            opacity: 0;
+            100% {
+                opacity: 1;
+            }
+        }
+
+        /* Indicateur de zoom temporaire */
+        #zoom-toast {
+            position: fixed;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 12px;
+            color: var(--text);
             pointer-events: none;
-        }
-
-        .idle #bottombar {
-            transform: translateY(100%);
-        }
-
-        .idle #settings-panel, body.fullscreen-mode:not(.show-ui) #settings-panel {
-            right: -100vw !important;
             opacity: 0;
-            pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 150;
         }
 
-        .idle #viewport {
-            top: 0;
-            bottom: 0;
-        }
-
-        .idle, .idle * {
-            cursor: none !important;
-        }
-
-        body.fullscreen-mode #topbar {
-            transform: translateY(-100%);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        body.fullscreen-mode #bottombar {
-            transform: translateY(100%);
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        body.fullscreen-mode.show-ui #topbar, body.fullscreen-mode.show-ui #bottombar {
-            transform: translateY(0) !important;
-            opacity: 1 !important;
-            pointer-events: auto !important;
-        }
-
-        /* ══════════════════════════════════════════
-           RESPONSIVE MOBILE
-        ══════════════════════════════════════════ */
         @media (max-width: 768px) {
-            #topbar, #bottombar, #settings-panel {
-                max-width: 100vw;
-                overflow-x: hidden;
-            }
-
             #zone-prev, #zone-next {
                 display: none;
             }
@@ -692,28 +652,18 @@
                 display: none;
             }
 
-            #bottombar {
-                gap: 6px;
-                padding: 0 8px;
-            }
-
             .nav-btn span {
                 display: none;
             }
 
             #chapter-select {
-                max-width: 120px;
+                max-width: 130px;
                 font-size: 12px;
             }
 
             #settings-panel {
-                width: 100%;
-                right: -100%;
+                width: calc(100vw - 28px);
             }
-
-                #settings-panel.open {
-                    right: 0;
-                }
         }
     </style>
 </head>
@@ -722,7 +672,8 @@
     <header id="topbar">
         <div class="manga-title" id="manga-title-display">Manga</div>
         <div class="breadcrumb" id="chapter-breadcrumb">Ch. <span id="breadcrumb-ch">–</span></div>
-        <button class="topbar-btn" id="btn-scroll" title="Mode défilement (W)">↕</button>
+        <button class="topbar-btn" id="btn-scroll" title="Mode défilement continu (W)">↕</button>
+        <button class="topbar-btn" id="btn-zoom" title="Zoom 100% natif (Z)">🔍</button>
         <button class="topbar-btn" id="btn-settings" title="Paramètres (S)">⚙</button>
         <button class="topbar-btn" id="btn-help" title="Raccourcis clavier (?)">?</button>
         <button class="topbar-btn" id="fullscreen-btn" title="Plein écran (F)">⛶</button>
@@ -733,7 +684,7 @@
 
         <div id="page-view">
             <div id="zone-prev"><div class="arrow">‹</div></div>
-            <img id="manga-page" src="" alt="Page manga">
+            <img id="manga-page" src="" alt="Page manga" title="Double-cliquez pour zoomer à 100%">
             <div id="zone-next"><div class="arrow">›</div></div>
         </div>
 
@@ -747,6 +698,8 @@
             <p id="error-detail"></p>
         </div>
     </div>
+
+    <div id="zoom-toast">Zoom 100% activé (Double-clic pour réinitialiser)</div>
 
     <footer id="bottombar">
         <button class="nav-btn" id="btn-prev-ch" title="Chapitre précédent">‹ <span>Préc.</span></button>
@@ -763,18 +716,24 @@
 
     <aside id="settings-panel">
         <div class="setting-group">
-            <div class="setting-label">Mode de lecture</div>
+            <div class="setting-label">Mode d'affichage</div>
             <div class="toggle-row">
-                <button class="toggle-btn active" id="mode-page">📄 Pages</button>
+                <button class="toggle-btn active" id="mode-page">📄 Page seule</button>
                 <button class="toggle-btn" id="mode-scroll">↕ Défilement</button>
             </div>
         </div>
         <div class="setting-group">
-            <div class="setting-label">Ajustement image</div>
+            <div class="setting-label">Ajustement d'écran</div>
             <div class="toggle-row">
-                <button class="toggle-btn active" id="fit-width">Largeur</button>
-                <button class="toggle-btn" id="fit-contain">Adapter</button>
-                <button class="toggle-btn" id="fit-height">Page entière</button>
+                <button class="toggle-btn active" id="fit-height">Hauteur max</button>
+                <button class="toggle-btn" id="fit-width">Largeur</button>
+            </div>
+        </div>
+        <div class="setting-group">
+            <div class="setting-label">Accentuation scans</div>
+            <div class="toggle-row">
+                <button class="toggle-btn active" id="btn-filter-on">Piqué ON</button>
+                <button class="toggle-btn" id="btn-filter-off">Naturel</button>
             </div>
         </div>
     </aside>
@@ -788,17 +747,15 @@
     <div id="help-modal">
         <div id="help-box">
             <h3>🎮 Raccourcis clavier</h3>
-            <div class="shortcut-row"><span class="desc">Page suivante</span><span class="keys"><kbd>→</kbd> ou <kbd>D</kbd></span></div>
-            <div class="shortcut-row"><span class="desc">Page précédente</span><span class="keys"><kbd>←</kbd> ou <kbd>A</kbd></span></div>
-            <div class="shortcut-row"><span class="desc">Défilement vertical</span><span class="keys"><kbd>↑</kbd> ou <kbd>↓</kbd></span></div>
-            <div class="shortcut-row"><span class="desc">Saut de vue</span><span class="keys"><kbd>Espace</kbd> ou <kbd>PgUp/Dn</kbd></span></div>
-            <div class="shortcut-row"><span class="desc">Chapitre suivant</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>→</kbd></span></div>
-            <div class="shortcut-row"><span class="desc">Chapitre précédent</span><span class="keys"><kbd>Ctrl</kbd>+<kbd>←</kbd></span></div>
-            <div class="shortcut-row"><span class="desc">Plein écran</span><span class="keys"><kbd>F</kbd></span></div>
-            <div class="shortcut-row"><span class="desc">Mode défilement</span><span class="keys"><kbd>W</kbd></span></div>
-            <div class="shortcut-row"><span class="desc">Paramètres</span><span class="keys"><kbd>S</kbd></span></div>
-            <div class="shortcut-row"><span class="desc">Fermer menu / Quitter plein écran</span><span class="keys"><kbd>Échap</kbd></span></div>
-            <div class="shortcut-row"><span class="desc">Cette aide</span><span class="keys"><kbd>?</kbd></span></div>
+            <div class="shortcut-row"><span>Page suivante</span><kbd>→</kbd> ou <kbd>D</kbd></div>
+            <div class="shortcut-row"><span>Page précédente</span><kbd>←</kbd> ou <kbd>A</kbd></div>
+            <div class="shortcut-row"><span>Zoom 100% natif</span><kbd>Z</kbd> ou Double-clic</div>
+            <div class="shortcut-row"><span>Mode Défilement</span><kbd>W</kbd></div>
+            <div class="shortcut-row"><span>Plein écran total</span><kbd>F</kbd></div>
+            <div class="shortcut-row"><span>Chapitre suivant</span><kbd>Ctrl</kbd> + <kbd>→</kbd></div>
+            <div class="shortcut-row"><span>Chapitre précédent</span><kbd>Ctrl</kbd> + <kbd>←</kbd></div>
+            <div class="shortcut-row"><span>Paramètres</span><kbd>S</kbd></div>
+            <div class="shortcut-row"><span>Fermer / Écran normal</span><kbd>Échap</kbd></div>
             <button id="help-close">Fermer</button>
         </div>
     </div>
@@ -808,11 +765,13 @@
         let currentPages = [];
         let currentPage = 0;
         let scrollMode = false;
-        let fitMode = 'width'; // Largeur active par défaut pour une netteté optimale
+        let fitMode = 'height';
+        let isZoomed = false;
         let isTransitioning = false;
         let nextChapterPreloaded = null;
         let isDraggingProgress = false;
         let isScrubbingScroll = false;
+        let filterActive = true;
 
         const mangaPageEl = document.getElementById('manga-page');
         const pageInfo = document.getElementById('page-info');
@@ -829,10 +788,10 @@
         const scrollView = document.getElementById('scroll-view');
         const scrollContent = document.getElementById('scroll-content');
         const pageView = document.getElementById('page-view');
-        const viewport = document.getElementById('viewport');
         const settingsPanel = document.getElementById('settings-panel');
         const breadcrumbCh = document.getElementById('breadcrumb-ch');
         const mangaTitleDisplay = document.getElementById('manga-title-display');
+        const zoomToast = document.getElementById('zoom-toast');
 
         const urlParams = new URLSearchParams(window.location.search);
         const mangaId = urlParams.get('id') || 'default';
@@ -872,7 +831,7 @@
         startCh = parsed.chapter;
         startPg = parsed.page;
         }
-        } catch(e) { console.error("Erreur lecture sauvegarde", e); }
+        } catch(e) { console.error(e); }
         }
 
         loadChapter(startCh, false, startPg);
@@ -908,7 +867,7 @@
         if (scrollMode) {
         buildScrollMode();
         } else {
-        applyFit();
+        exitZoom();
         updatePageView();
         }
         }
@@ -932,22 +891,18 @@
         mangaPageEl.style.animation = 'none';
         mangaPageEl.offsetHeight;
 
-        // Remise à zéro systématique du scroll au début de chaque page
-        pageView.scrollTop = 0;
-
         mangaPageEl.onload = () => {
         const isLandscape = mangaPageEl.naturalWidth > mangaPageEl.naturalHeight;
         const isMobile = window.innerWidth <= 768;
 
-        if (isLandscape && isMobile && fitMode === 'contain') {
+        if (isLandscape && isMobile) {
         mangaPageEl.classList.add('double-page-mobile');
-        pageView.classList.add('is-scrollable');
+        pageView.style.overflowX = 'auto';
         setTimeout(() => { pageView.scrollLeft = pageView.scrollWidth; }, 10);
         } else {
         mangaPageEl.classList.remove('double-page-mobile');
-        pageView.classList.remove('is-scrollable');
+        pageView.style.overflowX = 'hidden';
         pageView.scrollLeft = 0;
-        pageView.scrollTop = 0;
         }
 
         mangaPageEl.style.animation = 'fadeInPage 0.12s ease-out forwards';
@@ -961,40 +916,90 @@
 
         function applyFit() {
         if (!scrollMode) {
-        if (fitMode === 'width') {
-        mangaPageEl.style.maxWidth = '850px';
+        if (fitMode === 'height') {
+        mangaPageEl.style.maxHeight = '100vh';
+        mangaPageEl.style.maxWidth = '100vw';
+        mangaPageEl.style.height = '100vh';
+        mangaPageEl.style.width = 'auto';
+        } else {
         mangaPageEl.style.maxHeight = 'none';
+        mangaPageEl.style.maxWidth = '900px';
+        mangaPageEl.style.height = 'auto';
         mangaPageEl.style.width = '100%';
-        mangaPageEl.style.height = 'auto';
-        } else if (fitMode === 'contain') {
-        mangaPageEl.style.maxWidth = '100%';
-        mangaPageEl.style.maxHeight = '100%';
-        mangaPageEl.style.width = 'auto';
-        mangaPageEl.style.height = 'auto';
-        } else if (fitMode === 'height') {
-        mangaPageEl.style.maxWidth = 'none';
-        mangaPageEl.style.maxHeight = '100%';
-        mangaPageEl.style.width = 'auto';
-        mangaPageEl.style.height = '100%';
         }
-        if (mangaPageEl.src) updatePageView();
         } else {
         const imgs = scrollContent.querySelectorAll('img');
         imgs.forEach(img => {
-        if (fitMode === 'contain') {
-        img.style.maxWidth = '850px';
-        img.style.width = '100%';
-        } else if (fitMode === 'width') {
-        img.style.maxWidth = '100%';
-        img.style.width = '100%';
-        } else if (fitMode === 'height') {
-        img.style.maxWidth = '100%';
-        img.style.width = 'auto';
-        img.style.height = '100vh';
-        }
+        img.style.maxWidth = fitMode === 'height' ? '850px' : '100%';
         });
         }
         }
+
+        /* ══ SMART ZOOM 100% NATIF ══ */
+        function toggleZoom(e) {
+        if (scrollMode) return;
+        isZoomed = !isZoomed;
+
+        if (isZoomed) {
+        mangaPageEl.classList.add('is-zoomed');
+        pageView.classList.add('zoomed');
+        document.getElementById('btn-zoom').classList.add('active');
+
+        // Centrage automatique du zoom sur le point cliqué
+        if (e && e.clientX) {
+        const clickX = e.clientX;
+        const clickY = e.clientY;
+        const pctX = clickX / window.innerWidth;
+        const pctY = clickY / window.innerHeight;
+
+        setTimeout(() => {
+        pageView.scrollLeft = (mangaPageEl.offsetWidth * pctX) - (window.innerWidth / 2);
+        pageView.scrollTop = (mangaPageEl.offsetHeight * pctY) - (window.innerHeight / 2);
+        }, 20);
+        }
+
+        showToast('Zoom 100% natif actif');
+        } else {
+        exitZoom();
+        }
+        }
+
+        function exitZoom() {
+        isZoomed = false;
+        mangaPageEl.classList.remove('is-zoomed');
+        pageView.classList.remove('zoomed');
+        document.getElementById('btn-zoom').classList.remove('active');
+        pageView.scrollLeft = 0;
+        pageView.scrollTop = 0;
+        }
+
+        function showToast(txt) {
+        zoomToast.textContent = txt;
+        zoomToast.style.opacity = '1';
+        setTimeout(() => { zoomToast.style.opacity = '0'; }, 2000);
+        }
+
+        mangaPageEl.addEventListener('dblclick', toggleZoom);
+        document.getElementById('btn-zoom').addEventListener('click', () => toggleZoom(null));
+
+        /* Glisser-déposer de la vue lors du zoom */
+        let isPanning = false, startPanX = 0, startPanY = 0, scrollStartX = 0, scrollStartY = 0;
+        pageView.addEventListener('mousedown', e => {
+        if (!isZoomed) return;
+        isPanning = true;
+        startPanX = e.clientX;
+        startPanY = e.clientY;
+        scrollStartX = pageView.scrollLeft;
+        scrollStartY = pageView.scrollTop;
+        });
+
+        document.addEventListener('mousemove', e => {
+        if (!isPanning || !isZoomed) return;
+        pageView.scrollLeft = scrollStartX - (e.clientX - startPanX);
+        pageView.scrollTop = scrollStartY - (e.clientY - startPanY);
+        });
+
+        document.addEventListener('mouseup', () => { isPanning = false; });
 
         function buildScrollMode() {
         scrollContent.innerHTML = '';
@@ -1007,14 +1012,13 @@
         const img = document.createElement('img');
         img.src = src;
         img.alt = `Page ${idx + 1}`;
+        if (filterActive) img.style.filter = 'contrast(106%) brightness(99%)';
         img.onload = img.onerror = () => {
         loaded++;
         if (loaded === currentPages.length) {
         loader.style.display = 'none';
         const imgs = scrollContent.querySelectorAll('img');
-        if (imgs[currentPage]) {
-        imgs[currentPage].scrollIntoView({ behavior: 'auto' });
-        }
+        if (imgs[currentPage]) imgs[currentPage].scrollIntoView({ behavior: 'auto' });
         }
         };
         scrollContent.appendChild(img);
@@ -1098,6 +1102,8 @@
         document.getElementById('zone-prev').style.display = on ? 'none' : '';
         document.getElementById('zone-next').style.display = on ? 'none' : '';
 
+        exitZoom();
+
         if (on) {
         pageView.style.display = 'none';
         scrollView.style.display = 'block';
@@ -1111,13 +1117,11 @@
         }
 
         function nextPage() {
+        if (isZoomed) { exitZoom(); return; }
         if (scrollMode) {
         const imgs = scrollContent.querySelectorAll('img');
-        if (currentPage < imgs.length - 1) {
-        imgs[currentPage + 1].scrollIntoView({ behavior: 'smooth' });
-        } else {
-        goToNextChapter();
-        }
+        if (currentPage < imgs.length - 1) imgs[currentPage + 1].scrollIntoView({ behavior: 'smooth' });
+        else goToNextChapter();
         return;
         }
         if (currentPage < currentPages.length - 1) {
@@ -1129,13 +1133,11 @@
         }
 
         function prevPage() {
+        if (isZoomed) { exitZoom(); return; }
         if (scrollMode) {
         const imgs = scrollContent.querySelectorAll('img');
-        if (currentPage > 0) {
-        imgs[currentPage - 1].scrollIntoView({ behavior: 'smooth' });
-        } else {
-        goToPrevChapter();
-        }
+        if (currentPage > 0) imgs[currentPage - 1].scrollIntoView({ behavior: 'smooth' });
+        else goToPrevChapter();
         return;
         }
         if (currentPage > 0) {
@@ -1152,9 +1154,7 @@
         if (i < 0 || i >= chs.length - 1) return;
         const next = chs[i + 1];
         const title = mangaData[next].title || '';
-        showTransition('Chapitre suivant', 'Ch. ' + next + (title ? ' — ' + title : ''), () => {
-        loadChapter(next);
-        });
+        showTransition('Chapitre suivant', 'Ch. ' + next + (title ? ' — ' + title : ''), () => loadChapter(next));
         }
 
         function goToPrevChapter() {
@@ -1163,9 +1163,7 @@
         if (i <= 0) return;
         const prev = chs[i - 1];
         const title = mangaData[prev].title || '';
-        showTransition('Chapitre précédent', 'Ch. ' + prev + (title ? ' — ' + title : ''), () => {
-        loadChapter(prev, true);
-        });
+        showTransition('Chapitre précédent', 'Ch. ' + prev + (title ? ' — ' + title : ''), () => loadChapter(prev, true));
         }
 
         function showTransition(label, sub, callback) {
@@ -1175,7 +1173,7 @@
         setTimeout(() => {
         callback();
         transitionOverlay.classList.remove('show');
-        }, 1200);
+        }, 1100);
         }
 
         function updatePageFromProgress(clientX) {
@@ -1187,6 +1185,7 @@
         if (targetPage !== currentPage) {
         currentPage = targetPage;
         if (!scrollMode) {
+        exitZoom();
         updatePageView();
         } else {
         const imgs = scrollContent.querySelectorAll('img');
@@ -1244,7 +1243,7 @@
         if (!isDraggingProgress) progressTooltip.style.opacity = '0';
         });
 
-        /* Événements Bureau & Navigation */
+        /* Événements de navigation */
         document.getElementById('zone-prev').addEventListener('click', prevPage);
         document.getElementById('zone-next').addEventListener('click', nextPage);
         document.getElementById('btn-prev-ch').addEventListener('click', goToPrevChapter);
@@ -1265,12 +1264,32 @@
         document.getElementById('mode-page').addEventListener('click', () => { if (scrollMode) setScrollMode(false); });
         document.getElementById('mode-scroll').addEventListener('click', () => { if (!scrollMode) setScrollMode(true); });
 
-        ['width','contain','height'].forEach(f => {
-        document.getElementById('fit-' + f).addEventListener('click', () => {
-        fitMode = f;
-        ['width','contain','height'].forEach(x => document.getElementById('fit-' + x).classList.toggle('active', x === f));
+        document.getElementById('fit-height').addEventListener('click', () => {
+        fitMode = 'height';
+        document.getElementById('fit-height').classList.add('active');
+        document.getElementById('fit-width').classList.remove('active');
         applyFit();
         });
+
+        document.getElementById('fit-width').addEventListener('click', () => {
+        fitMode = 'width';
+        document.getElementById('fit-width').classList.add('active');
+        document.getElementById('fit-height').classList.remove('active');
+        applyFit();
+        });
+
+        document.getElementById('btn-filter-on').addEventListener('click', () => {
+        filterActive = true;
+        document.getElementById('btn-filter-on').classList.add('active');
+        document.getElementById('btn-filter-off').classList.remove('active');
+        mangaPageEl.style.filter = 'contrast(106%) brightness(99%)';
+        });
+
+        document.getElementById('btn-filter-off').addEventListener('click', () => {
+        filterActive = false;
+        document.getElementById('btn-filter-off').classList.add('active');
+        document.getElementById('btn-filter-on').classList.remove('active');
+        mangaPageEl.style.filter = 'none';
         });
 
         function isFS() {
@@ -1279,129 +1298,41 @@
 
         function toggleFS() {
         if (!isFS()) {
-        const req = (document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen).call(document.documentElement);
-        if (navigator.keyboard && navigator.keyboard.lock) {
-        if (req && req.then) {
-        req.then(() => navigator.keyboard.lock(['Escape'])).catch(() => {});
+        (document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen).call(document.documentElement);
         } else {
-        setTimeout(() => navigator.keyboard.lock(['Escape']).catch(() => {}), 100);
-        }
-        }
-        } else {
-        if (navigator.keyboard && navigator.keyboard.unlock) navigator.keyboard.unlock();
         (document.exitFullscreen || document.webkitExitFullscreen).call(document);
         }
         }
         document.getElementById('fullscreen-btn').addEventListener('click', toggleFS);
 
+        /* Détection d'inactivité pour masquer l'interface */
         let idleTimer;
         function resetIdle() {
         document.body.classList.remove('idle');
         clearTimeout(idleTimer);
-        if (isFS()) {
-        idleTimer = setTimeout(() => document.body.classList.add('idle'), 2500);
+        idleTimer = setTimeout(() => {
+        if (!settingsPanel.classList.contains('open') && !document.getElementById('help-modal').classList.contains('open')) {
+        document.body.classList.add('idle');
         }
-        }
-
-        let lastMouseX = -1, lastMouseY = -1;
-        function checkMouseMove(e) {
-        if (lastMouseX === -1) { lastMouseX = e.clientX; lastMouseY = e.clientY; return; }
-        const dist = Math.abs(e.clientX - lastMouseX) + Math.abs(e.clientY - lastMouseY);
-        if (dist > 45) {
-        lastMouseX = e.clientX;
-        lastMouseY = e.clientY;
-        resetIdle();
-        }
+        }, 3000);
         }
 
         ['mousedown','touchstart','fullscreenchange','webkitfullscreenchange'].forEach(e => {
         document.addEventListener(e, resetIdle, { passive: true });
         });
-        document.addEventListener('mousemove', checkMouseMove, { passive: true });
 
-        document.addEventListener('fullscreenchange', () => {
-        if (!isFS()) {
-        document.body.classList.remove('idle', 'fullscreen-mode', 'show-ui');
-        if (navigator.keyboard && navigator.keyboard.unlock) navigator.keyboard.unlock();
-        document.getElementById('help-modal').classList.remove('open');
-        settingsPanel.classList.remove('open');
-        document.getElementById('btn-settings').classList.remove('active');
-        } else {
-        document.body.classList.add('fullscreen-mode');
-        document.body.classList.remove('show-ui');
+        document.addEventListener('mousemove', e => {
+        // Rallume l'interface immédiatement si la souris approche des bords
+        if (e.clientY < 70 || e.clientY > window.innerHeight - 70) {
+        document.body.classList.remove('idle');
         }
-        viewport.style.top = isFS() ? '0' : '';
-        viewport.style.bottom = isFS() ? '0' : '';
-        });
-
-        /* Gestuelle Tactile (Tap & Swipe) */
-        let touchStartX = 0, touchStartY = 0;
-        let isDraggingView = false;
-        let dragStartTime = 0;
-
-        pageView.addEventListener('touchstart', e => {
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
-        isDraggingView = false;
-        dragStartTime = Date.now();
+        resetIdle();
         }, { passive: true });
 
-        pageView.addEventListener('touchmove', () => {
-        isDraggingView = true;
-        }, { passive: true });
-
-        pageView.addEventListener('touchend', e => {
-        if (scrollMode) return;
-        const touchEndX = e.changedTouches[0].clientX;
-        const touchEndY = e.changedTouches[0].clientY;
-        const dx = touchEndX - touchStartX;
-        const dy = touchEndY - touchStartY;
-        const absDx = Math.abs(dx);
-        const timeElapsed = Date.now() - dragStartTime;
-
-        if (!isDraggingView || (absDx < 10 && timeElapsed < 300)) {
-        const width = window.innerWidth;
-        const bottombar = document.getElementById('bottombar');
-        const topbar = document.getElementById('topbar');
-        const settings = document.getElementById('settings-panel');
-        if (bottombar.contains(e.target) || topbar.contains(e.target) || settings.contains(e.target)) return;
-
-        if (touchEndX < width * 0.3) {
-        prevPage();
-        } else if (touchEndX > width * 0.7) {
-        nextPage();
-        } else {
-        if (isFS()) document.body.classList.toggle('show-ui');
-        }
-        return;
-        }
-
-        if (absDx > 40 && absDx > Math.abs(dy)) {
-        const isAtLeftEdge = pageView.scrollLeft <= 10;
-        const isAtRightEdge = pageView.scrollLeft + pageView.clientWidth >= pageView.scrollWidth - 10;
-
-        if (dx < 0 && isAtRightEdge) {
-        nextPage();
-        } else if (dx > 0 && isAtLeftEdge) {
-        prevPage();
-        }
-        }
-        }, { passive: true });
-
-        /* Raccourcis Clavier : défilement et navigation universels */
+        /* Raccourcis Clavier */
         document.addEventListener('keydown', e => {
         if (e.target.tagName === 'SELECT') return;
-
-        const navKeys = ['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', ' ', 'ArrowLeft', 'ArrowRight', 'a', 'A', 'd', 'D'];
-        if (!navKeys.includes(e.key)) resetIdle();
-
-        const scrollTarget = scrollMode ? scrollView : pageView;
-        const scrollAmt = window.innerHeight * 0.75;
-
-        if (e.key === 'ArrowDown') { e.preventDefault(); scrollTarget.scrollBy({ top: 60, behavior: 'smooth' }); }
-        if (e.key === 'ArrowUp') { e.preventDefault(); scrollTarget.scrollBy({ top: -60, behavior: 'smooth' }); }
-        if (e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); scrollTarget.scrollBy({ top: scrollAmt, behavior: 'smooth' }); }
-        if (e.key === 'PageUp') { e.preventDefault(); scrollTarget.scrollBy({ top: -scrollAmt, behavior: 'smooth' }); }
+        resetIdle();
 
         if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
         if (e.ctrlKey || e.metaKey) goToNextChapter();
@@ -1412,20 +1343,22 @@
         else prevPage();
         }
 
+        if (e.key === 'z' || e.key === 'Z') toggleZoom(null);
         if (e.key === 'f' || e.key === 'F') toggleFS();
         if (e.key === 'w' || e.key === 'W') setScrollMode(!scrollMode);
         if (e.key === 's' || e.key === 'S') {
         settingsPanel.classList.toggle('open');
         document.getElementById('btn-settings').classList.toggle('active', settingsPanel.classList.contains('open'));
         }
-        if (e.key === '?') {
-        document.getElementById('help-modal').classList.add('open');
-        }
+        if (e.key === '?') document.getElementById('help-modal').classList.add('open');
 
         if (e.key === 'Escape') {
+        if (isZoomed) {
+        exitZoom();
+        return;
+        }
         const helpModal = document.getElementById('help-modal');
         if (helpModal.classList.contains('open') || settingsPanel.classList.contains('open')) {
-        e.preventDefault();
         helpModal.classList.remove('open');
         settingsPanel.classList.remove('open');
         document.getElementById('btn-settings').classList.remove('active');
