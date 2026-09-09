@@ -1,6 +1,6 @@
 @echo off
 chcp 65001 >nul
-setlocal enabledelayedexpansion
+setlocal
 title Quintalis Studio - Gestionnaire de Branches
 
 :menu
