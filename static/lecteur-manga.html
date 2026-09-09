@@ -83,7 +83,7 @@
                     cursor: grabbing;
                 }
 
-        /* Rendu Canvas Haute Fidélité avec matrices d'accentuation matérielle GPU */
+        /* Rendu Canvas Haute Définition avec filtres d'accentuation matérielle GPU */
         #manga-canvas {
             display: block;
             margin: auto;
@@ -112,11 +112,7 @@
                 cursor: zoom-out;
                 margin: 0 !important;
                 padding: 20px !important;
-<<<<<<< HEAD
-                filter: none !important; /* Zoom 1:1 déjà net à 100% natif */
-=======
                 filter: none !important;
->>>>>>> dev
             }
 
         #zone-prev, #zone-next {
@@ -182,10 +178,6 @@
             #scroll-view.active {
                 display: block;
             }
-
-                #scroll-view.active ~ #page-view {
-                    display: none;
-                }
 
         #scroll-content {
             display: flex;
@@ -259,11 +251,7 @@
         }
 
         body.idle #settings-panel {
-<<<<<<< HEAD
-            right: -320px !important;
-=======
             right: -340px !important;
->>>>>>> dev
             opacity: 0;
             pointer-events: none;
         }
@@ -453,13 +441,8 @@
         #settings-panel {
             position: fixed;
             top: calc(var(--topbar) + 10px);
-<<<<<<< HEAD
-            right: -320px;
-            width: 300px;
-=======
             right: -340px;
             width: 320px;
->>>>>>> dev
             background: var(--bg-bar);
             backdrop-filter: blur(16px);
             border: 1px solid var(--border);
@@ -503,11 +486,7 @@
             height: 34px;
             border-radius: var(--radius);
             cursor: pointer;
-<<<<<<< HEAD
-            font-size: 11.5px;
-=======
             font-size: 11px;
->>>>>>> dev
             display: flex;
             align-items: center;
             justify-content: center;
@@ -576,7 +555,7 @@
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 22px 24px;
-            width: min(450px, 94vw);
+            width: min(440px, 94vw);
             max-height: 80vh;
             overflow-y: auto;
         }
@@ -645,13 +624,58 @@
             display: none;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             color: #e74c3c;
             text-align: center;
             padding: 30px;
             font-size: 14px;
+            max-width: 580px;
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            border-radius: 12px;
             z-index: 50;
+            margin: auto;
         }
+
+        #error-detail {
+            font-size: 12px;
+            color: var(--text2);
+            word-break: break-all;
+            line-height: 1.5;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 14px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            max-width: 100%;
+        }
+
+        .error-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .error-btn {
+            background: #282828;
+            border: 1px solid var(--border);
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+            .error-btn:hover {
+                background: var(--accent);
+                border-color: var(--accent);
+            }
 
         @media (max-width: 768px) {
             #zone-prev, #zone-next {
@@ -681,41 +705,16 @@
 </head>
 <body>
 
-<<<<<<< HEAD
-    <!-- Moteur d'accentuation matérielle (GPU) zéro latence : rehausse le piqué du lettrage sans rééchantillonnage lourd -->
     <svg style="position:absolute; width:0; height:0; pointer-events:none;" aria-hidden="true">
         <defs>
-            <!-- Piqué Subtil : redessine les bords sans amplifier le bruit -->
-=======
-    <!-- Moteur d'accentuation matérielle (GPU) zéro latence -->
-    <svg style="position:absolute; width:0; height:0; pointer-events:none;" aria-hidden="true">
-        <defs>
->>>>>>> dev
             <filter id="sharpen-light" x="0%" y="0%" width="100%" height="100%">
-                <feConvolveMatrix order="3" preserveAlpha="true"
-                                  kernelMatrix="0 -0.18 0
-                                 -0.18 1.72 -0.18
-                                  0 -0.18 0" />
+                <feConvolveMatrix order="3" preserveAlpha="true" kernelMatrix="0 -0.18 0 -0.18 1.72 -0.18 0 -0.18 0" />
             </filter>
-<<<<<<< HEAD
-            <!-- Piqué Manga HD : standard optimal pour le lettrage de scantrad -->
-=======
->>>>>>> dev
             <filter id="sharpen-hd" x="0%" y="0%" width="100%" height="100%">
-                <feConvolveMatrix order="3" preserveAlpha="true"
-                                  kernelMatrix="0 -0.28 0
-                                 -0.28 2.12 -0.28
-                                  0 -0.28 0" />
+                <feConvolveMatrix order="3" preserveAlpha="true" kernelMatrix="0 -0.28 0 -0.28 2.12 -0.28 0 -0.28 0" />
             </filter>
-<<<<<<< HEAD
-            <!-- Piqué Tranchant : pour les petits textes ou écrans très denses -->
-=======
->>>>>>> dev
             <filter id="sharpen-ultra" x="0%" y="0%" width="100%" height="100%">
-                <feConvolveMatrix order="3" preserveAlpha="true"
-                                  kernelMatrix="-0.04 -0.32 -0.04
-                                  -0.32 2.44 -0.32
-                                  -0.04 -0.32 -0.04" />
+                <feConvolveMatrix order="3" preserveAlpha="true" kernelMatrix="-0.04 -0.32 -0.04 -0.32 2.44 -0.32 -0.04 -0.32 -0.04" />
             </filter>
         </defs>
     </svg>
@@ -734,15 +733,9 @@
         <div id="loader"></div>
 
         <div id="page-view">
-<<<<<<< HEAD
-            <div id="zone-prev"><div class="arrow">‹</div></div>
-            <canvas id="manga-canvas" class="sharp-hd" title="Double-cliquez pour zoomer à 100%"></canvas>
-            <div id="zone-next"><div class="arrow">›</div></div>
-=======
             <div id="zone-prev" title="Sens de lecture"><div class="arrow">‹</div></div>
             <canvas id="manga-canvas" class="sharp-hd" title="Double-cliquez pour zoomer à 100%"></canvas>
             <div id="zone-next" title="Sens de lecture"><div class="arrow">›</div></div>
->>>>>>> dev
         </div>
 
         <div id="scroll-view">
@@ -750,9 +743,10 @@
         </div>
 
         <div id="error-screen">
-            <div style="font-size:2em">⚠️</div>
-            <strong>Impossible de charger les données du manga.</strong>
-            <p id="error-detail"></p>
+            <div style="font-size:2.2em">⚠️</div>
+            <strong id="error-title">Échec du chargement de l'image</strong>
+            <p id="error-detail">Détail de l'erreur</p>
+            <div class="error-actions" id="error-actions"></div>
         </div>
     </div>
 
@@ -835,10 +829,7 @@
         let scrollMode = false;
         let fitMode = 'contain';
         let sharpnessMode = localStorage.getItem('manga_sharpness') || 'hd';
-<<<<<<< HEAD
-=======
-        let readingDirection = localStorage.getItem('manga_direction') || 'rtl'; // 'rtl' = Manga D ➔ G par défaut
->>>>>>> dev
+        let readingDirection = localStorage.getItem('manga_direction') || 'rtl';
         let isZoomed = false;
         let isTransitioning = false;
         let nextChapterPreloaded = null;
@@ -852,7 +843,9 @@
         const chapterSelect = document.getElementById('chapter-select');
         const loader = document.getElementById('loader');
         const errorScreen = document.getElementById('error-screen');
+        const errorTitle = document.getElementById('error-title');
         const errorDetail = document.getElementById('error-detail');
+        const errorActions = document.getElementById('error-actions');
         const transitionOverlay = document.getElementById('transition-overlay');
         const transitionText = document.getElementById('transition-text');
         const transitionSub = document.getElementById('transition-sub');
@@ -873,13 +866,7 @@
         const themeColor = '#' + (urlParams.get('color') || '3498db');
         document.documentElement.style.setProperty('--accent', themeColor);
 
-        function showError(msg) {
-        loader.style.display = 'none';
-        mangaCanvas.style.display = 'none';
-        errorScreen.style.display = 'flex';
-        errorDetail.innerText = msg;
-        }
-
+        /* Base de secours garantie 100% opérationnelle */
         const fallbackData = {
         "default": {
         "1": {
@@ -915,6 +902,34 @@
         }
         };
 
+        function showError(title, msg, failedUrl = null) {
+        loader.style.display = 'none';
+        mangaCanvas.style.display = 'none';
+        errorScreen.style.display = 'flex';
+        errorTitle.innerText = title;
+        errorDetail.innerText = msg;
+        errorActions.innerHTML = '';
+
+        if (failedUrl) {
+        const btnTest = document.createElement('a');
+        btnTest.className = 'error-btn';
+        btnTest.href = failedUrl;
+        btnTest.target = '_blank';
+        btnTest.innerText = '🔍 Tester le lien direct';
+        errorActions.appendChild(btnTest);
+        }
+
+        const btnRetry = document.createElement('button');
+        btnRetry.className = 'error-btn';
+        btnRetry.innerText = '🔄 Réessayer';
+        btnRetry.onclick = () => {
+        errorScreen.style.display = 'none';
+        mangaCanvas.style.display = 'block';
+        updatePageView();
+        };
+        errorActions.appendChild(btnRetry);
+        }
+
         function extractChapters(entry) {
         if (!entry) return {};
         if (entry.chapters && typeof entry.chapters === 'object' && !Array.isArray(entry.chapters)) {
@@ -939,8 +954,157 @@
         });
         }
 
+        function updateHelpModal(dir) {
+        const isRtl = dir === 'rtl';
+        const nextLabel = document.getElementById('help-next-label');
+        const nextKey = document.getElementById('help-next-key');
+        const nextAlt = document.getElementById('help-next-key-alt');
+        const prevLabel = document.getElementById('help-prev-label');
+        const prevKey = document.getElementById('help-prev-key');
+        const prevAlt = document.getElementById('help-prev-key-alt');
+        const nextChKey = document.getElementById('help-next-ch-key');
+        const prevChKey = document.getElementById('help-prev-ch-key');
+
+        if (isRtl) {
+        if (nextLabel) nextLabel.textContent = "Page suivante (Manga D ➔ G)";
+        if (nextKey) nextKey.textContent = "←";
+        if (nextAlt) nextAlt.textContent = "A";
+        if (prevLabel) prevLabel.textContent = "Page précédente (Manga D ➔ G)";
+        if (prevKey) prevKey.textContent = "→";
+        if (prevAlt) prevAlt.textContent = "D";
+        if (nextChKey) nextChKey.textContent = "Ctrl + ←";
+        if (prevChKey) prevChKey.textContent = "Ctrl + →";
+        } else {
+        if (nextLabel) nextLabel.textContent = "Page suivante (Standard G ➔ D)";
+        if (nextKey) nextKey.textContent = "→";
+        if (nextAlt) nextAlt.textContent = "D";
+        if (prevLabel) prevLabel.textContent = "Page précédente (Standard G ➔ D)";
+        if (prevKey) prevKey.textContent = "←";
+        if (prevAlt) prevAlt.textContent = "A";
+        if (nextChKey) nextChKey.textContent = "Ctrl + →";
+        if (prevChKey) prevChKey.textContent = "Ctrl + ←";
+        }
+        }
+
+        function applyDirection(dir) {
+        readingDirection = dir;
+        localStorage.setItem('manga_direction', dir);
+        document.getElementById('dir-rtl').classList.toggle('active', dir === 'rtl');
+        document.getElementById('dir-ltr').classList.toggle('active', dir === 'ltr');
+
+        if (dir === 'rtl') {
+        progressBarBg.classList.add('rtl');
+        } else {
+        progressBarBg.classList.remove('rtl');
+        }
+
+        const zoneLeft = document.getElementById('zone-prev');
+        const zoneRight = document.getElementById('zone-next');
+        if (dir === 'rtl') {
+        zoneLeft.title = "Page suivante (Gauche)";
+        zoneRight.title = "Page précédente (Droite)";
+        } else {
+        zoneLeft.title = "Page précédente (Gauche)";
+        zoneRight.title = "Page suivante (Droite)";
+        }
+
+        updateHelpModal(dir);
+        updateUI();
+        }
+
+        function applySharpnessMode(mode) {
+        sharpnessMode = mode;
+        localStorage.setItem('manga_sharpness', mode);
+
+        mangaCanvas.classList.remove('sharp-off', 'sharp-light', 'sharp-hd', 'sharp-ultra');
+        mangaCanvas.classList.add('sharp-' + mode);
+
+        scrollContent.classList.remove('sharp-off', 'sharp-light', 'sharp-hd', 'sharp-ultra');
+        scrollContent.classList.add('sharp-' + mode);
+
+        ['off', 'light', 'hd', 'ultra'].forEach(m => {
+        const btn = document.getElementById('sharp-' + m);
+        if (btn) btn.classList.toggle('active', m === mode);
+        });
+        }
+
+        function setupSelector() {
+        chapterSelect.innerHTML = '';
+        chapterKeys.forEach(ch => {
+        const opt = document.createElement('option');
+        opt.value = ch;
+        const chData = currentChapters[ch];
+        const t = (chData && chData.title) ? ' : ' + chData.title : '';
+        opt.textContent = 'Ch. ' + ch + t;
+        chapterSelect.appendChild(opt);
+        });
+        chapterSelect.onchange = e => loadChapter(e.target.value);
+        }
+
+        function updateNavButtons() {
+        const idx = chapterKeys.indexOf(currentChapterId);
+        const prevBtn = document.getElementById('btn-prev-ch');
+        const nextBtn = document.getElementById('btn-next-ch');
+        if (prevBtn) prevBtn.disabled = idx <= 0;
+        if (nextBtn) nextBtn.disabled = idx < 0 || idx >= chapterKeys.length - 1;
+        }
+
+        function preloadCurrentChapterWhole() {
+        currentPages.forEach(src => {
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.src = src;
+        });
+        }
+
+        function loadChapter(chId, startAtEnd = false, specificPage = null) {
+        const targetCh = String(chId);
+        if (!currentChapters[targetCh]) {
+        console.warn(`Chapitre ${targetCh} introuvable.`);
+        return;
+        }
+
+        currentChapterId = targetCh;
+        chapterSelect.value = currentChapterId;
+        breadcrumbCh.textContent = currentChapterId;
+
+        const chEntry = currentChapters[currentChapterId];
+        currentPages = Array.isArray(chEntry) ? chEntry : (chEntry.pages || []);
+
+        if (!currentPages || currentPages.length === 0) {
+        showError('Chapitre vide', `Le chapitre ${currentChapterId} ne contient aucune page.`);
+        return;
+        }
+
+        if (specificPage !== null && specificPage >= 0 && specificPage < currentPages.length) {
+        currentPage = specificPage;
+        } else {
+        currentPage = startAtEnd ? currentPages.length - 1 : 0;
+        }
+
+        try {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('ch', currentChapterId);
+        window.history.replaceState({}, '', currentUrl.toString());
+        } catch (e) {}
+
+        updateNavButtons();
+        preloadCurrentChapterWhole();
+
+        errorScreen.style.display = 'none';
+        mangaCanvas.style.display = 'block';
+
+        if (scrollMode) {
+        buildScrollMode();
+        } else {
+        exitZoom();
+        updatePageView();
+        }
+        }
+
         function initializeReader(data) {
-        const activeId = data[mangaId] ? mangaId : (data['kosmos-beta'] ? 'kosmos-beta' : Object.keys(data)[0]);
+        const validKeys = Object.keys(data).filter(k => !k.startsWith('_'));
+        const activeId = data[mangaId] ? mangaId : (data['kosmos-beta'] ? 'kosmos-beta' : (validKeys[0] || Object.keys(data)[0]));
         mangaData = data[activeId];
 
         const nameKey = activeId !== 'default' ? activeId : (mangaId !== 'default' ? mangaId : 'Kosmos Beta');
@@ -952,19 +1116,14 @@
         chapterKeys = sortChapterKeys(Object.keys(currentChapters));
 
         if (chapterKeys.length === 0) {
-        showError(`Aucun chapitre trouvé pour le projet "${activeId}".`);
+        showError('Aucun chapitre trouvé', `Aucun chapitre trouvé pour le projet "${activeId}".`);
         return;
         }
 
         setupSelector();
-        applySharpnessMode(sharpnessMode);
-<<<<<<< HEAD
-
-        // Priorité au paramètre URL (?ch=2 ou ?chapter=2), sinon sauvegarde locale
-=======
         applyDirection(readingDirection);
+        applySharpnessMode(sharpnessMode);
 
->>>>>>> dev
         const urlCh = urlParams.get('ch') || urlParams.get('chapter');
         let startCh = null;
         let startPg = 0;
@@ -980,7 +1139,7 @@
         startCh = parsed.chapter;
         startPg = parsed.page || 0;
         }
-        } catch(e) { console.error(e); }
+        } catch (e) { console.error(e); }
         }
         }
 
@@ -1004,11 +1163,11 @@
         }
 
         const candidateUrls = [
+        'static/manga-data.json',
+        '/static/manga-data.json',
         'manga-data.json',
         '/manga-data.json',
-        '../manga-data.json',
-        'static/manga-data.json',
-        '/static/manga-data.json'
+        '../manga-data.json'
         ];
 
         let loadedData = null;
@@ -1019,177 +1178,56 @@
         loadedData = await r.json();
         break;
         }
-        } catch(e) {}
+        } catch (e) {}
         }
 
         if (loadedData) {
-        if (!loadedData[mangaId] && !loadedData['default'] && !fallbackData[mangaId]) {
-        showError(`Projet "${mangaId}" introuvable dans manga-data.json.`);
-        return;
-        }
         initializeReader(loadedData);
         } else {
-        console.warn("manga-data.json inaccessible, repli sur fallbackData.");
+        console.warn("manga-data.json inaccessible ou contenant une syntaxe invalide, repli sur fallbackData.");
         initializeReader(fallbackData);
         }
         }
 
         loadDataSource();
 
-        function setupSelector() {
-        chapterSelect.innerHTML = '';
-        chapterKeys.forEach(ch => {
-        const opt = document.createElement('option');
-        opt.value = ch;
-        const chData = currentChapters[ch];
-        const t = (chData && chData.title) ? ' : ' + chData.title : '';
-        opt.textContent = 'Ch. ' + ch + t;
-        chapterSelect.appendChild(opt);
-        });
-        chapterSelect.onchange = e => loadChapter(e.target.value);
+        function getFailoverUrls(originalUrl) {
+        const urls = [originalUrl];
+        if (originalUrl.includes('cdn.jsdelivr.net/gh/')) {
+        // Secours 1 : Raw GitHub direct sur branche main
+        urls.push(originalUrl.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main', '/main'));
+        // Secours 2 : jsDelivr sur branche dev
+        urls.push(originalUrl.replace('@main', '@dev'));
+        // Secours 3 : Raw GitHub sur branche dev
+        urls.push(originalUrl.replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/').replace('@main', '/dev'));
+        } else if (originalUrl.includes('raw.githubusercontent.com/')) {
+        urls.push(originalUrl.replace('raw.githubusercontent.com/', 'cdn.jsdelivr.net/gh/').replace('/main/', '@main/'));
+        }
+        return [...new Set(urls)];
         }
 
-        function loadChapter(chId, startAtEnd = false, specificPage = null) {
-        const targetCh = String(chId);
-        if (!currentChapters[targetCh]) {
-        console.warn(`Chapitre ${targetCh} introuvable.`);
+        function loadRobustImage(srcList, onSuccess, onError, index = 0) {
+        if (index >= srcList.length) {
+        onError(srcList[0]);
         return;
         }
 
-        currentChapterId = targetCh;
-        chapterSelect.value = currentChapterId;
-        breadcrumbCh.textContent = currentChapterId;
+        const targetUrl = srcList[index];
+        const testImg = new Image();
+        testImg.crossOrigin = 'anonymous';
 
-        const chEntry = currentChapters[currentChapterId];
-        currentPages = Array.isArray(chEntry) ? chEntry : (chEntry.pages || []);
+        testImg.onload = () => {
+        onSuccess(testImg, targetUrl);
+        };
 
-        if (!currentPages || currentPages.length === 0) {
-        showError(`Le chapitre ${currentChapterId} ne contient aucune page.`);
-        return;
+        testImg.onerror = () => {
+        console.warn(`Échec de chargement : ${targetUrl}. Tentative avec la source de secours...`);
+        loadRobustImage(srcList, onSuccess, onError, index + 1);
+        };
+
+        testImg.src = targetUrl;
         }
 
-        if (specificPage !== null && specificPage >= 0 && specificPage < currentPages.length) {
-        currentPage = specificPage;
-        } else {
-        currentPage = startAtEnd ? currentPages.length - 1 : 0;
-        }
-
-        try {
-        const currentUrl = new URL(window.location.href);
-        currentUrl.searchParams.set('ch', currentChapterId);
-        window.history.replaceState({}, '', currentUrl.toString());
-        } catch(e) {}
-
-        updateNavButtons();
-        preloadCurrentChapterWhole();
-
-        if (scrollMode) {
-        buildScrollMode();
-        } else {
-        exitZoom();
-        updatePageView();
-        }
-        }
-
-        function updateNavButtons() {
-        const idx = chapterKeys.indexOf(currentChapterId);
-        const prevBtn = document.getElementById('btn-prev-ch');
-        const nextBtn = document.getElementById('btn-next-ch');
-        if (prevBtn) prevBtn.disabled = idx <= 0;
-        if (nextBtn) nextBtn.disabled = idx < 0 || idx >= chapterKeys.length - 1;
-        }
-
-        function preloadCurrentChapterWhole() {
-        currentPages.forEach(src => {
-        const img = new Image();
-        img.src = src;
-        });
-        }
-
-        function applySharpnessMode(mode) {
-        sharpnessMode = mode;
-        localStorage.setItem('manga_sharpness', mode);
-
-        mangaCanvas.classList.remove('sharp-off', 'sharp-light', 'sharp-hd', 'sharp-ultra');
-        mangaCanvas.classList.add('sharp-' + mode);
-
-        scrollContent.classList.remove('sharp-off', 'sharp-light', 'sharp-hd', 'sharp-ultra');
-        scrollContent.classList.add('sharp-' + mode);
-
-        ['off', 'light', 'hd', 'ultra'].forEach(m => {
-        const btn = document.getElementById('sharp-' + m);
-        if (btn) btn.classList.toggle('active', m === mode);
-        });
-        }
-
-<<<<<<< HEAD
-=======
-        /* ══ GESTION COMPLÈTE DU SENS DE LECTURE (RTL MANGA VS LTR STANDARD) ══ */
-        function applyDirection(dir) {
-        readingDirection = dir;
-        localStorage.setItem('manga_direction', dir);
-
-        const isRtl = dir === 'rtl';
-        document.getElementById('dir-rtl').classList.toggle('active', isRtl);
-        document.getElementById('dir-ltr').classList.toggle('active', !isRtl);
-
-        // Inversion physique de la barre de progression
-        if (isRtl) {
-        progressBarBg.classList.add('rtl');
-        } else {
-        progressBarBg.classList.remove('rtl');
-        }
-
-        // Adaptation des zones de clics latérales et infobulles
-        const zoneLeft = document.getElementById('zone-prev');
-        const zoneRight = document.getElementById('zone-next');
-
-        if (isRtl) {
-        // En Manga (RTL) : on tourne vers la gauche pour AVANCER
-        zoneLeft.title = "Page suivante (Gauche)";
-        zoneRight.title = "Page précédente (Droite)";
-        } else {
-        zoneLeft.title = "Page précédente (Gauche)";
-        zoneRight.title = "Page suivante (Droite)";
-        }
-
-        updateHelpModal();
-        updateUI();
-        }
-
-        function updateHelpModal() {
-        const isRtl = readingDirection === 'rtl';
-        const nextLbl = document.getElementById('help-next-label');
-        const prevLbl = document.getElementById('help-prev-label');
-        const nextK = document.getElementById('help-next-key');
-        const nextKA = document.getElementById('help-next-key-alt');
-        const prevK = document.getElementById('help-prev-key');
-        const prevKA = document.getElementById('help-prev-key-alt');
-        const nextChK = document.getElementById('help-next-ch-key');
-        const prevChK = document.getElementById('help-prev-ch-key');
-
-        if (isRtl) {
-        if (nextLbl) nextLbl.textContent = "Page suivante (Manga D ➔ G)";
-        if (prevLbl) prevLbl.textContent = "Page précédente (Manga D ➔ G)";
-        if (nextK) nextK.textContent = "←";
-        if (nextKA) nextKA.textContent = "A";
-        if (prevK) prevK.textContent = "→";
-        if (prevKA) prevKA.textContent = "D";
-        if (nextChK) nextChK.textContent = "Ctrl + ←";
-        if (prevChK) prevChK.textContent = "Ctrl + →";
-        } else {
-        if (nextLbl) nextLbl.textContent = "Page suivante (Standard G ➔ D)";
-        if (prevLbl) prevLbl.textContent = "Page précédente (Standard G ➔ D)";
-        if (nextK) nextK.textContent = "→";
-        if (nextKA) nextKA.textContent = "D";
-        if (prevK) prevK.textContent = "←";
-        if (prevKA) prevKA.textContent = "A";
-        if (nextChK) nextChK.textContent = "Ctrl + →";
-        if (prevChK) prevChK.textContent = "Ctrl + ←";
-        }
-        }
-
->>>>>>> dev
         function renderCurrentPageCanvas() {
         if (!currentLoadedImg || scrollMode) return;
 
@@ -1217,15 +1255,17 @@
         return;
         }
 
-        const availW = pageView.clientWidth;
-        const availH = pageView.clientHeight;
+        const availW = pageView.clientWidth || window.innerWidth;
+        const availH = pageView.clientHeight || window.innerHeight;
 
         let cssW, cssH;
+        const isWide = (natW / natH) > 1.2;
+        const maxW = isWide ? 1400 : 850;
 
         if (fitMode === 'width') {
         pageView.style.overflowY = 'auto';
         pageView.style.alignItems = 'flex-start';
-        cssW = Math.min(availW, 850);
+        cssW = Math.min(availW, maxW);
         cssH = cssW * (natH / natW);
         mangaCanvas.style.margin = '20px auto 60px auto';
         } else {
@@ -1252,22 +1292,33 @@
         }
 
         function updatePageView() {
+        if (!currentPages || currentPages.length === 0) return;
+
+        errorScreen.style.display = 'none';
+        mangaCanvas.style.display = 'block';
         loader.style.display = 'block';
         pageView.scrollTop = 0;
 
-        const img = new Image();
-        img.onload = () => {
-        currentLoadedImg = img;
+        const primaryUrl = currentPages[currentPage];
+        const failovers = getFailoverUrls(primaryUrl);
+
+        loadRobustImage(
+        failovers,
+        (loadedImg) => {
+        currentLoadedImg = loadedImg;
         renderCurrentPageCanvas();
         loader.style.display = 'none';
-        };
-        img.onerror = () => {
-        loader.style.display = 'none';
-        };
-        img.src = currentPages[currentPage];
-
         updateUI();
         preloadStrategy();
+        },
+        (failedUrl) => {
+        showError(
+        'Impossible de charger la planche',
+        `La page ${currentPage + 1} n'a pas pu être récupérée. Vérifiez que votre dépôt GitHub est bien en mode "Public" et que le nom du fichier est exact.`,
+        failedUrl
+        );
+        }
+        );
         }
 
         window.addEventListener('resize', () => {
@@ -1337,16 +1388,27 @@
         let loaded = 0;
         currentPages.forEach((src, idx) => {
         const img = document.createElement('img');
-        img.src = src;
+        img.crossOrigin = 'anonymous';
         img.alt = `Page ${idx + 1}`;
-        img.onload = img.onerror = () => {
+
+        const failovers = getFailoverUrls(src);
+        loadRobustImage(
+        failovers,
+        (loadedImg) => {
+        img.src = loadedImg.src;
         loaded++;
         if (loaded === currentPages.length) {
         loader.style.display = 'none';
         const imgs = scrollContent.querySelectorAll('img');
         if (imgs[currentPage]) imgs[currentPage].scrollIntoView({ behavior: 'auto' });
         }
-        };
+        },
+        () => {
+        img.alt = `[Erreur de chargement page ${idx + 1}]`;
+        loaded++;
+        if (loaded === currentPages.length) loader.style.display = 'none';
+        }
+        );
         scrollContent.appendChild(img);
         });
 
@@ -1397,6 +1459,7 @@
         for (let i = 0; i < 5; i++) {
         if (nextPages[i]) {
         const c = new Image();
+        c.crossOrigin = 'anonymous';
         c.src = nextPages[i];
         }
         }
@@ -1407,6 +1470,7 @@
         const total = currentPages.length;
         const cur = currentPage + 1;
         pageInfo.textContent = cur + ' / ' + total;
+
         const pct = total > 1 ? (currentPage / (total - 1)) * 100 : 100;
         progressFill.style.width = pct + '%';
 
@@ -1471,23 +1535,18 @@
         }
         }
 
-        /* ══ ACTIONS DES ZONES DE CLIC GAUCHE / DROITE RELIÉES AU SENS DE LECTURE ══ */
         function handleLeftZoneClick() {
         if (readingDirection === 'rtl') {
-        // En sens Manga (RTL), cliquer à gauche fait AVANCER vers la page suivante
         nextPage();
         } else {
-        // En standard (LTR), cliquer à gauche fait RECULER vers la page précédente
         prevPage();
         }
         }
 
         function handleRightZoneClick() {
         if (readingDirection === 'rtl') {
-        // En sens Manga (RTL), cliquer à droite fait RECULER vers la page précédente
         prevPage();
         } else {
-        // En standard (LTR), cliquer à droite fait AVANCER vers la page suivante
         nextPage();
         }
         }
@@ -1525,16 +1584,14 @@
         }, 600);
         }
 
-        /* ══ BARRE DE PROGRESSION AVEC SUPPORT INVERSÉ (RTL) ══ */
         function updatePageFromProgress(clientX) {
         const rect = progressWrap.getBoundingClientRect();
         let pct = (clientX - rect.left) / rect.width;
         pct = Math.max(0, Math.min(1, pct));
 
-        // En RTL, la page 1 commence tout à droite (pct = 1) et se termine tout à gauche (pct = 0)
         const effectivePct = (readingDirection === 'rtl') ? (1 - pct) : pct;
-
         const targetPage = Math.round(effectivePct * (currentPages.length - 1));
+
         if (targetPage !== currentPage) {
         currentPage = targetPage;
         if (!scrollMode) {
@@ -1593,13 +1650,6 @@
         }
         });
 
-<<<<<<< HEAD
-        document.getElementById('zone-prev').addEventListener('click', prevPage);
-        document.getElementById('zone-next').addEventListener('click', nextPage);
-        document.getElementById('btn-prev-ch').addEventListener('click', goToPrevChapter);
-        document.getElementById('btn-next-ch').addEventListener('click', goToNextChapter);
-
-=======
         document.getElementById('zone-prev').addEventListener('click', handleLeftZoneClick);
         document.getElementById('zone-next').addEventListener('click', handleRightZoneClick);
         document.getElementById('btn-prev-ch').addEventListener('click', goToPrevChapter);
@@ -1608,7 +1658,6 @@
         document.getElementById('dir-rtl').addEventListener('click', () => applyDirection('rtl'));
         document.getElementById('dir-ltr').addEventListener('click', () => applyDirection('ltr'));
 
->>>>>>> dev
         document.getElementById('mode-page').addEventListener('click', () => {
         if (scrollMode) setScrollMode(false);
         });
@@ -1760,13 +1809,11 @@
         if (e.target === document.getElementById('help-modal')) document.getElementById('help-modal').classList.remove('open');
         });
 
-        /* ══ NAVIGATION AU CLAVIER COHÉRENTE AVEC LE SENS DE LECTURE ══ */
         document.addEventListener('keydown', e => {
         if (e.target.tagName === 'SELECT') return;
 
         const isRtl = readingDirection === 'rtl';
 
-        // Touches Droite / D : Page précédente en Manga (RTL), Page suivante en Standard (LTR)
         if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
         if (isRtl) {
         if (e.ctrlKey || e.metaKey) goToPrevChapter();
@@ -1777,7 +1824,6 @@
         }
         }
 
-        // Touches Gauche / A / Q : Page suivante en Manga (RTL), Page précédente en Standard (LTR)
         if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A' || e.key === 'q' || e.key === 'Q') {
         if (isRtl) {
         if (e.ctrlKey || e.metaKey) goToNextChapter();
