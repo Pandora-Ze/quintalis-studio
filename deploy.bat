@@ -17,6 +17,7 @@ echo.
 echo   [1] Basculer sur DEV  - Espace de travail et tests
 echo   [2] Basculer sur MAIN - Espace stable et site officiel
 echo   [7] Repasser de DEV vers MAIN - Retour rapide sans publier
+echo   [8] Mettre a jour DEV avec MAIN - Evite les divergences
 echo.
 echo   [3] Envoyer les modifs en ligne sur %CURRENT_BRANCH%
 echo   [4] Fusionner DEV vers MAIN - Publier tout le chantier
@@ -25,7 +26,7 @@ echo   [6] Quitter
 echo.
 echo =======================================================
 set "choix="
-set /p choix="Fais ton choix [1-7] : "
+set /p choix="Fais ton choix [1-8] : "
 
 if "%choix%"=="1" goto switch_dev
 if "%choix%"=="2" goto switch_main
@@ -33,6 +34,7 @@ if "%choix%"=="3" goto push_current
 if "%choix%"=="4" goto merge_all
 if "%choix%"=="5" goto run_local
 if "%choix%"=="7" goto dev_to_main
+if "%choix%"=="8" goto sync_dev
 if "%choix%"=="6" goto fin
 goto menu
 
@@ -249,6 +251,79 @@ goto menu
 echo [!] Tu n'es pas sur DEV actuellement.
 echo     Branche active : %CURRENT_BRANCH%
 echo     Cette option est prevue uniquement pour revenir de DEV vers MAIN.
+pause
+goto menu
+
+:sync_dev
+cls
+echo =======================================================
+echo   MISE A JOUR DE DEV AVEC MAIN
+echo =======================================================
+echo.
+echo Ceci recupere les derniers changements de MAIN et les
+echo fusionne dans DEV, pour eviter que les deux branches
+echo divergent trop l'une de l'autre.
+echo.
+
+echo [+] [1/5] Sauvegarde du travail en cours sur %CURRENT_BRANCH%...
+git add -A
+git diff-index --quiet HEAD || git commit -m "[AUTO-SAVE] Avant synchronisation DEV avec MAIN"
+
+echo.
+echo [+] [2/5] Bascule sur MAIN et synchronisation avec GitHub...
+git checkout main
+if errorlevel 1 goto err_sync_main
+git pull origin main
+
+echo.
+echo [+] [3/5] Bascule sur DEV...
+git checkout dev
+if errorlevel 1 goto err_sync_dev
+
+echo.
+echo [+] [4/5] Fusion de MAIN dans DEV...
+git merge main --no-edit
+if errorlevel 1 goto err_sync_merge
+
+echo.
+echo [+] [5/5] Envoi de DEV mis a jour vers GitHub...
+git push origin dev
+if errorlevel 1 goto err_sync_push
+
+echo.
+echo =======================================================
+echo   SUCCES ! DEV est maintenant a jour avec MAIN.
+echo =======================================================
+pause
+goto menu
+
+:err_sync_main
+echo.
+echo [!] ERREUR : Impossible de basculer sur MAIN.
+pause
+goto menu
+
+:err_sync_dev
+echo.
+echo [!] ERREUR : Impossible de basculer sur DEV.
+pause
+goto menu
+
+:err_sync_merge
+echo.
+echo =======================================================
+echo [!] CONFLIT DE FUSION DETECTE PAR GIT !
+echo =======================================================
+echo Des fichiers ont ete modifies differemment sur DEV et MAIN.
+echo Fais 'git status' pour voir les fichiers en conflit.
+echo Pour annuler et revenir en arriere, tape : git merge --abort
+echo =======================================================
+pause
+goto menu
+
+:err_sync_push
+echo.
+echo [!] ERREUR : L'envoi de DEV vers GitHub a echoue.
 pause
 goto menu
 
