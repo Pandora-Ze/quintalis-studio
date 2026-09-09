@@ -27,12 +27,12 @@ echo =======================================================
 set "choix="
 set /p choix="Fais ton choix [1-7] : "
 
-if "%choix%""1" goto switch_dev
-if "%choix%""2" goto switch_main
-if "%choix%""3" goto push_current
-if "%choix%""4" goto merge_all
-if "%choix%""5" goto run_local
-if "%choix%""7" goto dev_to_main
+if "%choix%"=="1" goto switch_dev
+if "%choix%"=="2" goto switch_main
+if "%choix%"=="3" goto push_current
+if "%choix%"=="4" goto merge_all
+if "%choix%"=="5" goto run_local
+if "%choix%"=="7" goto dev_to_main
 if "%choix%"=="6" goto fin
 goto menu
 
@@ -80,7 +80,7 @@ echo.
 git add -A
 set "msg="
 set /p msg="Message de commit (ou Entree pour message auto) : "
-if "%msg%""" set msg=Mise a jour sur %CURRENT_BRANCH%
+if "%msg%"=="" set msg=Mise a jour sur %CURRENT_BRANCH%
 git commit -m "%msg%"
 echo.
 echo [+] Envoi vers GitHub (origin %CURRENT_BRANCH%)...
@@ -88,7 +88,7 @@ git push origin %CURRENT_BRANCH%
 if errorlevel 1 goto err_push_current
 echo.
 echo =======================================================
-if "%CURRENT_BRANCH%""main" goto msg_push_main
+if "%CURRENT_BRANCH%"=="main" goto msg_push_main
 echo   Site de test mis a jour : https://dev.quintalis-studio.pages.dev
 goto push_done
 
