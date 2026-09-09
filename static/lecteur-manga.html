@@ -112,14 +112,14 @@
                 cursor: zoom-out;
                 margin: 0 !important;
                 padding: 20px !important;
-                filter: none !important; /* Zoom 1:1 déjà net à 100% natif */
+                filter: none !important;
             }
 
         #zone-prev, #zone-next {
             position: absolute;
             top: 0;
             bottom: 0;
-            width: 25%;
+            width: 30%;
             z-index: 25;
             cursor: pointer;
         }
@@ -255,7 +255,7 @@
         }
 
         body.idle #settings-panel {
-            right: -320px !important;
+            right: -340px !important;
             opacity: 0;
             pointer-events: none;
         }
@@ -399,11 +399,21 @@
         }
 
         #progress-bar-fill {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
             height: 100%;
             background: var(--accent);
             border-radius: 99px;
             transition: width 0.08s ease;
             pointer-events: none;
+        }
+
+        /* Inversion RTL Manga : la barre se remplit de droite à gauche */
+        #progress-bar-bg.rtl #progress-bar-fill {
+            left: auto;
+            right: 0;
         }
 
         #progress-tooltip {
@@ -435,8 +445,8 @@
         #settings-panel {
             position: fixed;
             top: calc(var(--topbar) + 10px);
-            right: -320px;
-            width: 300px;
+            right: -340px;
+            width: 320px;
             background: var(--bg-bar);
             backdrop-filter: blur(16px);
             border: 1px solid var(--border);
@@ -480,7 +490,7 @@
             height: 34px;
             border-radius: var(--radius);
             cursor: pointer;
-            font-size: 11.5px;
+            font-size: 11px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -549,7 +559,7 @@
             border: 1px solid var(--border);
             border-radius: 10px;
             padding: 22px 24px;
-            width: min(420px, 92vw);
+            width: min(450px, 94vw);
             max-height: 80vh;
             overflow-y: auto;
         }
@@ -654,24 +664,21 @@
 </head>
 <body>
 
-    <!-- Moteur d'accentuation matérielle (GPU) zéro latence : rehausse le piqué du lettrage sans rééchantillonnage lourd -->
+    <!-- Moteur d'accentuation matérielle (GPU) zéro latence -->
     <svg style="position:absolute; width:0; height:0; pointer-events:none;" aria-hidden="true">
         <defs>
-            <!-- Piqué Subtil : redessine les bords sans amplifier le bruit -->
             <filter id="sharpen-light" x="0%" y="0%" width="100%" height="100%">
                 <feConvolveMatrix order="3" preserveAlpha="true"
                                   kernelMatrix="0 -0.18 0
                                  -0.18 1.72 -0.18
                                   0 -0.18 0" />
             </filter>
-            <!-- Piqué Manga HD : standard optimal pour le lettrage de scantrad -->
             <filter id="sharpen-hd" x="0%" y="0%" width="100%" height="100%">
                 <feConvolveMatrix order="3" preserveAlpha="true"
                                   kernelMatrix="0 -0.28 0
                                  -0.28 2.12 -0.28
                                   0 -0.28 0" />
             </filter>
-            <!-- Piqué Tranchant : pour les petits textes ou écrans très denses -->
             <filter id="sharpen-ultra" x="0%" y="0%" width="100%" height="100%">
                 <feConvolveMatrix order="3" preserveAlpha="true"
                                   kernelMatrix="-0.04 -0.32 -0.04
@@ -695,9 +702,9 @@
         <div id="loader"></div>
 
         <div id="page-view">
-            <div id="zone-prev"><div class="arrow">‹</div></div>
+            <div id="zone-prev" title="Sens de lecture"><div class="arrow">‹</div></div>
             <canvas id="manga-canvas" class="sharp-hd" title="Double-cliquez pour zoomer à 100%"></canvas>
-            <div id="zone-next"><div class="arrow">›</div></div>
+            <div id="zone-next" title="Sens de lecture"><div class="arrow">›</div></div>
         </div>
 
         <div id="scroll-view">
@@ -715,7 +722,7 @@
         <button class="nav-btn" id="btn-prev-ch" title="Chapitre précédent">‹ <span>Préc.</span></button>
         <select id="chapter-select"></select>
         <div id="progress-wrap">
-            <div id="progress-bar-bg">
+            <div id="progress-bar-bg" class="rtl">
                 <div id="progress-bar-fill" style="width:0%"></div>
             </div>
             <div id="progress-tooltip">1 / 1</div>
@@ -725,6 +732,13 @@
     </footer>
 
     <aside id="settings-panel">
+        <div class="setting-group">
+            <div class="setting-label">Sens de lecture</div>
+            <div class="toggle-row">
+                <button class="toggle-btn active" id="dir-rtl" title="Sens traditionnel japonais (droite vers gauche)">🇯🇵 Manga (D ➔ G)</button>
+                <button class="toggle-btn" id="dir-ltr" title="Sens occidental standard (gauche vers droite)">🌐 Standard (G ➔ D)</button>
+            </div>
+        </div>
         <div class="setting-group">
             <div class="setting-label">Mode d'affichage</div>
             <div class="toggle-row">
@@ -759,14 +773,14 @@
     <div id="help-modal">
         <div id="help-box">
             <h3>🎮 Raccourcis clavier</h3>
-            <div class="shortcut-row"><span>Page suivante</span><kbd>→</kbd> ou <kbd>D</kbd></div>
-            <div class="shortcut-row"><span>Page précédente</span><kbd>←</kbd> ou <kbd>A</kbd></div>
+            <div class="shortcut-row"><span id="help-next-label">Page suivante (Manga)</span><kbd id="help-next-key">←</kbd> ou <kbd id="help-next-key-alt">A</kbd></div>
+            <div class="shortcut-row"><span id="help-prev-label">Page précédente (Manga)</span><kbd id="help-prev-key">→</kbd> ou <kbd id="help-prev-key-alt">D</kbd></div>
             <div class="shortcut-row"><span>Défilement vertical</span><kbd>↑</kbd> ou <kbd>↓</kbd></div>
             <div class="shortcut-row"><span>Zoom 100% natif</span><kbd>Z</kbd> ou Double-clic</div>
             <div class="shortcut-row"><span>Mode Défilement</span><kbd>W</kbd></div>
             <div class="shortcut-row"><span>Plein écran total</span><kbd>F</kbd></div>
-            <div class="shortcut-row"><span>Chapitre suivant</span><kbd>Ctrl</kbd> + <kbd>→</kbd></div>
-            <div class="shortcut-row"><span>Chapitre précédent</span><kbd>Ctrl</kbd> + <kbd>←</kbd></div>
+            <div class="shortcut-row"><span id="help-next-ch-label">Chapitre suivant</span><kbd id="help-next-ch-key">Ctrl + ←</kbd></div>
+            <div class="shortcut-row"><span id="help-prev-ch-label">Chapitre précédent</span><kbd id="help-prev-ch-key">Ctrl + →</kbd></div>
             <div class="shortcut-row"><span>Paramètres</span><kbd>S</kbd></div>
             <div class="shortcut-row"><span>Fermer / Sortir</span><kbd>Échap</kbd></div>
             <button id="help-close">Fermer</button>
@@ -783,6 +797,7 @@
         let scrollMode = false;
         let fitMode = 'contain';
         let sharpnessMode = localStorage.getItem('manga_sharpness') || 'hd';
+        let readingDirection = localStorage.getItem('manga_direction') || 'rtl'; // 'rtl' = Manga D ➔ G par défaut
         let isZoomed = false;
         let isTransitioning = false;
         let nextChapterPreloaded = null;
@@ -803,6 +818,7 @@
         const progressFill = document.getElementById('progress-bar-fill');
         const progressTooltip = document.getElementById('progress-tooltip');
         const progressWrap = document.getElementById('progress-wrap');
+        const progressBarBg = document.getElementById('progress-bar-bg');
         const scrollView = document.getElementById('scroll-view');
         const scrollContent = document.getElementById('scroll-content');
         const pageView = document.getElementById('page-view');
@@ -901,8 +917,8 @@
 
         setupSelector();
         applySharpnessMode(sharpnessMode);
+        applyDirection(readingDirection);
 
-        // Priorité au paramètre URL (?ch=2 ou ?chapter=2), sinon sauvegarde locale
         const urlCh = urlParams.get('ch') || urlParams.get('chapter');
         let startCh = null;
         let startPg = 0;
@@ -1058,6 +1074,71 @@
         const btn = document.getElementById('sharp-' + m);
         if (btn) btn.classList.toggle('active', m === mode);
         });
+        }
+
+        /* ══ GESTION COMPLÈTE DU SENS DE LECTURE (RTL MANGA VS LTR STANDARD) ══ */
+        function applyDirection(dir) {
+        readingDirection = dir;
+        localStorage.setItem('manga_direction', dir);
+
+        const isRtl = dir === 'rtl';
+        document.getElementById('dir-rtl').classList.toggle('active', isRtl);
+        document.getElementById('dir-ltr').classList.toggle('active', !isRtl);
+
+        // Inversion physique de la barre de progression
+        if (isRtl) {
+        progressBarBg.classList.add('rtl');
+        } else {
+        progressBarBg.classList.remove('rtl');
+        }
+
+        // Adaptation des zones de clics latérales et infobulles
+        const zoneLeft = document.getElementById('zone-prev');
+        const zoneRight = document.getElementById('zone-next');
+
+        if (isRtl) {
+        // En Manga (RTL) : on tourne vers la gauche pour AVANCER
+        zoneLeft.title = "Page suivante (Gauche)";
+        zoneRight.title = "Page précédente (Droite)";
+        } else {
+        zoneLeft.title = "Page précédente (Gauche)";
+        zoneRight.title = "Page suivante (Droite)";
+        }
+
+        updateHelpModal();
+        updateUI();
+        }
+
+        function updateHelpModal() {
+        const isRtl = readingDirection === 'rtl';
+        const nextLbl = document.getElementById('help-next-label');
+        const prevLbl = document.getElementById('help-prev-label');
+        const nextK = document.getElementById('help-next-key');
+        const nextKA = document.getElementById('help-next-key-alt');
+        const prevK = document.getElementById('help-prev-key');
+        const prevKA = document.getElementById('help-prev-key-alt');
+        const nextChK = document.getElementById('help-next-ch-key');
+        const prevChK = document.getElementById('help-prev-ch-key');
+
+        if (isRtl) {
+        if (nextLbl) nextLbl.textContent = "Page suivante (Manga D ➔ G)";
+        if (prevLbl) prevLbl.textContent = "Page précédente (Manga D ➔ G)";
+        if (nextK) nextK.textContent = "←";
+        if (nextKA) nextKA.textContent = "A";
+        if (prevK) prevK.textContent = "→";
+        if (prevKA) prevKA.textContent = "D";
+        if (nextChK) nextChK.textContent = "Ctrl + ←";
+        if (prevChK) prevChK.textContent = "Ctrl + →";
+        } else {
+        if (nextLbl) nextLbl.textContent = "Page suivante (Standard G ➔ D)";
+        if (prevLbl) prevLbl.textContent = "Page précédente (Standard G ➔ D)";
+        if (nextK) nextK.textContent = "→";
+        if (nextKA) nextKA.textContent = "D";
+        if (prevK) prevK.textContent = "←";
+        if (prevKA) prevKA.textContent = "A";
+        if (nextChK) nextChK.textContent = "Ctrl + →";
+        if (prevChK) prevChK.textContent = "Ctrl + ←";
+        }
         }
 
         function renderCurrentPageCanvas() {
@@ -1341,6 +1422,27 @@
         }
         }
 
+        /* ══ ACTIONS DES ZONES DE CLIC GAUCHE / DROITE RELIÉES AU SENS DE LECTURE ══ */
+        function handleLeftZoneClick() {
+        if (readingDirection === 'rtl') {
+        // En sens Manga (RTL), cliquer à gauche fait AVANCER vers la page suivante
+        nextPage();
+        } else {
+        // En standard (LTR), cliquer à gauche fait RECULER vers la page précédente
+        prevPage();
+        }
+        }
+
+        function handleRightZoneClick() {
+        if (readingDirection === 'rtl') {
+        // En sens Manga (RTL), cliquer à droite fait RECULER vers la page précédente
+        prevPage();
+        } else {
+        // En standard (LTR), cliquer à droite fait AVANCER vers la page suivante
+        nextPage();
+        }
+        }
+
         function goToNextChapter() {
         const idx = chapterKeys.indexOf(currentChapterId);
         if (idx < 0 || idx >= chapterKeys.length - 1) return;
@@ -1374,12 +1476,16 @@
         }, 600);
         }
 
+        /* ══ BARRE DE PROGRESSION AVEC SUPPORT INVERSÉ (RTL) ══ */
         function updatePageFromProgress(clientX) {
         const rect = progressWrap.getBoundingClientRect();
         let pct = (clientX - rect.left) / rect.width;
         pct = Math.max(0, Math.min(1, pct));
 
-        const targetPage = Math.round(pct * (currentPages.length - 1));
+        // En RTL, la page 1 commence tout à droite (pct = 1) et se termine tout à gauche (pct = 0)
+        const effectivePct = (readingDirection === 'rtl') ? (1 - pct) : pct;
+
+        const targetPage = Math.round(effectivePct * (currentPages.length - 1));
         if (targetPage !== currentPage) {
         currentPage = targetPage;
         if (!scrollMode) {
@@ -1402,7 +1508,8 @@
         let pct = (clientX - rect.left) / rect.width;
         pct = Math.max(0, Math.min(1, pct));
 
-        const pg = Math.round(pct * (currentPages.length - 1)) + 1;
+        const effectivePct = (readingDirection === 'rtl') ? (1 - pct) : pct;
+        const pg = Math.round(effectivePct * (currentPages.length - 1)) + 1;
         progressTooltip.textContent = pg + ' / ' + currentPages.length;
 
         const tooltipX = Math.max(0, Math.min(rect.width, clientX - rect.left));
@@ -1437,10 +1544,13 @@
         }
         });
 
-        document.getElementById('zone-prev').addEventListener('click', prevPage);
-        document.getElementById('zone-next').addEventListener('click', nextPage);
+        document.getElementById('zone-prev').addEventListener('click', handleLeftZoneClick);
+        document.getElementById('zone-next').addEventListener('click', handleRightZoneClick);
         document.getElementById('btn-prev-ch').addEventListener('click', goToPrevChapter);
         document.getElementById('btn-next-ch').addEventListener('click', goToNextChapter);
+
+        document.getElementById('dir-rtl').addEventListener('click', () => applyDirection('rtl'));
+        document.getElementById('dir-ltr').addEventListener('click', () => applyDirection('ltr'));
 
         document.getElementById('mode-page').addEventListener('click', () => {
         if (scrollMode) setScrollMode(false);
@@ -1593,16 +1703,32 @@
         if (e.target === document.getElementById('help-modal')) document.getElementById('help-modal').classList.remove('open');
         });
 
+        /* ══ NAVIGATION AU CLAVIER COHÉRENTE AVEC LE SENS DE LECTURE ══ */
         document.addEventListener('keydown', e => {
         if (e.target.tagName === 'SELECT') return;
 
+        const isRtl = readingDirection === 'rtl';
+
+        // Touches Droite / D : Page précédente en Manga (RTL), Page suivante en Standard (LTR)
         if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        if (isRtl) {
+        if (e.ctrlKey || e.metaKey) goToPrevChapter();
+        else prevPage();
+        } else {
         if (e.ctrlKey || e.metaKey) goToNextChapter();
         else nextPage();
         }
-        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        }
+
+        // Touches Gauche / A / Q : Page suivante en Manga (RTL), Page précédente en Standard (LTR)
+        if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A' || e.key === 'q' || e.key === 'Q') {
+        if (isRtl) {
+        if (e.ctrlKey || e.metaKey) goToNextChapter();
+        else nextPage();
+        } else {
         if (e.ctrlKey || e.metaKey) goToPrevChapter();
         else prevPage();
+        }
         }
 
         const targetScrollEl = scrollMode ? scrollView : (fitMode === 'width' ? pageView : null);
