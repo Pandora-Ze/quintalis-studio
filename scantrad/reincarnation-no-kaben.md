@@ -2,7 +2,7 @@
 label: TRADUCTION
 title: "Reincarnation no Kaben"
 image: /static/affiche-reincarnation-no-kaben.webp
-description: "Découvrez la version française de Reincarnation no Kaben. Plongez dans la lutte impitoyable des réincarnés et des génies du passé. Une traduction signée Quintalis STUDIO."
+description: "Découvrez la version française de Reincarnation no Kaben. Plongez dans l'univers impitoyable des réincarnés. Une traduction signée Quintalis STUDIO."
 visibility: hidden
 ---
 
@@ -34,8 +34,7 @@ visibility: hidden
     <ul style="line-height: 1.8; margin-bottom: 30px; padding-left: 20px;">
       <li><strong>Auteur / Dessinateur :</strong> Konishi Mikihisa</li>
       <li><strong>Traduction :</strong> Quintalis STUDIO</li>
-      <li><strong>Genre :</strong> Action, Surnaturel, Mystère, Shônen</li>
-      <li><strong>Thèmes :</strong> Réincarnation, Talents passés, Combats</li>
+      <li><strong>Genre :</strong> Shonen, Action, Mystère, Surnaturel</li>
     </ul>
     
     <h2 style="margin-top: 0; margin-bottom: 15px; font-size: 1.5rem; font-weight: 700; color: #e74c3c;">Synopsis</h2>
@@ -53,7 +52,9 @@ visibility: hidden
     </p>
     
   </div>
-</div>---
+</div>
+
+---
 
 ### Zone de Lecture
 
