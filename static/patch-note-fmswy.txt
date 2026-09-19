@@ -571,3 +571,5 @@ Version 1.3 :
 		- Remplacement d'un mot répété + ajout d'un point d'interrogation (ca02_15)
 
 		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca02_15)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca02_16)
