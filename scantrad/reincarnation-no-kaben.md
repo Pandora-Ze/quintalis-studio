@@ -60,3 +60,4 @@ visibility: hidden
 
 <div style="width: 100%; height: 85vh; overflow: hidden; border: 2px solid #e74c3c; border-radius: 8px; background: #000; margin-top: 1rem;">
 <iframe src="/static/lecteur-manga.html?id=reincarnation-no-kaben&color=e74c3c" width="100%" height="590px" style="border:none; user-select:none; -webkit-user-select:none; -webkit-tap-highlight-color:transparent;" allowfullscreen></iframe>
+</div>

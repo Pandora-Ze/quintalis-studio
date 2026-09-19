@@ -952,10 +952,45 @@
         window.location.href.startsWith('blob:');
 
         async function loadDataSource() {
-        if (isBlobOrLocal) {
+    if (isBlobOrLocal) {
         initializeReader(fallbackData);
         return;
+    }
+
+    // Le cache-buster ?t= force le navigateur à récupérer la version fraîche
+    const cacheBuster = '?t=' + Date.now();
+    const candidateUrls = [
+        'manga-data.json' + cacheBuster,
+        '/manga-data.json' + cacheBuster,
+        '../manga-data.json' + cacheBuster,
+        'static/manga-data.json' + cacheBuster,
+        '/static/manga-data.json' + cacheBuster
+    ];
+
+    let loadedData = null;
+    for (const u of candidateUrls) {
+        try {
+            const r = await fetch(u, { cache: 'no-store' });
+            if (r.ok) {
+                loadedData = await r.json();
+                break;
+            }
+        } catch(e) {
+            console.error("Erreur de parsing JSON sur", u, e);
         }
+    }
+
+    if (loadedData) {
+        if (!loadedData[mangaId] && !loadedData['default'] && !fallbackData[mangaId]) {
+            showError(`Projet "${mangaId}" introuvable dans manga-data.json.`);
+            return;
+        }
+        initializeReader(loadedData);
+    } else {
+        console.warn("manga-data.json inaccessible ou invalide, repli sur fallbackData.");
+        initializeReader(fallbackData);
+    }
+}
 
         const candidateUrls = [
         'manga-data.json',
