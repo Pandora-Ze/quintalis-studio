@@ -11,9 +11,13 @@ icon: eye
     }
   }
 
-  /* Recadrage ciblé sur la couverture */
+  /* Recadrage ciblé sur les couvertures */
   a[href*="kosmos-beta"] img {
     object-position: 50% 15% !important;
+  }
+
+  a[href*="reincarnation-no-kaben"] img {
+    object-position: 50% 10% !important;
   }
 </style>
 
