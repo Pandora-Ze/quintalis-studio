@@ -2,7 +2,7 @@
 label: TRADUCTION
 title: "Reincarnation no Kaben"
 image: /static/affiche-reincarnation-no-kaben.webp
-description: "Découvrez la version française de Reincarnation no Kaben. Plongez dans l'univers impitoyable des réincarnés. Une traduction signée Quintalis STUDIO."
+description: "Découvrez la version française de Reincarnation no Kaben, et plongez dans l'univers impitoyable des réincarnés. Une traduction signée Quintalis STUDIO."
 visibility: hidden
 ---
 
