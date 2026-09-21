@@ -11,9 +11,13 @@ icon: eye
     }
   }
 
-  /* Recadrage ciblé sur la couverture de Kosmos Beta */
+  /* Recadrage ciblé sur les couvertures */
   a[href*="kosmos-beta"] img {
     object-position: 50% 15% !important;
+  }
+
+  a[href*="reincarnation-no-kaben"] img {
+    object-position: 50% 10% !important;
   }
 </style>
 
@@ -25,4 +29,5 @@ Choisissez une série ci-dessous pour accéder à tous ses chapitres.
 
 :::grid {cols=2 gap=6}
 [!card vert](kosmos-beta.md)
+[!card vert](reincarnation-no-kaben.md)
 :::
