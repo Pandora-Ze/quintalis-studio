@@ -46,7 +46,7 @@ layout: page
 Plongez dès maintenant dans notre toute nouvelle série. 
 Le premier chapitre de **Reincarnation no Kaben** est disponible en version française intégrale !
 
-[!button variant="danger" text="Accéder à la lecture" icon="book-open"](scantrad/reincarnation-no-kaben/)
+[!button variant="danger" text="Accéder à la lecture" icon="repo"](scantrad/reincarnation-no-kaben/)
 :::
 
 ---
