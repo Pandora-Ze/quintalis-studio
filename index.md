@@ -43,9 +43,9 @@ layout: page
 ### À la une
 
 ::: success [Nouveauté] Reincarnation no Kaben (Chapitre 1)
-Le premier chapitre traduit du manga Reincarnation no Kaben est enfin disponible.
-
-[!button variant="danger" text="Accéder aux téléchargements" icon="download"](scantrad/reincarnation-no-kaben/)
+Plongez dès maintenant dans notre toute nouvelle série. 
+Le premier chapitre de **Reincarnation no Kaben** est disponible en version française intégrale !
+[!button variant="danger" text="Accéder à la lecture" icon="download"](scantrad/reincarnation-no-kaben/)
 :::
 
 ---
@@ -71,7 +71,7 @@ Le premier chapitre traduit du manga Reincarnation no Kaben est enfin disponible
 | **TQQ : Honeymoon** | Fansub | [!badge variant="success" text="Terminé"] | 100% |
 | **Kirio Fanclub** | Fansub | [!badge variant="success" text="Terminé"] | 100% |
 | **Petals of Reincarnation** | Fansub | [!badge variant="success" text="Terminé"] | 100% |
-| **Marika's Love Meter** | Fansub | [!badge variant="info" text="En cours"] | 12% |
+| **Marika's Love Meter** | Fansub | [!badge variant="danger" text="Abandonné"] | \ |
 | **Kosmos Beta** | Scantrad | [!badge variant="info" text="En cours"] | 12% |
 | **Reincarnation no Kaben** | Scantrad | [!badge variant="info" text="En cours"] | 0.88% |
 :::
