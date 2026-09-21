@@ -42,11 +42,10 @@ layout: page
 
 ### À la une
 
-::: success [Nouveauté] Patch Gotokisu (v1.2)
-La traduction française (quasi) intégrale du jeu The Quintessential Quintuplets : Five Memories Spent With You est enfin disponible ! 
-C'est le moment de retrouver les quintuplées en version française.
+::: success [Nouveauté] Reincarnation no Kaben (Chapitre 1)
+Le premier chapitre traduit du manga Reincarnation no Kaben est enfin disponible.
 
-[!button variant="danger" text="Accéder aux téléchargements" icon="download"](jeux-video/téléchargements)
+[!button variant="danger" text="Accéder aux téléchargements" icon="download"](scantrad/reincarnation-no-kaben/)
 :::
 
 ---
@@ -74,6 +73,7 @@ C'est le moment de retrouver les quintuplées en version française.
 | **Petals of Reincarnation** | Fansub | [!badge variant="success" text="Terminé"] | 100% |
 | **Marika's Love Meter** | Fansub | [!badge variant="info" text="En cours"] | 12% |
 | **Kosmos Beta** | Scantrad | [!badge variant="info" text="En cours"] | 12% |
+| **Reincarnation no Kaben** | Scantrad | [!badge variant="info" text="En cours"] | 0.88% |
 :::
 
 ---
