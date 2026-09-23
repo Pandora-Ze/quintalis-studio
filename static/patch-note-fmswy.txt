@@ -571,3 +571,120 @@ Version 1.3 :
 		- Remplacement d'un mot répété + ajout d'un point d'interrogation (ca02_15)
 
 		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca02_15)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca02_16)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_16)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca02_16)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_16)
+
+		- Correction d'une faute d'ortographe (ca02_17)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca02_17)
+
+		- Correction de la mise à la ligne auto, ou elle se faisait avec un guillemet (ca02_19)
+
+		- Correction de la mise à la ligne auto, ou elle se faisait avec un guillemet (ca02_19)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca02_19)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca02_19)
+
+		- Correction de la mise à la ligne auto, ou elle se faisait avec un guillemet (ca02_19)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca02_21)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x2 (ca02_mv3_01)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_mv3_02)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca02_mv3_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_mv3_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_mv3_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_mv3_02)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x1 (ca02_mv3_03)
+		
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_mv3_03)
+
+		- Remplacement d'un tiret par des points de suspention (ca02_mv3_03)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x1 (ca02_mv4_01)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca02_mv4_01)
+
+		- Remplacement d'un tiret par des points de suspention (ca02_mv4_01)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca02_mv4_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_mv4_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_mv4_02)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca02_mv4_02)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x1 (ca02_mv4_03)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_mv4_03)
+		
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_23)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_25)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca02_25)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca02_25)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_25)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x1 (ca02_25)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_25)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca02_27)
+		
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_mv5_03)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca02_mv5_03)
+
+		- Racourcicement des choix, qui dépassaient de la boite de dialogue x1 (ca02_mv5_04)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ca02_mv5_04)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_mv5_05)
+
+		- Correction de la mise à la ligne auto, ou le point d'exclamation était seul à la ligne (ca02_mv5_05)
+
+		- Remplacement d'une lettre pour plus de cohérence (ca02_mv5_05)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca02_29)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ca02_29)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ca02_30)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ed02_01_01)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ed02_01_01)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ed02_01_02)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ed02_02_01)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ed02_02_01)
+
+		- Correction de la mise à la ligne automatique, ou elle se faisait avec un tiret (ed02_02_01)
+
+		- Traduction du nom de l'organisatrice (ed02_02_03)
+
+		- Correction des retour à la ligne multiples inutiles + ajustements pour la taille de la case (ed02_02_03)
+
+		- Correction de la mise à la ligne auto, ou le point d'interrogation était seul à la ligne (ed02_02_04)
+
+	- Correction de la voie de Miku :
+		
