@@ -710,7 +710,7 @@
 
         <div id="error-screen">
             <div style="font-size:2em">⚠️</div>
-            <strong>Impossible de charger les données du manga.</strong>
+            <strong id="error-title">Erreur de chargement</strong>
             <p id="error-detail"></p>
         </div>
     </div>
@@ -832,20 +832,10 @@
         function showError(msg) {
         loader.style.display = 'none';
         mangaCanvas.style.display = 'none';
+        if (scrollView) scrollView.style.display = 'none';
         errorScreen.style.display = 'flex';
         errorDetail.innerText = msg;
         }
-
-        const fallbackData = {
-        "kosmos-beta": {
-        "1": {
-        "title": "LE DERNIER FESTIVAL",
-        "pages": Array.from({ length: 15 }, (_, i) =>
-        `https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/ch-01/${String(i + 1).padStart(2, '0')}.webp`
-        )
-        }
-        }
-        };
 
         function extractChapters(entry) {
         if (!entry) return {};
@@ -873,12 +863,12 @@
 
         function initializeReader(data) {
         if (!mangaId) {
-        showError("Aucun manga spécifié dans l'URL. Veuillez ouvrir le lecteur depuis le catalogue.");
+        showError("Aucun identifiant de manga spécifié dans l'URL. Veuillez ouvrir le lecteur depuis le catalogue.");
         return;
         }
 
-        if (!data[mangaId]) {
-        showError(`Le projet "${mangaId}" est introuvable.`);
+        if (!data || !data[mangaId]) {
+        showError(`Le projet "${mangaId}" est introuvable dans manga-data.json.`);
         return;
         }
 
@@ -891,7 +881,7 @@
         chapterKeys = sortChapterKeys(Object.keys(currentChapters));
 
         if (chapterKeys.length === 0) {
-        showError(`Aucun chapitre trouvé pour le projet "${mangaId}".`);
+        showError(`Aucun chapitre trouvé pour le projet "${mangaId}" dans manga-data.json.`);
         return;
         }
 
@@ -926,30 +916,23 @@
         loadChapter(startCh, false, startPg);
         }
 
-        const isBlobOrLocal = window.location.protocol === 'blob:' ||
-        window.location.protocol === 'file:' ||
-        window.location.protocol === 'about:' ||
-        window.location.href.startsWith('blob:');
-
         async function loadDataSource() {
         if (!mangaId) {
-        showError("Aucun manga spécifié dans l'URL. Veuillez accéder au lecteur via le site.");
-        return;
-        }
-
-        if (isBlobOrLocal) {
-        initializeReader(fallbackData);
+        showError("Aucun identifiant de manga spécifié dans l'URL. Veuillez accéder au lecteur via le site.");
         return;
         }
 
         const cacheBuster = '?t=' + Date.now();
         const candidateUrls = [
         '/static/manga-data.json' + cacheBuster,
-        'manga-data.json' + cacheBuster,
-        '/manga-data.json' + cacheBuster
+        'static/manga-data.json' + cacheBuster,
+        '/manga-data.json' + cacheBuster,
+        'manga-data.json' + cacheBuster
         ];
 
         let loadedData = null;
+        let lastError = null;
+
         for (const u of candidateUrls) {
         try {
         const r = await fetch(u, { cache: 'no-store' });
@@ -957,14 +940,17 @@
         loadedData = await r.json();
         break;
         }
-        } catch(e) {}
+        } catch(e) {
+        lastError = e;
+        console.error("Échec de lecture ou de parsing JSON sur " + u + " :", e);
+        }
         }
 
         if (loadedData) {
         initializeReader(loadedData);
         } else {
-        console.warn("manga-data.json inaccessible en ligne, repli sur données internes.");
-        initializeReader(fallbackData);
+        const detail = lastError ? `Erreur de syntaxe JSON (${lastError.message})` : "Fichier static/manga-data.json introuvable (404).";
+        showError(`Impossible de charger les données : ${detail}`);
         }
         }
 
@@ -1491,7 +1477,7 @@
         try {
         callback();
         } catch (err) {
-        console.error("Erreur transition chapitre:", err);
+        console.error("Erreur transition chapitre :", err);
         } finally {
         transitionOverlay.classList.remove('show');
         }
