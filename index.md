@@ -44,7 +44,7 @@ layout: page
 
 ::: success [Nouveauté] Gotoubun no Hanayome β (Chapitre 2)
 Un nouveau chapitre de traduit ! 
-Le second chapitre de **Gotoubun no Hanayome β** est disponible en version française intégrale !
+Le second chapitre de **Kosmos Beta** est disponible en version française intégrale !
 
 [!button variant="danger" text="Accéder à la lecture" icon="repo"](scantrad/kosmos-beta/)
 :::
