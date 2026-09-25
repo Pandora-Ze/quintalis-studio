@@ -797,7 +797,7 @@
         let scrollMode = false;
         let fitMode = 'contain';
         let sharpnessMode = localStorage.getItem('manga_sharpness') || 'hd';
-        let readingDirection = localStorage.getItem('manga_direction') || 'rtl'; // 'rtl' = Manga D ➔ G par défaut
+        let readingDirection = localStorage.getItem('manga_direction') || 'rtl';
         let isZoomed = false;
         let isTransitioning = false;
         let nextChapterPreloaded = null;
@@ -828,7 +828,7 @@
         const viewport = document.getElementById('viewport');
 
         const urlParams = new URLSearchParams(window.location.search);
-        const mangaId = urlParams.get('id') || 'default';
+        const mangaId = urlParams.get('id'); // Aucun défaut automatique
         const themeColor = '#' + (urlParams.get('color') || '3498db');
         document.documentElement.style.setProperty('--accent', themeColor);
 
@@ -840,36 +840,12 @@
         }
 
         const fallbackData = {
-        "default": {
-        "1": {
-        "title": "Le Dernier Festival",
-        "pages": Array.from({ length: 28 }, (_, i) =>
-        `https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/ch-01/p${String(i + 1).padStart(2, '0')}.webp`
-        ).concat([
-        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/Scantrad.webp"
-        ])
-        },
-        "2": {
-        "title": "CONQUÊTE ACCOMPLIE",
-        "pages": [
-        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/Traduction.webp"
-        ]
-        }
-        },
         "kosmos-beta": {
         "1": {
-        "title": "Le Dernier Festival",
-        "pages": Array.from({ length: 28 }, (_, i) =>
-        `https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/ch-01/p${String(i + 1).padStart(2, '0')}.webp`
-        ).concat([
-        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/Scantrad.webp"
-        ])
-        },
-        "2": {
-        "title": "CONQUÊTE ACCOMPLIE",
-        "pages": [
-        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/Traduction.webp"
-        ]
+        "title": "LE DERNIER FESTIVAL",
+        "pages": Array.from({ length: 15 }, (_, i) =>
+        `https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/ch-01/${String(i + 1).padStart(2, '0')}.webp`
+        )
         }
         }
         };
@@ -899,11 +875,18 @@
         }
 
         function initializeReader(data) {
-        const activeId = data[mangaId] ? mangaId : (data['kosmos-beta'] ? 'kosmos-beta' : Object.keys(data)[0]);
-        mangaData = data[activeId];
+        if (!mangaId) {
+        showError("Aucun manga spécifié. Ouvrez ce lecteur depuis une page de projet.");
+        return;
+        }
 
-        const nameKey = activeId !== 'default' ? activeId : (mangaId !== 'default' ? mangaId : 'Kosmos Beta');
-        const autoTitle = (mangaData && mangaData.title) ? mangaData.title : nameKey.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        if (!data[mangaId]) {
+        showError(`Le projet "${mangaId}" est introuvable dans la base de données.`);
+        return;
+        }
+
+        mangaData = data[mangaId];
+        const autoTitle = (mangaData && mangaData.title) ? mangaData.title : mangaId.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         mangaTitleDisplay.textContent = autoTitle;
         document.title = autoTitle + ' — Lecteur Quintalis';
 
@@ -911,7 +894,7 @@
         chapterKeys = sortChapterKeys(Object.keys(currentChapters));
 
         if (chapterKeys.length === 0) {
-        showError(`Aucun chapitre trouvé pour le projet "${activeId}".`);
+        showError(`Aucun chapitre trouvé pour le projet "${mangaId}".`);
         return;
         }
 
@@ -926,7 +909,7 @@
         if (urlCh && currentChapters[urlCh]) {
         startCh = urlCh;
         } else {
-        const savedProgress = localStorage.getItem('manga_progress_' + activeId);
+        const savedProgress = localStorage.getItem('manga_progress_' + mangaId);
         if (savedProgress) {
         try {
         const parsed = JSON.parse(savedProgress);
@@ -952,23 +935,27 @@
         window.location.href.startsWith('blob:');
 
         async function loadDataSource() {
+        if (!mangaId) {
+        showError("Aucun manga spécifié dans l'URL. Veuillez accéder au lecteur via le site.");
+        return;
+        }
+
         if (isBlobOrLocal) {
         initializeReader(fallbackData);
         return;
         }
 
+        const cacheBuster = '?t=' + Date.now();
         const candidateUrls = [
-        'manga-data.json',
-        '/manga-data.json',
-        '../manga-data.json',
-        'static/manga-data.json',
-        '/static/manga-data.json'
+        '/static/manga-data.json' + cacheBuster,
+        'manga-data.json' + cacheBuster,
+        '/manga-data.json' + cacheBuster
         ];
 
         let loadedData = null;
         for (const u of candidateUrls) {
         try {
-        const r = await fetch(u);
+        const r = await fetch(u, { cache: 'no-store' });
         if (r.ok) {
         loadedData = await r.json();
         break;
@@ -977,13 +964,9 @@
         }
 
         if (loadedData) {
-        if (!loadedData[mangaId] && !loadedData['default'] && !fallbackData[mangaId]) {
-        showError(`Projet "${mangaId}" introuvable dans manga-data.json.`);
-        return;
-        }
         initializeReader(loadedData);
         } else {
-        console.warn("manga-data.json inaccessible, repli sur fallbackData.");
+        console.warn("manga-data.json inaccessible en ligne, repli sur données internes.");
         initializeReader(fallbackData);
         }
         }
@@ -1085,19 +1068,16 @@
         document.getElementById('dir-rtl').classList.toggle('active', isRtl);
         document.getElementById('dir-ltr').classList.toggle('active', !isRtl);
 
-        // Inversion physique de la barre de progression
         if (isRtl) {
         progressBarBg.classList.add('rtl');
         } else {
         progressBarBg.classList.remove('rtl');
         }
 
-        // Adaptation des zones de clics latérales et infobulles
         const zoneLeft = document.getElementById('zone-prev');
         const zoneRight = document.getElementById('zone-next');
 
         if (isRtl) {
-        // En Manga (RTL) : on tourne vers la gauche pour AVANCER
         zoneLeft.title = "Page suivante (Gauche)";
         zoneRight.title = "Page précédente (Droite)";
         } else {
@@ -1214,6 +1194,7 @@
         };
         img.onerror = () => {
         loader.style.display = 'none';
+        console.error("Échec de chargement sur la page :", currentPages[currentPage]);
         };
         img.src = currentPages[currentPage];
 
@@ -1425,20 +1406,16 @@
         /* ══ ACTIONS DES ZONES DE CLIC GAUCHE / DROITE RELIÉES AU SENS DE LECTURE ══ */
         function handleLeftZoneClick() {
         if (readingDirection === 'rtl') {
-        // En sens Manga (RTL), cliquer à gauche fait AVANCER vers la page suivante
         nextPage();
         } else {
-        // En standard (LTR), cliquer à gauche fait RECULER vers la page précédente
         prevPage();
         }
         }
 
         function handleRightZoneClick() {
         if (readingDirection === 'rtl') {
-        // En sens Manga (RTL), cliquer à droite fait RECULER vers la page précédente
         prevPage();
         } else {
-        // En standard (LTR), cliquer à droite fait AVANCER vers la page suivante
         nextPage();
         }
         }
@@ -1482,10 +1459,9 @@
         let pct = (clientX - rect.left) / rect.width;
         pct = Math.max(0, Math.min(1, pct));
 
-        // En RTL, la page 1 commence tout à droite (pct = 1) et se termine tout à gauche (pct = 0)
         const effectivePct = (readingDirection === 'rtl') ? (1 - pct) : pct;
-
         const targetPage = Math.round(effectivePct * (currentPages.length - 1));
+
         if (targetPage !== currentPage) {
         currentPage = targetPage;
         if (!scrollMode) {
@@ -1709,7 +1685,6 @@
 
         const isRtl = readingDirection === 'rtl';
 
-        // Touches Droite / D : Page précédente en Manga (RTL), Page suivante en Standard (LTR)
         if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
         if (isRtl) {
         if (e.ctrlKey || e.metaKey) goToPrevChapter();
@@ -1720,7 +1695,6 @@
         }
         }
 
-        // Touches Gauche / A / Q : Page suivante en Manga (RTL), Page précédente en Standard (LTR)
         if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A' || e.key === 'q' || e.key === 'Q') {
         if (isRtl) {
         if (e.ctrlKey || e.metaKey) goToNextChapter();
