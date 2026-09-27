@@ -83,7 +83,6 @@
                     cursor: grabbing;
                 }
 
-        /* Rendu Canvas Haute Définition avec filtres d'accentuation matérielle GPU */
         #manga-canvas {
             display: block;
             margin: auto;
@@ -406,7 +405,6 @@
             pointer-events: none;
         }
 
-        /* Inversion RTL Manga : la barre se remplit de droite à gauche */
         #progress-bar-bg.rtl #progress-bar-fill {
             left: auto;
             right: 0;
@@ -743,10 +741,9 @@
         </div>
 
         <div id="error-screen">
-            <div style="font-size:2.2em">⚠️</div>
-            <strong id="error-title">Échec du chargement de l'image</strong>
-            <p id="error-detail">Détail de l'erreur</p>
-            <div class="error-actions" id="error-actions"></div>
+            <div style="font-size:2em">⚠️</div>
+            <strong id="error-title">Erreur de chargement</strong>
+            <p id="error-detail"></p>
         </div>
     </div>
 
@@ -862,72 +859,16 @@
         const viewport = document.getElementById('viewport');
 
         const urlParams = new URLSearchParams(window.location.search);
-        const mangaId = urlParams.get('id') || 'default';
+        const mangaId = urlParams.get('id');
         const themeColor = '#' + (urlParams.get('color') || '3498db');
         document.documentElement.style.setProperty('--accent', themeColor);
 
-        /* Base de secours garantie 100% opérationnelle */
-        const fallbackData = {
-        "default": {
-        "1": {
-        "title": "Le Dernier Festival",
-        "pages": Array.from({ length: 28 }, (_, i) =>
-        `https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/ch-01/p${String(i + 1).padStart(2, '0')}.webp`
-        ).concat([
-        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/Scantrad.webp"
-        ])
-        },
-        "2": {
-        "title": "CONQUÊTE ACCOMPLIE",
-        "pages": [
-        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/Traduction.webp"
-        ]
-        }
-        },
-        "kosmos-beta": {
-        "1": {
-        "title": "Le Dernier Festival",
-        "pages": Array.from({ length: 28 }, (_, i) =>
-        `https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/ch-01/p${String(i + 1).padStart(2, '0')}.webp`
-        ).concat([
-        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/Scantrad.webp"
-        ])
-        },
-        "2": {
-        "title": "CONQUÊTE ACCOMPLIE",
-        "pages": [
-        "https://cdn.jsdelivr.net/gh/Pandora-Ze/quintalis-manga-assets@main/kosmos-beta/Traduction.webp"
-        ]
-        }
-        }
-        };
-
-        function showError(title, msg, failedUrl = null) {
+        function showError(msg) {
         loader.style.display = 'none';
         mangaCanvas.style.display = 'none';
+        if (scrollView) scrollView.style.display = 'none';
         errorScreen.style.display = 'flex';
-        errorTitle.innerText = title;
         errorDetail.innerText = msg;
-        errorActions.innerHTML = '';
-
-        if (failedUrl) {
-        const btnTest = document.createElement('a');
-        btnTest.className = 'error-btn';
-        btnTest.href = failedUrl;
-        btnTest.target = '_blank';
-        btnTest.innerText = '🔍 Tester le lien direct';
-        errorActions.appendChild(btnTest);
-        }
-
-        const btnRetry = document.createElement('button');
-        btnRetry.className = 'error-btn';
-        btnRetry.innerText = '🔄 Réessayer';
-        btnRetry.onclick = () => {
-        errorScreen.style.display = 'none';
-        mangaCanvas.style.display = 'block';
-        updatePageView();
-        };
-        errorActions.appendChild(btnRetry);
         }
 
         function extractChapters(entry) {
@@ -1103,12 +1044,18 @@
         }
 
         function initializeReader(data) {
-        const validKeys = Object.keys(data).filter(k => !k.startsWith('_'));
-        const activeId = data[mangaId] ? mangaId : (data['kosmos-beta'] ? 'kosmos-beta' : (validKeys[0] || Object.keys(data)[0]));
-        mangaData = data[activeId];
+        if (!mangaId) {
+        showError("Aucun identifiant de manga spécifié dans l'URL. Veuillez ouvrir le lecteur depuis le catalogue.");
+        return;
+        }
 
-        const nameKey = activeId !== 'default' ? activeId : (mangaId !== 'default' ? mangaId : 'Kosmos Beta');
-        const autoTitle = (mangaData && mangaData.title) ? mangaData.title : nameKey.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        if (!data || !data[mangaId]) {
+        showError(`Le projet "${mangaId}" est introuvable dans manga-data.json.`);
+        return;
+        }
+
+        mangaData = data[mangaId];
+        const autoTitle = (mangaData && mangaData.title) ? mangaData.title : mangaId.split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
         mangaTitleDisplay.textContent = autoTitle;
         document.title = autoTitle + ' — Lecteur Quintalis';
 
@@ -1116,7 +1063,7 @@
         chapterKeys = sortChapterKeys(Object.keys(currentChapters));
 
         if (chapterKeys.length === 0) {
-        showError('Aucun chapitre trouvé', `Aucun chapitre trouvé pour le projet "${activeId}".`);
+        showError(`Aucun chapitre trouvé pour le projet "${mangaId}" dans manga-data.json.`);
         return;
         }
 
@@ -1131,7 +1078,7 @@
         if (urlCh && currentChapters[urlCh]) {
         startCh = urlCh;
         } else {
-        const savedProgress = localStorage.getItem('manga_progress_' + activeId);
+        const savedProgress = localStorage.getItem('manga_progress_' + mangaId);
         if (savedProgress) {
         try {
         const parsed = JSON.parse(savedProgress);
@@ -1151,41 +1098,41 @@
         loadChapter(startCh, false, startPg);
         }
 
-        const isBlobOrLocal = window.location.protocol === 'blob:' ||
-        window.location.protocol === 'file:' ||
-        window.location.protocol === 'about:' ||
-        window.location.href.startsWith('blob:');
-
         async function loadDataSource() {
-        if (isBlobOrLocal) {
-        initializeReader(fallbackData);
+        if (!mangaId) {
+        showError("Aucun identifiant de manga spécifié dans l'URL. Veuillez accéder au lecteur via le site.");
         return;
         }
 
+        const cacheBuster = '?t=' + Date.now();
         const candidateUrls = [
-        'static/manga-data.json',
-        '/static/manga-data.json',
-        'manga-data.json',
-        '/manga-data.json',
-        '../manga-data.json'
+        '/static/manga-data.json' + cacheBuster,
+        'static/manga-data.json' + cacheBuster,
+        '/manga-data.json' + cacheBuster,
+        'manga-data.json' + cacheBuster
         ];
 
         let loadedData = null;
+        let lastError = null;
+
         for (const u of candidateUrls) {
         try {
-        const r = await fetch(u);
+        const r = await fetch(u, { cache: 'no-store' });
         if (r.ok) {
         loadedData = await r.json();
         break;
         }
-        } catch (e) {}
+        } catch(e) {
+        lastError = e;
+        console.error("Échec de lecture ou de parsing JSON sur " + u + " :", e);
+        }
         }
 
         if (loadedData) {
         initializeReader(loadedData);
         } else {
-        console.warn("manga-data.json inaccessible ou contenant une syntaxe invalide, repli sur fallbackData.");
-        initializeReader(fallbackData);
+        const detail = lastError ? `Erreur de syntaxe JSON (${lastError.message})` : "Fichier static/manga-data.json introuvable (404).";
+        showError(`Impossible de charger les données : ${detail}`);
         }
         }
 
@@ -1225,7 +1172,119 @@
         loadRobustImage(srcList, onSuccess, onError, index + 1);
         };
 
-        testImg.src = targetUrl;
+        if (specificPage !== null && specificPage >= 0 && specificPage < currentPages.length) {
+        currentPage = specificPage;
+        } else {
+        currentPage = startAtEnd ? currentPages.length - 1 : 0;
+        }
+
+        try {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.set('ch', currentChapterId);
+        window.history.replaceState({}, '', currentUrl.toString());
+        } catch(e) {}
+
+        updateNavButtons();
+        preloadCurrentChapterWhole();
+
+        if (scrollMode) {
+        buildScrollMode();
+        } else {
+        exitZoom();
+        updatePageView();
+        }
+        }
+
+        function updateNavButtons() {
+        const idx = chapterKeys.indexOf(currentChapterId);
+        const prevBtn = document.getElementById('btn-prev-ch');
+        const nextBtn = document.getElementById('btn-next-ch');
+        if (prevBtn) prevBtn.disabled = idx <= 0;
+        if (nextBtn) nextBtn.disabled = idx < 0 || idx >= chapterKeys.length - 1;
+        }
+
+        function preloadCurrentChapterWhole() {
+        currentPages.forEach(src => {
+        const img = new Image();
+        img.src = src;
+        });
+        }
+
+        function applySharpnessMode(mode) {
+        sharpnessMode = mode;
+        localStorage.setItem('manga_sharpness', mode);
+
+        mangaCanvas.classList.remove('sharp-off', 'sharp-light', 'sharp-hd', 'sharp-ultra');
+        mangaCanvas.classList.add('sharp-' + mode);
+
+        scrollContent.classList.remove('sharp-off', 'sharp-light', 'sharp-hd', 'sharp-ultra');
+        scrollContent.classList.add('sharp-' + mode);
+
+        ['off', 'light', 'hd', 'ultra'].forEach(m => {
+        const btn = document.getElementById('sharp-' + m);
+        if (btn) btn.classList.toggle('active', m === mode);
+        });
+        }
+
+        function applyDirection(dir) {
+        readingDirection = dir;
+        localStorage.setItem('manga_direction', dir);
+
+        const isRtl = dir === 'rtl';
+        document.getElementById('dir-rtl').classList.toggle('active', isRtl);
+        document.getElementById('dir-ltr').classList.toggle('active', !isRtl);
+
+        if (isRtl) {
+        progressBarBg.classList.add('rtl');
+        } else {
+        progressBarBg.classList.remove('rtl');
+        }
+
+        const zoneLeft = document.getElementById('zone-prev');
+        const zoneRight = document.getElementById('zone-next');
+
+        if (isRtl) {
+        zoneLeft.title = "Page suivante (Gauche)";
+        zoneRight.title = "Page précédente (Droite)";
+        } else {
+        zoneLeft.title = "Page précédente (Gauche)";
+        zoneRight.title = "Page suivante (Droite)";
+        }
+
+        updateHelpModal();
+        updateUI();
+        }
+
+        function updateHelpModal() {
+        const isRtl = readingDirection === 'rtl';
+        const nextLbl = document.getElementById('help-next-label');
+        const prevLbl = document.getElementById('help-prev-label');
+        const nextK = document.getElementById('help-next-key');
+        const nextKA = document.getElementById('help-next-key-alt');
+        const prevK = document.getElementById('help-prev-key');
+        const prevKA = document.getElementById('help-prev-key-alt');
+        const nextChK = document.getElementById('help-next-ch-key');
+        const prevChK = document.getElementById('help-prev-ch-key');
+
+        if (isRtl) {
+        if (nextLbl) nextLbl.textContent = "Page suivante (Manga D ➔ G)";
+        if (prevLbl) prevLbl.textContent = "Page précédente (Manga D ➔ G)";
+        if (nextK) nextK.textContent = "←";
+        if (nextKA) nextKA.textContent = "A";
+        if (prevK) prevK.textContent = "→";
+        if (prevKA) prevKA.textContent = "D";
+        if (nextChK) nextChK.textContent = "Ctrl + ←";
+        if (prevChK) prevChK.textContent = "Ctrl + →";
+        } else {
+        if (nextLbl) nextLbl.textContent = "Page suivante (Standard G ➔ D)";
+        if (prevLbl) prevLbl.textContent = "Page précédente (Standard G ➔ D)";
+        if (nextK) nextK.textContent = "→";
+        if (nextKA) nextKA.textContent = "D";
+        if (prevK) prevK.textContent = "←";
+        if (prevKA) prevKA.textContent = "A";
+        if (nextChK) nextChK.textContent = "Ctrl + →";
+        if (prevChK) prevChK.textContent = "Ctrl + ←";
+        }
         }
 
         function renderCurrentPageCanvas() {
@@ -1291,6 +1350,32 @@
         ctx.restore();
         }
 
+        function drawErrorOnCanvas(failedUrl) {
+        currentLoadedImg = null;
+        mangaCanvas.width = 600;
+        mangaCanvas.height = 400;
+        mangaCanvas.style.width = '600px';
+        mangaCanvas.style.height = '400px';
+        mangaCanvas.style.margin = 'auto';
+
+        ctx.fillStyle = '#111111';
+        ctx.fillRect(0, 0, 600, 400);
+
+        ctx.fillStyle = '#e74c3c';
+        ctx.font = 'bold 18px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('⚠️ Page introuvable', 300, 175);
+
+        ctx.fillStyle = '#888888';
+        ctx.font = '12px monospace';
+        const shortName = failedUrl ? failedUrl.split('/').slice(-3).join('/') : 'Inconnue';
+        ctx.fillText(shortName, 300, 205);
+
+        ctx.fillStyle = '#aaaaaa';
+        ctx.font = '13px sans-serif';
+        ctx.fillText('Vérifiez le nom sur GitHub ou videz le cache', 300, 235);
+        }
+
         function updatePageView() {
         if (!currentPages || currentPages.length === 0) return;
 
@@ -1299,15 +1384,42 @@
         loader.style.display = 'block';
         pageView.scrollTop = 0;
 
-        const primaryUrl = currentPages[currentPage];
-        const failovers = getFailoverUrls(primaryUrl);
+        const primarySrc = currentPages[currentPage];
+        if (!primarySrc) {
+        loader.style.display = 'none';
+        return;
+        }
 
-        loadRobustImage(
-        failovers,
-        (loadedImg) => {
-        currentLoadedImg = loadedImg;
+        let fallbackSrc = null;
+        if (primarySrc.includes('cdn.jsdelivr.net/gh/')) {
+        fallbackSrc = primarySrc
+        .replace('cdn.jsdelivr.net/gh/', 'raw.githubusercontent.com/')
+        .replace('@', '/');
+        }
+
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        let hasTriedFallback = false;
+
+        img.onload = () => {
+        currentLoadedImg = img;
         renderCurrentPageCanvas();
         loader.style.display = 'none';
+        };
+
+        img.onerror = () => {
+        if (fallbackSrc && !hasTriedFallback) {
+        hasTriedFallback = true;
+        console.warn("Échec CDN, bascule automatique sur GitHub Raw :", fallbackSrc);
+        img.src = fallbackSrc;
+        return;
+        }
+        loader.style.display = 'none';
+        console.error("Échec définitif du chargement :", img.src);
+        drawErrorOnCanvas(img.src);
+        };
+
+        img.src = primarySrc;
         updateUI();
         preloadStrategy();
         },
@@ -1577,7 +1689,7 @@
         try {
         callback();
         } catch (err) {
-        console.error("Erreur transition chapitre:", err);
+        console.error("Erreur transition chapitre :", err);
         } finally {
         transitionOverlay.classList.remove('show');
         }
