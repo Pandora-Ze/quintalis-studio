@@ -1,0 +1,28 @@
+name: Publier DEV vers MAIN
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Recuperer le code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configurer Git
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+
+      - name: Fusionner dev vers main
+        run: |
+          git checkout main
+          git pull origin main
+          git merge origin/dev -X theirs -m "Publication automatique depuis mobile"
+          git push origin main
